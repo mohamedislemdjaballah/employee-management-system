@@ -1,0 +1,191 @@
+<div class="form-wrapper">
+  <div class="card">
+    <div class="form-header">
+      <div>
+        <h1 class="form-title">
+          {{ isEditMode ? "Modifier la Fiche de l'Agent" : 'Enregistrer un Nouvel Agent' }}
+        </h1>
+        <p class="form-subtitle">
+          Les champs marqués d'un astérisque (*) sont contrôlés côté client (Angular Reactive Forms)
+          et côté serveur (Spring Boot <code>&#64;Valid</code>).
+        </p>
+      </div>
+      <a routerLink="/employees" class="btn btn-outline">
+        ← Retour à l'annuaire
+      </a>
+    </div>
+
+    @if (serverErrorMessage) {
+      <div class="alert alert-error">
+        <strong>Erreur Serveur :</strong> {{ serverErrorMessage }}
+      </div>
+    }
+
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-grid">
+        <!-- Matricule -->
+        <div class="form-group">
+          <label for="matricule">Matricule Administratif *</label>
+          <input
+            id="matricule"
+            type="text"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('matricule')"
+            formControlName="matricule"
+            placeholder="Ex: FIN-2026-007"
+          />
+          @if (isFieldInvalid('matricule')) {
+            <div class="error-text">Le matricule administratif est obligatoire.</div>
+          }
+        </div>
+
+        <!-- Direction / Service -->
+        <div class="form-group">
+          <label for="departmentId">Direction d'Affectation *</label>
+          <select
+            id="departmentId"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('departmentId')"
+            formControlName="departmentId"
+          >
+            <option [ngValue]="null" disabled>-- Sélectionnez une direction --</option>
+            @for (dept of departments; track dept.id) {
+              <option [ngValue]="dept.id">{{ dept.code }} — {{ dept.name }}</option>
+            }
+          </select>
+          @if (isFieldInvalid('departmentId')) {
+            <div class="error-text">Veuillez choisir une direction d'affectation.</div>
+          }
+        </div>
+
+        <!-- Nom -->
+        <div class="form-group">
+          <label for="lastName">Nom de Famille *</label>
+          <input
+            id="lastName"
+            type="text"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('lastName')"
+            formControlName="lastName"
+            placeholder="Ex: BENALI"
+          />
+          @if (isFieldInvalid('lastName')) {
+            <div class="error-text">Le nom de famille est obligatoire.</div>
+          }
+        </div>
+
+        <!-- Prénom -->
+        <div class="form-group">
+          <label for="firstName">Prénom *</label>
+          <input
+            id="firstName"
+            type="text"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('firstName')"
+            formControlName="firstName"
+            placeholder="Ex: Karim"
+          />
+          @if (isFieldInvalid('firstName')) {
+            <div class="error-text">Le prénom est obligatoire.</div>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Adresse Email Professionnelle *</label>
+          <input
+            id="email"
+            type="email"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('email')"
+            formControlName="email"
+            placeholder="prenom.nom@finances.gov"
+          />
+          @if (isFieldInvalid('email')) {
+            <div class="error-text">Veuillez saisir une adresse email valide.</div>
+          }
+        </div>
+
+        <!-- Téléphone -->
+        <div class="form-group">
+          <label for="phone">Téléphone / Poste Interne</label>
+          <input
+            id="phone"
+            type="text"
+            class="form-control"
+            formControlName="phone"
+            placeholder="Ex: 0550 12 34 56"
+          />
+        </div>
+
+        <!-- Poste / Grade -->
+        <div class="form-group">
+          <label for="jobTitle">Intitulé du Poste / Grade *</label>
+          <input
+            id="jobTitle"
+            type="text"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('jobTitle')"
+            formControlName="jobTitle"
+            placeholder="Ex: Ingénieur d'État en Informatique"
+          />
+          @if (isFieldInvalid('jobTitle')) {
+            <div class="error-text">L'intitulé du poste est obligatoire.</div>
+          }
+        </div>
+
+        <!-- Salaire -->
+        <div class="form-group">
+          <label for="salary">Salaire Mensuel Brut (DA) *</label>
+          <input
+            id="salary"
+            type="number"
+            step="500"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('salary')"
+            formControlName="salary"
+          />
+          @if (isFieldInvalid('salary')) {
+            <div class="error-text">Le salaire doit être un montant positif valide.</div>
+          }
+        </div>
+
+        <!-- Date de recrutement -->
+        <div class="form-group">
+          <label for="hireDate">Date de Recrutement *</label>
+          <input
+            id="hireDate"
+            type="date"
+            class="form-control"
+            [class.invalid]="isFieldInvalid('hireDate')"
+            formControlName="hireDate"
+          />
+          @if (isFieldInvalid('hireDate')) {
+            <div class="error-text">La date de recrutement est obligatoire.</div>
+          }
+        </div>
+
+        <!-- Statut -->
+        <div class="form-group">
+          <label for="status">Statut Administratif *</label>
+          <select id="status" class="form-control" formControlName="status">
+            <option value="ACTIVE">En Activité (ACTIVE)</option>
+            <option value="ON_LEAVE">En Congé / Détachement (ON_LEAVE)</option>
+            <option value="INACTIVE">Inactif (INACTIVE)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/employees" class="btn btn-outline">Annuler</a>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            Enregistrement en cours...
+          } @else {
+            {{ isEditMode ? 'Enregistrer les modifications' : "Créer l'agent" }}
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

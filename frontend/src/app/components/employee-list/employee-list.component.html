@@ -1,0 +1,193 @@
+<!-- Bandeau d'état de connexion avec le Backend Spring Boot -->
+@if (employeeService.isOfflineFallbackMode) {
+  <div class="alert alert-info">
+    <strong>Mode Simulation Frontend Actif :</strong>
+    Le serveur Spring Boot (<code>http://localhost:8080</code>) n'est pas détecté.
+    L'application fonctionne actuellement avec le jeu de données en mémoire afin de permettre
+    l'apprentissage d'Angular de manière autonome. Dès que Spring Boot est lancé, cliquez sur
+    <strong>Actualiser</strong> pour basculer sur PostgreSQL.
+  </div>
+}
+
+@if (errorMessage) {
+  <div class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+}
+
+<!-- 1. Cartes d'indicateurs RH (KPIs) -->
+<section class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">Effectif Affiché</div>
+    <div class="kpi-value">{{ totalEmployees }}</div>
+    <div class="kpi-sub">Agents recensés</div>
+  </div>
+
+  <div class="kpi-card kpi-success">
+    <div class="kpi-label">En Activité</div>
+    <div class="kpi-value">{{ activeEmployeesCount }}</div>
+    <div class="kpi-sub">Présents en poste</div>
+  </div>
+
+  <div class="kpi-card kpi-warning">
+    <div class="kpi-label">En Congé / Détachement</div>
+    <div class="kpi-value">{{ onLeaveEmployeesCount }}</div>
+    <div class="kpi-sub">Absence temporaire</div>
+  </div>
+
+  <div class="kpi-card kpi-accent">
+    <div class="kpi-label">Masse Salariale Mensuelle</div>
+    <div class="kpi-value">{{ totalMonthlyPayroll | number:'1.0-0' }} <small>DA</small></div>
+    <div class="kpi-sub">Total brut mensuel</div>
+  </div>
+</section>
+
+<!-- 2. Barre de recherche et de filtrage multicritères -->
+<section class="card filter-bar">
+  <div class="filter-header">
+    <div>
+      <h1 class="page-title">Annuaire des Agents du Ministère</h1>
+      <p class="page-subtitle">
+        Source de données :
+        @if (employeeService.isOfflineFallbackMode) {
+          <span class="badge badge-leave">Simulation Locale (En mémoire)</span>
+        } @else {
+          <span class="badge badge-active">Connecté à Spring Boot + PostgreSQL (:8080)</span>
+        }
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="btn btn-outline" (click)="loadEmployees()">
+        ↻ Actualiser
+      </button>
+      <a routerLink="/employees/new" class="btn btn-primary">
+        + Ajouter un Agent
+      </a>
+    </div>
+  </div>
+
+  <div class="filter-controls">
+    <div class="filter-group filter-search">
+      <label for="searchInput">Recherche rapide (Nom, Prénom, Matricule, Poste)</label>
+      <input
+        id="searchInput"
+        type="text"
+        class="form-control"
+        placeholder="Ex: BENALI, FIN-2026, Architecte..."
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onFilterChange()"
+        (input)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="deptSelect">Direction / Structure</label>
+      <select
+        id="deptSelect"
+        class="form-control"
+        [(ngModel)]="selectedDepartmentId"
+        (change)="onFilterChange()"
+      >
+        <option [ngValue]="null">Toutes les directions</option>
+        @for (dept of departments; track dept.id) {
+          <option [ngValue]="dept.id">{{ dept.code }} — {{ dept.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="statusSelect">Statut Administratif</label>
+      <select
+        id="statusSelect"
+        class="form-control"
+        [(ngModel)]="selectedStatus"
+        (change)="onFilterChange()"
+      >
+        <option value="">Tous les statuts</option>
+        <option value="ACTIVE">En Activité</option>
+        <option value="ON_LEAVE">En Congé</option>
+        <option value="INACTIVE">Inactif</option>
+      </select>
+    </div>
+
+    <div class="filter-group filter-reset">
+      <button type="button" class="btn btn-outline" (click)="resetFilters()">
+        Réinitialiser
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Tableau des Agents -->
+<section class="card table-card">
+  @if (isLoading) {
+    <div class="empty-state">Chargement des données depuis l'API REST...</div>
+  } @else if (employees.length === 0) {
+    <div class="empty-state">
+      <p>Aucun agent ne correspond aux critères de recherche sélectionnés.</p>
+      <button type="button" class="btn btn-outline" style="margin-top: 0.75rem;" (click)="resetFilters()">
+        Afficher tous les agents
+      </button>
+    </div>
+  } @else {
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Matricule</th>
+            <th>Agent (Nom & Prénom)</th>
+            <th>Direction</th>
+            <th>Poste / Fonction</th>
+            <th>Recrutement</th>
+            <th class="text-right">Salaire Mensuel</th>
+            <th>Statut</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Équivalent Blade @foreach($employees as $emp) -->
+          @for (emp of employees; track emp.id) {
+            <tr>
+              <td>
+                <span class="matricule-code">{{ emp.matricule }}</span>
+              </td>
+              <td>
+                <div class="emp-name">{{ emp.lastName }} {{ emp.firstName }}</div>
+                <div class="emp-meta">{{ emp.email }} @if (emp.phone) { • {{ emp.phone }} }</div>
+              </td>
+              <td>
+                <span class="badge badge-dept" [title]="emp.departmentName">
+                  {{ emp.departmentCode }}
+                </span>
+                <div class="dept-name-sub">{{ emp.departmentName }}</div>
+              </td>
+              <td>{{ emp.jobTitle }}</td>
+              <td>{{ emp.hireDate }}</td>
+              <td class="text-right font-mono">
+                {{ emp.salary | number:'1.2-2' }} DA
+              </td>
+              <td>
+                <span [class]="getStatusBadgeClass(emp.status)">
+                  {{ getStatusLabel(emp.status) }}
+                </span>
+              </td>
+              <td class="text-right actions-cell">
+                <a [routerLink]="['/employees', emp.id, 'edit']" class="btn btn-outline btn-sm">
+                  Modifier
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm"
+                  (click)="confirmDelete(emp)"
+                >
+                  Supprimer
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
