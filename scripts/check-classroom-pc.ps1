@@ -1,4 +1,4 @@
-﻿# ============================================================================
+# ============================================================================
 # Script de Diagnostic Poste Stagiaire / Formateur (Windows PowerShell)
 # Formation : Développement Web Fullstack (Spring Boot 3 + PostgreSQL + Angular)
 # Usage     : .\scripts\check-classroom-pc.ps1
