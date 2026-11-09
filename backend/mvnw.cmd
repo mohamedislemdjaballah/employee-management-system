@@ -7,6 +7,16 @@
 @echo off
 setlocal
 
+:: Auto-detect JDK 21 if JAVA_HOME is not set or points to an old JRE
+if not defined JAVA_HOME (
+    for /d %%D in ("C:\Program Files\Eclipse Adoptium\jdk-21*") do (
+        if exist "%%D\bin\javac.exe" (
+            set "JAVA_HOME=%%D"
+            set "PATH=%%D\bin;%PATH%"
+        )
+    )
+)
+
 set WRAPPER_DIR=%~dp0
 set MAVEN_VERSION=3.9.9
 set MAVEN_HOME_DIR=%USERPROFILE%\.m2\wrapper\dists\apache-maven-%MAVEN_VERSION%

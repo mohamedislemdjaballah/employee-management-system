@@ -21,7 +21,17 @@ if %ERRORLEVEL% EQU 0 (
     echo       (or Spring Boot will use in-memory H2 database).
 )
 
-:: 2. Start Backend Spring Boot in a new window
+:: 2. Auto-detect JDK 21 if JAVA_HOME is not set
+if not defined JAVA_HOME (
+    for /d %%D in ("C:\Program Files\Eclipse Adoptium\jdk-21*") do (
+        if exist "%%D\bin\javac.exe" (
+            set "JAVA_HOME=%%D"
+            set "PATH=%%D\bin;%PATH%"
+        )
+    )
+)
+
+:: 3. Start Backend Spring Boot in a new window
 echo [2/3] Launching Spring Boot Backend (http://localhost:8080)...
 start "Spring Boot Backend (Port 8080)" cmd /k "cd /d "%REPO_DIR%backend" && (mvnw.cmd spring-boot:run || (echo If Java 21 is not installed, install Eclipse Temurin 21 && pause))"
 
