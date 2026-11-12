@@ -1,0 +1,3 @@
+if (-not (Get-Command ssh -ErrorAction SilentlyContinue)) {
+    Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+}
