@@ -47,3 +47,7 @@ Thumbs.db
 Desktop.ini
 .env
 .env.local
+
+
+# others
+*.pyc
