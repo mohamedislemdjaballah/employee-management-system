@@ -1,0 +1,73 @@
+### File-level Variables
+@baseUrl = https://jsonplaceholder.typicode.com
+@httpbin = https://httpbin.org
+@contentType = application/json
+
+### 1. Simple GET Request (List Resources)
+GET {{baseUrl}}/posts HTTP/1.1
+
+### 2. GET with Query Parameters (Multi-line formatting)
+GET {{baseUrl}}/comments?postId=1&_limit=5
+
+### 3. POST Request with Static JSON Body
+# @name createPost
+POST {{baseUrl}}/posts HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "title": "Sample Mock Post",
+  "body": "This is a static JSON payload for testing.",
+  "userId": 1
+}
+
+### 4. Request Chaining (Using data from the previous response)
+# Uses the ID returned by 'createPost' above
+@createdId = {{createPost.response.body.$.id}}
+
+GET {{baseUrl}}/posts/{{createdId}} HTTP/1.1
+
+### 5. PUT Request (Full Update)
+PUT {{baseUrl}}/posts/1 HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "id": 1,
+  "title": "Updated Post Title",
+  "body": "Completely replaced post content.",
+  "userId": 1
+}
+
+### 6. PATCH Request (Partial Update)
+PATCH {{baseUrl}}/posts/1 HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "title": "Patched Title Only"
+}
+
+### 7. DELETE Request
+DELETE {{baseUrl}}/posts/1 HTTP/1.1
+
+### 8. Testing Bearer Token Authentication (via httpbin)
+GET {{httpbin}}/bearer HTTP/1.1
+Authorization: Bearer my-mock-jwt-token-12345
+
+
+### 9. Testing Basic Authentication (via httpbin)
+# REST Client automatically Base64-encodes username:password
+GET {{httpbin}}/basic-auth/admin/secret123 HTTP/1.1
+Authorization: Basic admin:secret123
+
+
+### 10. Form URL-Encoded POST Request
+POST {{httpbin}}/post HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+username=jdoe
+&role=developer
+&active=true
+
+### 11. Interactive Prompt Variables
+# Prompts you for input in VS Code before sending
+# @prompt statusCode Enter an HTTP status code to simulate (e.g., 200, 404, 500)
+GET {{httpbin}}/status/{{statusCode}} HTTP/1.1
