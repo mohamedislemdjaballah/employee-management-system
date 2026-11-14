@@ -4,7 +4,7 @@
 
 ## Slide 1: Welcome & Title
 - **Title:** Modern Web Development
-- **Subtitle:** A 5-Day Crash Course on Modern Web Architecture, Spring Boot, Angular, PostgreSQL & DevOps
+- **Subtitle:** A 5-Day Workshop on Modern Web Architecture, Spring Boot, Angular, PostgreSQL & DevOps
 - **Presenters:** [Your Name] & [Co-Presenter Name]
 
 ---
@@ -50,14 +50,14 @@
 | Day | Theme | 08:00 – 10:00 | 10:00 – 12:00 | 14:00 – 16:00 |
 | :--- | :--- | :--- | :--- | :--- |
 | **Day 1** | **Modern Web & APIs** | Web History & Evolution | Web Apps Architectures & REST API | REST API Practice |
-| **Day 2** | **Data & Backend Fundamentals** | Java & Spring Boot | PostgreSQL & Data Modeling | pgAdmin & Java Code |
+| **Day 2** | **Data & Backend Fundamentals** | Java & Spring Boot | PostgreSQL & Data Modeling | pgAdmin & Java Practice |
 | **Day 3** | **Angular & Frontend** | Modern Frontends: Single-Page Applications | How Angular Works | Demo Project (EMS) |
-| **Day 4** | **DevOps & Dev Lifecycle** | Dev Lifecycle Part 1 | Dev Lifecycle Part 2 | Web Servers & Reverse Proxies |
-| **Day 5** | **TBD** | *TBD* | *TBD* | *TBD* |
+| **Day 4** | **DevOps & Dev Lifecycle** | Dev Lifecycle Part 1 | Dev Lifecycle Part 2 | Quizz & Practice |
+| **Day 5** | **Security & Wrap-Up** | AuthN & AuthZ | Wrap UP | Quizz, Q&A |
 
 ---
 
-## Slide 6: Day-by-Day Breakdown (Days 1–4)
+## Slide 6: Day-by-Day Breakdown (Days 1–5)
 
 ### Day 1: Modern Web & APIs
 - **08:00 – 10:00:** Web History & Evolution
@@ -67,14 +67,19 @@
 ### Day 2: Data & Backend Fundamentals
 - **08:00 – 10:00:** Java & Spring Boot
 - **10:00 – 12:00:** PostgreSQL & Data Modeling
-- **14:00 – 16:00:** pgAdmin & Java Code
+- **14:00 – 16:00:** pgAdmin & Java Practice
 
 ### Day 3: Angular & Frontend
-- **08:00 – 10:00:** Modern Frontends: Single-Page Applications
+- **08:00 – 10:00:** JavaScript & Single-Page Applications
 - **10:00 – 12:00:** How Angular Works
 - **14:00 – 16:00:** Demo Project (EMS)
 
 ### Day 4: DevOps & Dev Lifecycle
 - **08:00 – 10:00:** Dev Lifecycle Part 1
 - **10:00 – 12:00:** Dev Lifecycle Part 2
-- **14:00 – 16:00:** Web Servers & Reverse Proxies
+- **14:00 – 16:00:** Quizz & Practice
+
+### Day 5: Security & Wrap-Up
+- **08:00 – 10:00:** AuthN & AuthZ
+- **10:00 – 12:00:** Wrap Up
+- **14:00 – 16:00:** Quizz, Q&A

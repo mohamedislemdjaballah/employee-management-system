@@ -393,7 +393,28 @@
 
 ---
 
-### Slide 23: Following a Full REST API Call in Our Decoupled Stack
+### Slide 23: Standard HTTP Status Codes — Reading the Server's Reply
+- **Slide Points:**
+  - Every HTTP response starts with a **3-digit Status Code** telling you what happened:
+  - **2xx — Success (Everything Worked):**
+    - **`200 OK`** — Request succeeded (e.g., `GET /posts` returned data, or `PUT` updated it).
+    - **`201 Created`** — A new resource was created and saved (e.g., `POST /posts`).
+    - **`204 No Content`** — Action succeeded with no body to return (common for `DELETE`).
+  - **4xx — Client Error (Fix Your Request):**
+    - **`400 Bad Request`** — Malformed request or invalid syntax.
+    - **`401 Unauthorized` / `403 Forbidden`** — Not logged in (`401`) or no permission (`403`).
+    - **`404 Not Found`** — That URL or record ID doesn't exist (e.g., `/posts/999`).
+    - **`405 Method Not Allowed`** — Wrong HTTP verb for that URL (e.g., `PUT /posts` instead of `POST`).
+    - **`409 Conflict` / `422 Unprocessable Entity`** — Duplicate action (`409`) or missing/wrong JSON field (`422`).
+  - **5xx — Server Error (Backend Problem):**
+    - **`500 Internal Server Error`** — Unexpected bug or crash on the server.
+- **Talking Points:**
+  - Quick rule of thumb: **2xx = Success**, **4xx = Client mistake (check your URL, method, or JSON)**, **5xx = Server crashed**.
+  - Knowing `404`, `405`, `409`, and `422` will make you an instant API detective when debugging in Chrome DevTools or Postman!
+
+---
+
+### Slide 24: Following a Full REST API Call in Our Decoupled Stack
 - **Slide Points:**
   - **Scenario: HR Clicks "Save New Employee" in the Angular App**
     1. **Angular (Browser):** Reads the form fields and sends an HTTP request:
@@ -412,7 +433,7 @@
 
 ---
 
-### Slide 24: OpenAPI Specification — The Blueprint for Any REST API
+### Slide 25: OpenAPI Specification — The Blueprint for Any REST API
 - **Slide Points:**
   - **The Problem:** How do frontend developers, mobile apps, or QA testers know **which URLs exist**, **what HTTP method to use**, and **what JSON fields are required**?
   - **The Solution — OpenAPI Specification (formerly Swagger):**
@@ -427,7 +448,7 @@
 
 ---
 
-### Slide 25: Inside an OpenAPI Schema — Real YAML Example
+### Slide 26: Inside an OpenAPI Schema — Real YAML Example
 - **Slide Points:**
   - **3 Core Sections of Every OpenAPI File:**
     1. **`info`:** API title and version (`Social Media Demo API`, `1.0.0`)
@@ -461,7 +482,7 @@
 
 ---
 
-### Slide 26: What Can You Do With an OpenAPI Spec?
+### Slide 27: What Can You Do With an OpenAPI Spec?
 - **Slide Points:**
   - **1. Generate Client Code (SDKs):**
     - Tools like `openapi-generator` create ready-to-use **TypeScript (Angular/React)**, **Python**, or **Swift/Kotlin** functions automatically—no manual `fetch` boilerplate or typos.
@@ -474,7 +495,7 @@
 
 ---
 
-### Slide 27: Quick Recap & The "Bridge" to Next Session
+### Slide 28: Quick Recap & The "Bridge" to Next Session
 - **Slide Points:**
   - **Quick Recap:**
     1. **The 3 Core Layers:** Every business web app has a **Presentation Layer** (UI), **Business Logic Layer** (Backend rules), and **Data Layer** (Database).
