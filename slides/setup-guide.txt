@@ -1,5 +1,5 @@
 ============================================================
-PRESENTER SETUP GUIDE — MACHINE & WORKSHOP PREPARATION
+SETUP GUIDE
 ============================================================
 
 1. POSTMAN SIGNUP (Temporary Email)
@@ -7,6 +7,7 @@ PRESENTER SETUP GUIDE — MACHINE & WORKSHOP PREPARATION
 - Open website: https://temp-mail.org/en/
 - Sign up to Postman using the temporary email address from temp-mail.org
 - Verify the email via the temp-mail inbox and complete login
+- app is on http://app.ezypie.com/
 
 
 2. SSH SETUP ON WINDOWS MACHINES
