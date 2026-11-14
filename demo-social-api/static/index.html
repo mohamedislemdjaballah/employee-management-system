@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiniSocial — Buggy SPA Challenge</title>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: #f1f5f9; color: #0f172a; }
+    header {
+      background: #1e293b; color: #fff; padding: 16px 24px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    header h1 { margin: 0; font-size: 20px; }
+    header span { font-size: 13px; color: #94a3b8; }
+    .container { max-width: 760px; margin: 24px auto; padding: 0 16px; }
+    .card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .alert {
+      display: none; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;
+      padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; font-size: 14px;
+    }
+    .alert.show { display: block; }
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    input, textarea, select {
+      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px;
+      font-size: 14px; margin-top: 6px; margin-bottom: 10px;
+    }
+    button {
+      background: #2563eb; color: #fff; border: none; border-radius: 8px;
+      padding: 9px 14px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    button:hover { background: #1d4ed8; }
+    button.secondary { background: #e2e8f0; color: #1e293b; }
+    button.secondary:hover { background: #cbd5e1; }
+    button.like-btn { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+    button.like-btn:hover { background: #ffe4e6; }
+    .meta { font-size: 13px; color: #64748b; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .post-content { font-size: 16px; margin: 10px 0 14px; line-height: 1.45; }
+    .comment-box { display: flex; gap: 8px; margin-top: 12px; }
+    .comment-box input { margin: 0; flex: 1; }
+    .hint { font-size: 13px; color: #475569; background: #e0f2fe; border: 1px solid #bae6fd; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>MiniSocial</h1>
+      <span>Decoupled SPA Demo — Press F12 &rarr; Network tab to inspect API calls</span>
+    </div>
+    <div class="row">
+      <label for="activeUser" style="font-size:13px;">Acting as:</label>
+      <select id="activeUser" style="width:auto; margin:0;"></select>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="hint">
+      <strong>Workshop Challenge:</strong> Try creating a post, viewing an author profile, liking a post, and adding a comment. When something fails, open <strong>DevTools (F12) &rarr; Network</strong> and check what the browser sent!
+    </div>
+
+    <div id="errorBanner" class="alert"></div>
+
+    <!-- Create Post Card -->
+    <div class="card">
+      <h3 style="margin-top:0;">Create a New Post</h3>
+      <textarea id="newPostContent" rows="2" placeholder="What's on your mind?"></textarea>
+      <button onclick="createPost()">Publish Post</button>
+    </div>
+
+    <!-- Feed -->
+    <div id="feed">Loading posts...</div>
+  </div>
+
+  <script>
+    const API_BASE = ""; // Same origin as FastAPI
+    let usersMap = {};
+
+    function showError(actionName, status) {
+      const el = document.getElementById("errorBanner");
+      el.innerHTML = `<strong>${actionName} failed (HTTP ${status})!</strong> Open <code>F12 &rarr; Network</code> to inspect the failed request and see what went wrong.`;
+      el.classList.add("show");
+    }
+
+    function clearError() {
+      document.getElementById("errorBanner").classList.remove("show");
+    }
+
+    async function loadInitialData() {
+      const usersRes = await fetch(`${API_BASE}/users`);
+      const users = await usersRes.json();
+      const select = document.getElementById("activeUser");
+      select.innerHTML = "";
+      users.forEach((u) => {
+        usersMap[u.id] = u;
+        const opt = document.createElement("option");
+        opt.value = u.id;
+        opt.textContent = `${u.display_name} (@${u.username})`;
+        // Pre-select Bob (id=2), who already liked Post #1 in seed.py
+        if (u.id === 2) opt.selected = true;
+        select.appendChild(opt);
+      });
+      await loadPosts();
+    }
+
+    async function loadPosts() {
+      const res = await fetch(`${API_BASE}/posts`);
+      const posts = await res.json();
+      const feed = document.getElementById("feed");
+      feed.innerHTML = "";
+
+      posts.forEach((post) => {
+        const author = usersMap[post.user_id] || { display_name: `User #${post.user_id}`, username: "unknown" };
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="meta">
+            <span><strong>${author.display_name}</strong> (@${author.username}) &bull; Post #${post.id}</span>
+            <button class="secondary" onclick="viewProfile(${post.user_id})">View Author Profile</button>
+          </div>
+          <div class="post-content">${post.content}</div>
+          <div class="row">
+            <button class="like-btn" onclick="likePost(${post.id})">&#10084; Like (${post.likes_count})</button>
+            <span style="font-size:13px; color:#64748b;">${post.comments_count} comments</span>
+          </div>
+          <div class="comment-box">
+            <input type="text" id="comment-${post.id}" placeholder="Write a comment..." />
+            <button class="secondary" onclick="addComment(${post.id})">Comment</button>
+          </div>
+        `;
+        feed.appendChild(card);
+      });
+    }
+
+    // BUG 1: Wrong HTTP method (sends PUT instead of POST to /posts) -> 405 Method Not Allowed
+    async function createPost() {
+      clearError();
+      const userId = Number(document.getElementById("activeUser").value);
+      const content = document.getElementById("newPostContent").value || "Hello from MiniSocial!";
+      const res = await fetch(`${API_BASE}/posts`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, content }),
+      });
+      if (!res.ok) return showError("Publish Post", res.status);
+      await loadPosts();
+    }
+
+    // BUG 2: Wrong endpoint URL (singular /user/ instead of /users/) -> 404 Not Found
+    async function viewProfile(userId) {
+      clearError();
+      const res = await fetch(`${API_BASE}/user/${userId}`);
+      if (!res.ok) return showError("View Author Profile", res.status);
+      const user = await res.json();
+      alert(`${user.display_name}: ${user.bio}`);
+    }
+
+    // BUG 3: Wrong JSON field name (sends "message" instead of "text") -> 422 Unprocessable Entity
+    async function addComment(postId) {
+      clearError();
+      const userId = Number(document.getElementById("activeUser").value);
+      const input = document.getElementById(`comment-${postId}`);
+      const textValue = input.value || "Nice post!";
+      const res = await fetch(`${API_BASE}/posts/${postId}/comments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, message: textValue }),
+      });
+      if (!res.ok) return showError("Add Comment", res.status);
+      await loadPosts();
+    }
+
+    // BUG 4: Duplicate Like (Bob #2 already liked Post #1, or clicking Like twice) -> 409 Conflict
+    async function likePost(postId) {
+      clearError();
+      const userId = Number(document.getElementById("activeUser").value);
+      const res = await fetch(`${API_BASE}/posts/${postId}/likes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId }),
+      });
+      if (!res.ok) return showError("Like Post", res.status);
+      await loadPosts();
+    }
+
+    loadInitialData();
+  </script>
+</body>
+</html>

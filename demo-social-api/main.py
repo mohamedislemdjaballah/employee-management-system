@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Annotated, TypeVar
 
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from models import Comment, Like, Post, User
 from schemas import (
     CommentCreate,
@@ -75,6 +77,7 @@ def root():
     return {
         "message": "Welcome to the Social Media Demo REST API!",
         "docs": "/docs",
+        "spa_challenge": "/app",
         "resources": [
             "/users",
             "/posts",
@@ -82,6 +85,12 @@ def root():
             "/posts/{post_id}/likes",
         ],
     }
+
+
+@app.get("/app", include_in_schema=False)
+def buggy_spa():
+    """Serve the intentionally buggy MiniSocial SPA for the Period 1 & 2 debugging challenge."""
+    return FileResponse(Path(__file__).parent / "static" / "index.html")
 
 
 # ---------------------------------------------------------------------------

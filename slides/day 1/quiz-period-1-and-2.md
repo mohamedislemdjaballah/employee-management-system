@@ -1,7 +1,7 @@
 # Day 1 — Periods 1 & 2 Quiz (Votense Ready)
 
 > **Coverage:** Period 1 (Web History & Evolution) & Period 2 (Web Apps Architectures, REST APIs & OpenAPI)  
-> **Votense Types Used:** `Multiple choice` · `Multi-select` · `True or false` · `Type answer`
+> **Votense Types Used:** `Multiple choice` · `Multi-select` · `True or false`
 
 ---
 
@@ -113,19 +113,31 @@
 
 ---
 
-## 4. Type answer *(Typed, matched loosely)*
+## 4. Multiple choice *(One right answer — Core REST Concepts)*
 
 **19. What does "REST" stand for?**
-- **Answer:** `Representational State Transfer` ✅
+- A) Rapid Execution Server Technology
+- B) Remote Endpoint Storage Tool
+- C) **Representational State Transfer** ✅
+- D) Reliable External System Transport
 
 **20. In a REST API, what lightweight text format (`{ "key": "value" }`) is most commonly used to exchange data between client and server?**
-- **Answer:** `JSON` ✅
+- A) CSS
+- B) **JSON (JavaScript Object Notation)** ✅
+- C) SQL
+- D) PNG
 
 **21. If `GET /posts` returns all posts, what URL path should you request to get only Post #42?**
-- **Answer:** `/posts/42` ✅
+- A) `/posts?delete=42`
+- B) `/get-post-42`
+- C) **`/posts/42`** ✅
+- D) `/42/posts/all`
 
 **22. Which HTTP method (verb) is used to update an existing resource (like editing a post)?**
-- **Answer:** `PUT` *(or `PATCH`)* ✅
+- A) `GET`
+- B) `DELETE`
+- C) **`PUT`** ✅
+- D) `HEAD`
 
 ---
 
@@ -151,5 +163,8 @@
 - C) It forgot `Content-Type`
 - D) It sent `user_id` as a boolean
 
-**26. *(Type answer)* When Bob (#2) clicks "Like" on Post #1 (which he already liked), what 3-digit HTTP Status Code does the server return?**
-- **Answer:** `409` ✅ *(409 Conflict — a user can only like a post once)*
+**26. *(Multiple choice)* When Bob (#2) clicks "Like" on Post #1 (which he already liked), what 3-digit HTTP Status Code does the server return?**
+- A) `200 OK`
+- B) `404 Not Found`
+- C) **`409 Conflict`** ✅ *(a user can only like a post once)*
+- D) `500 Internal Server Error`

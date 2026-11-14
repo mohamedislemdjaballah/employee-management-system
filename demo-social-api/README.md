@@ -13,7 +13,7 @@ uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 Once running:
 - **API Base URL:** `http://localhost:8000`
 - **Interactive Swagger Docs:** `http://localhost:8000/docs`
-- **Database:** `social_media.db` (auto-created and seeded with 3 sample users, 3 posts, comments, and likes on first startup)
+- **Database:** `social_media.sqlite` (auto-created and seeded with 3 sample users, 3 posts, comments, and likes on first startup)
 
 ## Endpoints
 

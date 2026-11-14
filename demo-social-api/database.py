@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./social_media.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./social_media.sqlite"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
