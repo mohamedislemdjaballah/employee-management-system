@@ -5,6 +5,7 @@ from typing import Annotated, TypeVar
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from models import Comment, Like, Post, User
 from schemas import (
     CommentCreate,
@@ -50,6 +51,10 @@ app.add_middleware(
 )
 
 
+BASE_DIR = Path(__file__).parent
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+
+
 def _get_or_404(db: Session, model: type[ModelT], item_id: int, label: str) -> ModelT:
     item = db.get(model, item_id)
     if item is None:
@@ -71,26 +76,10 @@ def _serialize_post(post: Post) -> PostOut:
     )
 
 
-@app.get("/", tags=["Health"])
+@app.get("/", include_in_schema=False)
 def root():
-    """Welcome endpoint with quick links."""
-    return {
-        "message": "Welcome to the Social Media Demo REST API!",
-        "docs": "/docs",
-        "spa_challenge": "/app",
-        "resources": [
-            "/users",
-            "/posts",
-            "/posts/{post_id}/comments",
-            "/posts/{post_id}/likes",
-        ],
-    }
-
-
-@app.get("/app", include_in_schema=False)
-def buggy_spa():
-    """Serve the intentionally buggy MiniSocial SPA for the Period 1 & 2 debugging challenge."""
-    return FileResponse(Path(__file__).parent / "static" / "index.html")
+    """Serve the MiniSocial SPA at the root path."""
+    return FileResponse(BASE_DIR / "static" / "index.html")
 
 
 # ---------------------------------------------------------------------------

@@ -42,15 +42,27 @@
     .comment-box { display: flex; gap: 8px; margin-top: 12px; }
     .comment-box input { margin: 0; flex: 1; }
     .hint { font-size: 13px; color: #475569; background: #e0f2fe; border: 1px solid #bae6fd; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; }
+    .nav-link {
+      display: inline-block; background: #0f766e; color: #fff; text-decoration: none;
+      padding: 8px 13px; border-radius: 8px; font-size: 13px; font-weight: 600;
+    }
+    .nav-link:hover { background: #115e59; }
+    details.diagrams-box summary {
+      cursor: pointer; font-weight: 700; font-size: 15px; color: #1e293b; list-style: none;
+    }
+    details.diagrams-box img {
+      width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 12px;
+    }
   </style>
 </head>
 <body>
   <header>
     <div>
       <h1>MiniSocial</h1>
-      <span>Decoupled SPA Demo — Press F12 &rarr; Network tab to inspect API calls</span>
+      <span>Decoupled SPA Demo — Right-click &rarr; Inspect &rarr; Network tab to inspect API calls</span>
     </div>
     <div class="row">
+      <a class="nav-link" href="/docs" target="_blank" rel="noopener">Swagger Docs (/docs) &nearr;</a>
       <label for="activeUser" style="font-size:13px;">Acting as:</label>
       <select id="activeUser" style="width:auto; margin:0;"></select>
     </div>
@@ -58,8 +70,15 @@
 
   <div class="container">
     <div class="hint">
-      <strong>Workshop Challenge:</strong> Try creating a post, viewing an author profile, liking a post, and adding a comment. When something fails, open <strong>DevTools (F12) &rarr; Network</strong> and check what the browser sent!
+      <strong>Workshop Challenge:</strong> Try creating a post, viewing an author profile, liking a post, and adding a comment. When something fails, <strong>Right-click anywhere &rarr; Inspect &rarr; Network</strong> and check what the browser sent (compare with <a href="/docs" target="_blank" rel="noopener">/docs</a>)!
     </div>
+
+    <details class="card diagrams-box">
+      <summary>&#128506; View API &amp; Resource Diagrams (Click to expand)</summary>
+      <p style="font-size:13px; color:#475569; margin:8px 0 4px;">Use these diagrams to verify how resources and REST endpoints are connected:</p>
+      <img src="/static/rest-endpoints-flow.png" alt="How Resource Links Map to REST Endpoints" />
+      <img src="/static/resource-relationships.png" alt="Social Media REST API Resource Relationships" />
+    </details>
 
     <div id="errorBanner" class="alert"></div>
 
@@ -80,7 +99,7 @@
 
     function showError(actionName, status) {
       const el = document.getElementById("errorBanner");
-      el.innerHTML = `<strong>${actionName} failed (HTTP ${status})!</strong> Open <code>F12 &rarr; Network</code> to inspect the failed request and see what went wrong.`;
+      el.innerHTML = `<strong>${actionName} failed (HTTP ${status})!</strong> <strong>Right-click &rarr; Inspect &rarr; Network</strong> to inspect the failed request and see what went wrong.`;
       el.classList.add("show");
     }
 
