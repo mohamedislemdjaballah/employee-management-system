@@ -1,0 +1,6 @@
+Host ems-vps
+    HostName 16.171.30.51
+    User ubuntu
+    IdentityFile /home/younes/.ssh/ems-demo-app.pem
+    Port 22
+    IdentitiesOnly yes
