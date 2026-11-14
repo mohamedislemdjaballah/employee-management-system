@@ -1,0 +1,31 @@
+============================================================
+PRESENTER SETUP GUIDE — MACHINE & WORKSHOP PREPARATION
+============================================================
+
+1. POSTMAN SIGNUP (Temporary Email)
+------------------------------------------------------------
+- Open website: https://temp-mail.org/en/
+- Sign up to Postman using the temporary email address from temp-mail.org
+- Verify the email via the temp-mail inbox and complete login
+
+
+2. SSH SETUP ON WINDOWS MACHINES
+------------------------------------------------------------
+a) Install OpenSSH Client (run in PowerShell as Administrator):
+
+if (-not (Get-Command ssh -ErrorAction SilentlyContinue)) {
+    Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+}
+
+b) Add SSH key and config files to each machine:
+- Copy the SSH private key and `config` file into the user's `.ssh` folder:
+  - Windows path: %USERPROFILE%\.ssh\
+- Test the SSH connection from terminal:
+  ssh ems-vps
+
+
+3. VS CODE EXTENSIONS
+------------------------------------------------------------
+Install the following extensions in VS Code on each machine:
+- Remote - SSH (ms-vscode-remote.remote-ssh)
+- REST Client (humao.rest-client)
