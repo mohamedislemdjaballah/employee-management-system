@@ -45,10 +45,10 @@
 
 ### Slide 4: Why Do Enterprises Love Java?
 - **Slide Points:**
-  - **1. Rock-Solid Stability & Backward Compatibility:** Code written 10 years ago still runs on modern Java today
+  - **1. Stability & Backward Compatibility:** Code written 10 years ago still runs on modern Java today
   - **2. Strict Safety (Catches Bugs Early):** The compiler catches typos and wrong data types *before* the app ever goes live
   - **3. Massive Performance & Scale:** Powers banking systems, **Netflix**, **Amazon**, **LinkedIn**, and **Uber** services
-  - **4. Huge Ecosystem & Talent Pool:** Millions of developers and battle-tested libraries for security, payments, and databases
+  - **4. Huge Ecosystem & Talent Pool:** Widely taught in schools and universities for **Object-Oriented Programming (OOP)**—almost any university tech student already knows Java, making hiring and onboarding much easier
 - **Talking Points:**
   - *(0:17–0:24)* Why do banks, airlines, and large companies pick Java over newer languages? Because when an app handles salaries, invoices, or millions of users, **predictability and long-term support** matter more than hype.
 
@@ -57,12 +57,16 @@
 ### Slide 5: How Java Runs — Source Code → Bytecode → JVM
 - **Slide Points:**
   - **Step 1 — Write Code (`Employee.java`):** Human-readable Java source file
-  - **Step 2 — Compile (`javac`):** Checks for errors and translates it into **Bytecode (`Employee.class`)**
-  - **Step 3 — Run on the JVM (Java Virtual Machine):**
-    - The **JVM** is a universal translator installed on Windows, macOS, or Linux
+  - **Step 2 — Compile (`javac Employee.java`):** Checks for errors and translates it into **Bytecode (`Employee.class`)**
+  - **Step 3 — Run on the JVM (`java Employee` or `java -jar app.jar`):**
+    - The **JVM (Java Virtual Machine)** is a universal translator installed on Windows, macOS, or Linux
     - Same `.class` / `.jar` file runs identically on a developer's laptop and a Linux cloud server!
+  - **`.class` vs. `.jar` (What's the Difference?):**
+    - **`.class`:** One single compiled Java file.
+    - **`.jar` (Java Archive):** A ZIP-style bundle packaging **all `.class` files + libraries** into one runnable file (`java -jar app.jar`).
 - **Talking Points:**
   - *(0:24–0:32)* Analogy: Bytecode is like **sheet music**, and the **JVM** is the **musician** on Windows, Mac, or Linux who knows how to read that exact sheet music and play it anywhere.
+  - Point out that when deploying a Spring Boot backend, teams don't copy hundreds of `.class` files—they package everything into a single `.jar` file and run `java -jar app.jar`.
 
 ---
 
@@ -93,44 +97,80 @@
 
 ---
 
-### Slide 8: What Is a "Framework" & Why Not Plain Java?
+### Slide 8: Java Packages vs. Frameworks
 - **Slide Points:**
-  - **Plain Java** gives you the language—not a web server, JSON converter, or database connector
-  - **Writing everything from scratch** would mean manually handling:
-    - Raw network sockets & HTTP parsing
-    - Converting Java objects ↔ JSON text
-    - Managing database connections & security
-  - **A Framework** gives you the pre-built foundation, plumbing, and wiring so developers focus purely on **business features**.
+  - **What Is a Java Package?**
+    - A **folder / namespace** that groups related Java classes together so files stay organized and names don't clash (e.g., `com.company.ems.service`).
+    - Built-in & third-party examples: `java.util` (Lists/Maps), `java.time` (Dates), **Jackson** (JSON), **PDFBox** (PDFs).
+  - **Package / Library vs. Framework (Key Difference):**
+    - **Package / Library (A Tool *You* Call):** You control the program and call a package when you need one specific job (e.g., formatting a date or generating a PDF).
+    - **Framework (The Skeleton That Calls *Your* Code):** Gives you the entire app structure, web server, and wiring—you plug your code into it (e.g., **Spring Boot**, **FastAPI**, **Angular**).
+- **Talking Points:**
+  - *(0:46–0:52)* Analogy: A **package/library** is like buying a **microwave** for your kitchen (you decide when to press Start). A **framework** is like renting a **fully equipped commercial kitchen** with rules for where every station goes!
+
+---
+
+### Slide 9: What Is a "Framework" & Why Not Plain Java?
+- **Slide Points:**
+  - **Plain Java** gives you the core language—not the production plumbing every web server needs
+  - **Without a Framework, You Would Build From Scratch:**
+    - **HTTP Server & Routing:** Listening on ports, parsing URLs, headers, and query params
+    - **JSON Serialization & Validation:** Converting Java objects ↔ JSON and checking required fields
+    - **Database Drivers:** connect to databases and make queries.
+    - **Security & Auth:** Login, change passwords, check permissions.
+    - **Caching & Performance:** Storing frequent results in memory to save time.
+    - **Logging & periodic Jobs:** Tracking errors and running nightly background tasks
+  - **A Framework** gives you all of this pre-built plumbing so developers focus purely on **business features**.
 - **Talking Points:**
   - *(0:46–0:53)* Analogy: Plain Java is like lumber and nails; a framework is a pre-framed house with electricity and plumbing already installed.
 
 ---
 
-### Slide 9: Meet Spring & Spring Boot
+### Slide 10: Popular Java Frameworks & What They Are Used For
 - **Slide Points:**
-  - **Spring Framework (2003):** The most popular Java ecosystem for building enterprise applications
-  - **Spring Boot (2014):** The modern, fast way to use Spring:
-    - **Zero-Hassle Setup:** Auto-configures sensible defaults out of the box
-    - **Embedded Web Server (Tomcat):** Packages the entire backend into one runnable `.jar` file—no external server setup needed
-    - **Production-Ready:** Built-in health checks, logging, and metrics
+  - **Web & Testing:**
+    - **Spring Boot:** The **#1** framework for building enterprise **REST APIs**, web backends, and microservices
+    - **Micronaut:** Lightweight framework built for **microservices**
+    - **Jakarta EE (formerly Java EE):** Traditional framework used in large banking and government systems
+    - **JUnit:** **Automated testing** framework used to verify that backend code works as expected
+  - **Desktop & Mobile:**
+    - **JavaFX & Swing:** Build **cross-platform desktop apps** (internal tools, POS)
+    - **Android SDK:** **Android mobile apps** are built using Java (Kotlin)
+- **Talking Points:**
+  - *(0:53–0:58)* Java isn't just for servers! **Android** made Java one of the biggest mobile languages in history, and **JavaFX/Swing** still power desktop tools—including JetBrains IDEs like IntelliJ! While **Spring Boot** dominates web backends, it helps to recognize these names when you hear engineers mention them in meetings.
+
+---
+
+### Slide 11: Meet Spring & Spring Boot
+- **Slide Points:**
+  - **Spring Framework (2003):** Great Java Framework, but required lots of manual setup
+  - **Spring Boot (2014):** Adds ready-to-drive convenience on top of Spring:
+    - **Smart Defaults:** Replaces hundreds of lines of manual setup with automatic configuration
+    - **Built-In Web Server:** Includes a mini web server inside the app—no separate server installation needed
+    - **Ready-Made "Starter Packs":** Add one item like *"Web"* or *"Database"* instead of hunting down 15 compatible libraries
+    - **One Simple Settings File:** Change ports, database URLs, or passwords in one place (`application.properties`)
+    - **Built-In Health & Monitoring:** Instant status checks so cloud servers know the app is alive and healthy
 - **Talking Points:**
   - *(0:53–1:00)* Think of **Spring** as the engine and **Spring Boot** as the complete car with keys in the ignition. Almost every new Java backend today is built with **Spring Boot**.
 
 ---
 
-### Slide 10: Managing Dependencies — Maven (`pom.xml`) & Gradle
+### Slide 12: Managing Dependencies — Maven (`pom.xml`) & Gradle
 - **Slide Points:**
-  - Modern apps rely on dozens of open-source libraries (Web, Database, Security)
-  - **Build Tools (Maven or Gradle)** act like a **recipe & shopping list**:
-    - Developers list what they need in **`pom.xml`** (e.g., `spring-boot-starter-web`, `postgresql`)
-    - Maven automatically downloads the exact versions and packages the app into a `.jar` file
-  - **Spring Initializr (`start.spring.io`):** Web tool to generate a fresh Spring Boot project in 10 seconds!
+  - **Why Not Just Run `javac` and `java` Directly?**
+    - `javac` / `java` works great for **1 or 2 simple files**, but a real Spring Boot app has **dozens of files and 50+ external libraries**
+    - Doing that manually would mean downloading every `.jar` file by hand, fixing version clashes, and typing huge compile commands
+  - **What Maven (`mvn`) Does in One Command:**
+    - Reads your shopping list in **`pom.xml`** (e.g., `spring-boot-starter-web`, `postgresql`)
+    - Automatically downloads all libraries (and the libraries *they* depend on)
+    - Compiles every file, runs your tests, and bundles everything into one runnable `.jar` (`mvn spring-boot:run` or `mvn package`)
+  - **Spring Initializr (`start.spring.io`):** Web tool to generate a fresh Maven/Gradle project in 10 seconds!
 - **Talking Points:**
-  - *(1:00–1:07)* Connect to what they saw in Day 1 (`uv` / `pyproject.toml` in Python): in Java, **Maven (`pom.xml`)** or **Gradle (`build.gradle`)** plays that exact same dependency-manager role.
+  - *(1:00–1:07)* Connect to what they saw in Day 1 (`uv` / `pyproject.toml` in Python): in Java, **Maven (`pom.xml`)** or **Gradle (`build.gradle`)** plays that exact same project-manager role so developers never have to juggle `.jar` files manually.
 
 ---
 
-### Slide 11: Inside a Spring Boot App — The 3-Layer Pattern
+### Slide 13: Inside a Spring Boot App — The 3-Layer Pattern
 - **Slide Points:**
   - Almost every Spring Boot backend organizes code into **3 clean layers**:
     1. **Controller Layer (The Receptionist):**
@@ -144,7 +184,7 @@
 
 ---
 
-### Slide 12: Layer 1 — The Controller (`@RestController`)
+### Slide 14: Layer 1 — The Controller (`@RestController`)
 - **Slide Points:**
   - **What It Looks Like in Real Code:**
     ```java
@@ -169,7 +209,7 @@
 
 ---
 
-### Slide 13: Layer 2 — The Service (`@Service`)
+### Slide 15: Layer 2 — The Service (`@Service`)
 - **Slide Points:**
   - **Why Not Put Everything in the Controller?**
     - Controllers should only care about **HTTP** (URLs, status codes)
@@ -183,7 +223,7 @@
 
 ---
 
-### Slide 14: Layer 3 — The Repository & JPA (`@Repository` / `@Entity`)
+### Slide 16: Layer 3 — The Repository & JPA (`@Repository` / `@Entity`)
 - **Slide Points:**
   - **The Challenge:** Java thinks in **Objects** (`Employee`), while PostgreSQL thinks in **Tables & Rows** (`employees`)
   - **The Bridge — ORM (Object-Relational Mapping) via Spring Data JPA:**
@@ -198,7 +238,7 @@
 
 ---
 
-### Slide 15: Magic Superpower #1 — Annotations (`@...`)
+### Slide 17: Spring Boot Annotations (`@...`)
 - **Slide Points:**
   - You've seen words starting with **`@`** everywhere in Spring Boot:
     - `@SpringBootApplication` → *"Start the whole app here"*
@@ -211,19 +251,7 @@
 
 ---
 
-### Slide 16: Magic Superpower #2 — Dependency Injection (DI)
-- **Slide Points:**
-  - **Without DI:** Every class has to manually create and configure the tools it needs (`new DatabaseConnection()`, `new Service()`)
-  - **With Spring Boot DI:**
-    - Spring creates and manages the Controller, Service, and Repository for you
-    - When `EmployeeController` needs `EmployeeService`, Spring **injects (hands)** it automatically!
-  - **Analogy:** A chef doesn't grow the vegetables or build the oven—the kitchen hands them prepped ingredients so they can focus on cooking.
-- **Talking Points:**
-  - *(1:45–1:50)* Keep this high-level: "Dependency Injection" sounds intimidating, but it simply means **Spring Boot connects the Lego bricks for you** automatically.
-
----
-
-### Slide 17: Configuration (`application.properties` / `application.yml`)
+### Slide 18: Configuration (`application.properties` / `application.yml`)
 - **Slide Points:**
   - Instead of hardcoding passwords or ports inside Java code, Spring Boot uses **one central config file**:
     ```properties
@@ -234,11 +262,11 @@
     ```
   - **Why It Matters:** Same `.jar` file can run on a developer's laptop, a staging server, or production simply by swapping the config/environment variables!
 - **Talking Points:**
-  - *(1:50–1:54)* Point out `server.port=8080` and the database URL—they'll recognize these immediately when we connect to PostgreSQL in Period 2 and run Docker on Day 4.
+  - *(1:45–1:52)* Point out `server.port=8080` and the database URL—they'll recognize these immediately when we connect to PostgreSQL in Period 2 and run Docker on Day 4.
 
 ---
 
-### Slide 18: FastAPI (Day 1) vs. Spring Boot (Day 2) — Same Patterns!
+### Slide 19: FastAPI (Day 1) vs. Spring Boot (Day 2) — Same Patterns!
 - **Slide Points:**
   - **Yesterday's Python/FastAPI Demo** and **Today's Java/Spring Boot** follow the exact same blueprint:
     - **Route / Endpoint:** `@app.get("/posts")` ↔ `@GetMapping("/posts")`
@@ -246,16 +274,16 @@
     - **Database ORM:** SQLAlchemy `Model` ↔ Spring Data JPA `@Entity`
     - **Auto API Docs:** FastAPI `/docs` ↔ Springdoc OpenAPI (`/swagger-ui.html`)
 - **Talking Points:**
-  - *(1:54–1:57)* This slide is an "aha!" moment: once you understand REST + 3-layer architecture in one stack, every other modern backend stack looks familiar.
+  - *(1:52–1:56)* This slide is an "aha!" moment: once you understand REST + 3-layer architecture in one stack, every other modern backend stack looks familiar.
 
 ---
 
-### Slide 19: Quick Recap & Bridge to Period 2
+### Slide 20: Quick Recap & Bridge to Period 2
 - **Slide Points:**
   - **What We Learned:**
     - **Java + JVM:** Strongly typed, reliable enterprise language that runs anywhere
-    - **Spring Boot:** Turns Java into a ready-to-run REST API with embedded Tomcat, Annotations (`@`), and Dependency Injection
+    - **Spring Boot:** Turns Java into a ready-to-run REST API with a built-in web server, starter packs, and Annotations (`@`)
     - **3-Layer Backend:** **Controller** (HTTP/JSON) → **Service** (Business Rules) → **Repository** (Database via JPA)
   - **Coming Up Next (Period 2 — 10:00 to 12:00):** *PostgreSQL & Data Modeling* — stepping into the **Data Layer** to see how tables, primary/foreign keys, and relationships actually work!
 - **Talking Points:**
-  - *(1:57–2:00)* Wrap up with Q&A and transition smoothly into Period 2 on PostgreSQL and data modeling.
+  - *(1:56–2:00)* Wrap up with Q&A and transition smoothly into Period 2 on PostgreSQL and data modeling.
