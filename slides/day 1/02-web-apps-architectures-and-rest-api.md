@@ -66,7 +66,7 @@
 ### Slide 4: Separation of Concerns — How the 3 Layers Interact
 - **Slide Points:**
   - **Why We Separate These 3 Responsibilities:**
-    - **Security:** The Browser (Presentation Layer) should **never** talk directly to the Database (Data Layer)—otherwise any user could open Chrome DevTools (`F12`) and delete or view everyone's salary!
+    - **Security:** The Browser (Presentation Layer) should **never** talk directly to the Database (Data Layer)—otherwise any user could open Chrome DevTools (Right-click → **Inspect**) and delete or view everyone's salary!
     - **The Backend Acts as the Gatekeeper:** All requests from the Presentation Layer must pass through the Business Logic Layer first.
   - **Layer Interaction Diagram:**
     ```text

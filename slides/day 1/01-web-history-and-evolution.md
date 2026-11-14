@@ -179,7 +179,7 @@
     1. **Networking Layer:** Sends HTTP requests and receives HTTP responses.
     2. **Rendering Engine (e.g., Blink, WebKit, Gecko):** Reads **HTML** and **CSS** to calculate layouts and paint pixels on your monitor.
     3. **JavaScript Engine (e.g., Chrome's V8):** Executes **JavaScript** code at high speed to handle clicks, animations, and background logic.
-    4. **Browser Storage & DevTools:** Stores login cookies/session tokens and provides built-in inspection tools (`F12`).
+    4. **Browser Storage & DevTools:** Stores login cookies/session tokens and provides built-in inspection tools (Right-click → **Inspect**).
 - **Talking Points (Speaker Notes):**
   - *[Target Pacing: 09:00 – 09:25 for Part 2 (Slides 8–12)]*
   - When a server sends back a response, it's just plain text over a wire. The browser is the engine that turns that raw text into buttons, tables, colors, and interactive screens.
