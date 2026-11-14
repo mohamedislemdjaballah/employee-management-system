@@ -22,7 +22,7 @@
 **3. When you click "Comment", it fails with `422 Unprocessable Entity`. What did the SPA send wrong in the JSON body?**
 - A) **It sent `"message"` instead of `"text"` (check `/docs`!)** ✅
 - B) It sent XML instead of JSON
-- C) It forgot `Content-Type`
+- C) It forgot `Content-Type` Header
 - D) It sent `user_id` as a boolean
 
 **4. When Bob (#2) clicks "Like" on Post #1 (which he already liked), what 3-digit HTTP Status Code does the server return?**

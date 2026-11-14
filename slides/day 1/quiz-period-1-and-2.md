@@ -27,7 +27,7 @@
 
 **4. Why did TypeScript become so popular for modern frontend web apps?**
 - A) It replaces HTML completely
-- B) It runs only on SQLite databases
+- B) It's Faster than JavaScript
 - C) **It adds strict type-checking on top of JavaScript to catch bugs before code runs** ✅
 - D) It is the only language Chrome understands
 
@@ -37,7 +37,7 @@
 - C) Browsers stopped supporting images
 - D) Every website had to be written in C
 
-**6. Which HTTP Status Code range means "Success" (for example, `200 OK` or `201 Created`)?**
+**6. Which HTTP Status Code range means "Success"?**
 - A) **2xx** ✅
 - B) 3xx
 - C) 4xx
@@ -59,9 +59,9 @@
 - A) The physical server rack in a data center
 - B) **The readable snapshot of data (usually JSON) sent between client and server** ✅
 - C) The company logo on the homepage
-- D) The SQLite file stored on disk
+- D) database files stored on disk
 
-**10. Which HTTP method is used in a REST API to CREATE a new resource (like publishing a new post)?**
+**10. Which HTTP method is used in a REST API to CREATE a new resource?**
 - A) `GET`
 - B) **`POST`** ✅
 - C) `DELETE`
@@ -87,25 +87,25 @@
 - A) **Web and mobile apps can share the exact same backend API** ✅
 - B) **Frontend and backend teams can work independently** ✅
 - C) You never need a database anymore
-- D) **You can call or test the backend API directly without a browser (e.g., Postman or `curl`)** ✅
+- D) **You can call or test the backend API directly without a browser (e.g., Postman)** ✅
 
 **14. What can you do with an OpenAPI Specification file?**
-- A) **Power interactive API documentation (`/docs` Swagger UI)** ✅
+- A) **Get interactive API documentation (`/docs` Swagger UI)** ✅
 - B) **Import it into Postman to auto-generate requests** ✅
-- C) **Generate client SDK code (e.g., Angular/TypeScript, Python) and starter server stubs** ✅
+- C) **Generate client code (e.g., Angular/TypeScript, Python) and server code** ✅
 - D) Replace CSS styling in the browser
 
 ---
 
 ## 3. True or false *(Two answers)*
 
-**15. In a REST API, "State" means the physical server hardware where the code runs.**
+**15. In a REST API, "State" means the physical server where the code runs.**
 - **False** ✅ *(State means the current data/values of a resource in the database right now.)*
 
 **16. With a Decoupled architecture, both a web browser app and a mobile app can talk to the exact same Backend REST API.**
 - **True** ✅
 
-**17. An OpenAPI specification is written in a standard JSON or YAML format.**
+**17. An OpenAPI specification can be written in a JSON or YAML format.**
 - **True** ✅
 
 **18. In a REST API, `GET` requests are used to delete records from the database.**
@@ -121,15 +121,15 @@
 - C) **Representational State Transfer** ✅
 - D) Reliable External System Transport
 
-**20. In a REST API, what lightweight text format (`{ "key": "value" }`) is most commonly used to exchange data between client and server?**
+**20. In a REST API, what format (`{ "key": "value" }`) is used to exchange data between client and server?**
 - A) CSS
 - B) **JSON (JavaScript Object Notation)** ✅
 - C) SQL
 - D) PNG
 
 **21. If `GET /posts` returns all posts, what URL path should you request to get only Post #42?**
-- A) `/posts?delete=42`
-- B) `/get-post-42`
+- A) `/posts?id=42`
+- B) `/get-post/42`
 - C) **`/posts/42`** ✅
 - D) `/42/posts/all`
 
