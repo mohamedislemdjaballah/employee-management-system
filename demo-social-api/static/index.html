@@ -47,6 +47,8 @@
       padding: 8px 13px; border-radius: 8px; font-size: 13px; font-weight: 600;
     }
     .nav-link:hover { background: #115e59; }
+    .nav-link.quiz { background: #7c3aed; }
+    .nav-link.quiz:hover { background: #6d28d9; }
     details.diagrams-box summary {
       cursor: pointer; font-weight: 700; font-size: 15px; color: #1e293b; list-style: none;
     }
@@ -62,6 +64,7 @@
       <span>Decoupled SPA Demo — Right-click &rarr; Inspect &rarr; Network tab to inspect API calls</span>
     </div>
     <div class="row">
+      <a class="nav-link quiz quiz-link" href="#TODO_PASTE_VOTENSE_URL" target="_blank" rel="noopener">Answer Quiz (Votense) &nearr;</a>
       <a class="nav-link" href="/docs" target="_blank" rel="noopener">Swagger Docs (/docs) &nearr;</a>
       <label for="activeUser" style="font-size:13px;">Acting as:</label>
       <select id="activeUser" style="width:auto; margin:0;"></select>
@@ -70,7 +73,7 @@
 
   <div class="container">
     <div class="hint">
-      <strong>Workshop Challenge:</strong> Try creating a post, viewing an author profile, liking a post, and adding a comment. When something fails, <strong>Right-click anywhere &rarr; Inspect &rarr; Network</strong> and check what the browser sent (compare with <a href="/docs" target="_blank" rel="noopener">/docs</a>)!
+      <strong>Workshop Challenge:</strong> Try creating a post, viewing an author profile, liking a post, and adding a comment. When something fails, <strong>Right-click anywhere &rarr; Inspect &rarr; Network</strong>, compare with <a href="/docs" target="_blank" rel="noopener">/docs</a>, and submit your answers in the <a class="quiz-link" href="#TODO_PASTE_VOTENSE_URL" target="_blank" rel="noopener"><strong>Votense Quiz &nearr;</strong></a>!
     </div>
 
     <details class="card diagrams-box">
@@ -94,6 +97,9 @@
   </div>
 
   <script>
+    const QUIZ_URL = "#TODO_PASTE_VOTENSE_URL";
+    document.querySelectorAll(".quiz-link").forEach((el) => { el.href = QUIZ_URL; });
+
     const API_BASE = ""; // Same origin as FastAPI
     let usersMap = {};
 
