@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spring Boot Demo Setup Guide</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-soft: #eff6ff;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --warn-bg: #fffbeb;
+      --warn-border: #f59e0b;
+      --accent: #16a34a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #b2f6cc, #16a34a);
+      color: #ffffff;
+      padding: 32px 28px;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px rgba(22, 163, 74, 0.22);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 1.85rem;
+      line-height: 1.25;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 1.02rem;
+    }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.3rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+    }
+
+    h3 {
+      margin: 20px 0 10px;
+      font-size: 1.05rem;
+      color: #1e293b;
+    }
+
+    p { margin: 0 0 12px; color: var(--muted); }
+    ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--muted); }
+    li { margin-bottom: 6px; }
+
+    a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.9em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .callout {
+      background: var(--warn-bg);
+      border-left: 4px solid var(--warn-border);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 14px 0;
+      color: #78350f;
+      font-size: 0.95rem;
+    }
+
+    .screenshot {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin: 14px 0 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+      display: block;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 10px 0 18px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 0;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.22); }
+
+    /* Simple syntax highlighting classes */
+    .kw { color: #c084fc; }   /* keywords */
+    .ty { color: #38bdf8; }   /* types & annotations */
+    .st { color: #86efac; }   /* strings */
+    .cm { color: #94a3b8; }   /* comments */
+    .nu { color: #fbbf24; }   /* numbers */
+
+    .exercise {
+      border: 2px solid #bfdbfe;
+      background: linear-gradient(to bottom, #eff6ff, #ffffff 90px);
+    }
+
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .checklist input[type="checkbox"] {
+      margin-top: 4px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    details.starter {
+      margin: 16px 0;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      background: #ffffff;
+      padding: 12px 16px;
+    }
+
+    details.starter summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--primary);
+      user-select: none;
+    }
+
+    details.starter[open] summary {
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Spring Boot Demo Setup Guide</h1>
+      <p>From <strong>start.spring.io</strong> to a running REST API using a normal Java <code>ArrayList</code> (no database).</p>
+    </header>
+
+    <!-- STEP 1 -->
+    <section class="card">
+      <h2><span class="badge">Step 1</span> Generate the Project on start.spring.io</h2>
+      <p>Open <a href="https://start.spring.io/" target="_blank" rel="noopener">https://start.spring.io/</a> and choose these settings:</p>
+      <img src="../../spring-setup.png" alt="Spring Initializr Setup" class="screenshot" />
+      <table>
+        <thead>
+          <tr><th>Setting</th><th>Value to Select</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Project</strong></td><td><strong>Maven</strong></td><td>Manages dependencies and builds the project (<code>pom.xml</code>)</td></tr>
+          <tr><td><strong>Language</strong></td><td><strong>Java</strong></td><td>Programming language</td></tr>
+          <tr><td><strong>Spring Boot</strong></td><td>Latest stable (not <code>SNAPSHOT</code>)</td><td>Stable release</td></tr>
+          <tr><td><strong>Group</strong></td><td><code>com.example</code></td><td>Base package</td></tr>
+          <tr><td><strong>Artifact</strong></td><td><code>demo</code></td><td>Project folder &amp; app name</td></tr>
+          <tr><td><strong>Package name</strong></td><td><code>com.example.demo</code></td><td>Root Java package</td></tr>
+          <tr><td><strong>Packaging</strong></td><td><strong>Jar</strong></td><td>Standard runnable Spring Boot app</td></tr>
+          <tr><td><strong>Java</strong></td><td><code>25</code> (or your installed JDK, e.g. <code>21</code>)</td><td>Matches your local JDK</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Dependencies to Add</h3>
+      <ol>
+        <li><strong>Spring Web</strong> — <strong>Required</strong> (gives you <code>@RestController</code>, HTTP endpoints, JSON conversion, and the built-in Tomcat server on port <code>8080</code>).</li>
+        <li><strong>SpringDoc OpenAPI</strong> — Gives you interactive Swagger UI docs at <code>/swagger-ui.html</code> to test your endpoints in the browser.</li>
+        <li><strong>Spring Boot DevTools</strong> — <em>Optional</em> (auto-restarts the app when you save changes).</li>
+      </ol>
+      <div class="callout">
+        <strong>Important:</strong> Do <strong>NOT</strong> add Spring Data JPA or any database driver. We store data in an <code>ArrayList</code> in memory.
+      </div>
+      <p>Click <strong>GENERATE</strong> and extract the downloaded <code>demo.zip</code> file.</p>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="card">
+      <h2><span class="badge">Step 2</span> Import the Project into Eclipse</h2>
+      <p>In Eclipse, import the folder from the UI (do not use right-click &ldquo;Open with&rdquo;):</p>
+      <ol>
+        <li>Open <strong>Eclipse</strong> &rarr; <strong>File</strong> &rarr; <strong>Import...</strong></li>
+        <li>Expand <strong>Maven</strong> &rarr; select <strong>Existing Maven Projects</strong> &rarr; click <strong>Next</strong>.</li>
+        <li>Click <strong>Browse...</strong> next to <strong>Root Directory</strong> and select the extracted <code>demo</code> folder (the folder containing <code>pom.xml</code>).</li>
+        <li>Make sure <code>/pom.xml</code> is checked, then click <strong>Finish</strong>.</li>
+        <li>Wait a few seconds (bottom-right progress bar) for Maven to download dependencies.</li>
+      </ol>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="card">
+      <h2><span class="badge">Step 3</span> Project Structure</h2>
+      <p>Inside <code>src/main/java/com/example/demo/</code>, we keep the structure simple with <strong>2 folders</strong>:</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code>src/main/java/com/example/demo/
+├── DemoApplication.java             <span class="cm">// Entry point (main) + holds our ArrayLists</span>
+├── model/                           <span class="cm">// Plain Java classes (data shapes)</span>
+│   ├── Employee.java                <span class="cm">// Guided Example 1</span>
+│   ├── Department.java              <span class="cm">// Guided Example 2</span>
+│   └── Task.java                    <span class="cm">// Student Exercise</span>
+└── controller/                      <span class="cm">// REST API endpoints (@RestController)</span>
+    ├── EmployeeController.java      <span class="cm">// Guided Example 1 (/api/employees)</span>
+    ├── DepartmentController.java    <span class="cm">// Guided Example 2 (/api/departments)</span>
+    └── TaskController.java          <span class="cm">// Student Exercise (/api/tasks)</span></code></pre>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="card">
+      <h2><span class="badge">Step 4</span> Create the Models (<code>model/</code>)</h2>
+      <p>We use regular Java classes with <code>public</code> fields and two constructors (an empty constructor for JSON <code>POST</code> requests, and a full constructor for creating sample items).</p>
+
+      <h3>1. <code>model/Employee.java</code></h3>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">package</span> com.example.demo.model;
+
+<span class="kw">public class</span> <span class="ty">Employee</span> {
+    <span class="kw">public int</span> id;
+    <span class="kw">public</span> <span class="ty">String</span> name;
+    <span class="kw">public</span> <span class="ty">String</span> role;
+    <span class="kw">public int</span> departmentId;
+
+    <span class="kw">public</span> Employee() {
+    }
+
+    <span class="kw">public</span> Employee(<span class="kw">int</span> id, <span class="ty">String</span> name, <span class="ty">String</span> role, <span class="kw">int</span> departmentId) {
+        <span class="kw">this</span>.id = id;
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.role = role;
+        <span class="kw">this</span>.departmentId = departmentId;
+    }
+}</code></pre>
+      </div>
+
+      <h3>2. <code>model/Department.java</code></h3>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">package</span> com.example.demo.model;
+
+<span class="kw">public class</span> <span class="ty">Department</span> {
+    <span class="kw">public int</span> id;
+    <span class="kw">public</span> <span class="ty">String</span> name;
+    <span class="kw">public</span> <span class="ty">String</span> location;
+
+    <span class="kw">public</span> Department() {
+    }
+
+    <span class="kw">public</span> Department(<span class="kw">int</span> id, <span class="ty">String</span> name, <span class="ty">String</span> location) {
+        <span class="kw">this</span>.id = id;
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.location = location;
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="card">
+      <h2><span class="badge">Step 5</span> Store &amp; Pre-Fill the Lists in <code>DemoApplication.java</code></h2>
+      <p>Open <code>DemoApplication.java</code> and add <code>public static ArrayList&lt;...&gt;</code> fields so all sample data starts in one place inside <code>main()</code>:</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">package</span> com.example.demo;
+
+<span class="kw">import</span> com.example.demo.model.Department;
+<span class="kw">import</span> com.example.demo.model.Employee;
+<span class="kw">import</span> org.springframework.boot.SpringApplication;
+<span class="kw">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;
+
+<span class="kw">import</span> java.util.ArrayList;
+
+<span class="ty">@SpringBootApplication</span>
+<span class="kw">public class</span> <span class="ty">DemoApplication</span> {
+
+    <span class="kw">public static</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Employee</span>&gt; employees = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+    <span class="kw">public static</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Department</span>&gt; departments = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+
+    <span class="kw">public static void</span> main(<span class="ty">String</span>[] args) {
+        departments.add(<span class="kw">new</span> <span class="ty">Department</span>(<span class="nu">1</span>, <span class="st">"Engineering"</span>, <span class="st">"Floor 3"</span>));
+        departments.add(<span class="kw">new</span> <span class="ty">Department</span>(<span class="nu">2</span>, <span class="st">"Design"</span>, <span class="st">"Floor 2"</span>));
+
+        employees.add(<span class="kw">new</span> <span class="ty">Employee</span>(<span class="nu">1</span>, <span class="st">"Alice"</span>, <span class="st">"Developer"</span>, <span class="nu">1</span>));
+        employees.add(<span class="kw">new</span> <span class="ty">Employee</span>(<span class="nu">2</span>, <span class="st">"Bob"</span>, <span class="st">"Designer"</span>, <span class="nu">2</span>));
+
+        <span class="ty">SpringApplication</span>.run(<span class="ty">DemoApplication</span>.<span class="kw">class</span>, args);
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- STEP 6 -->
+    <section class="card">
+      <h2><span class="badge">Step 6</span> Create the Controllers (<code>controller/</code>)</h2>
+      <p>Each controller handles HTTP requests (<code>GET</code>, <code>POST</code>, <code>DELETE</code>) using <code>@RestController</code>, <code>@ResponseStatus</code>, and <code>for-each</code> loops.</p>
+
+      <h3>1. <code>controller/EmployeeController.java</code></h3>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">package</span> com.example.demo.controller;
+
+<span class="kw">import</span> com.example.demo.DemoApplication;
+<span class="kw">import</span> com.example.demo.model.Employee;
+<span class="kw">import</span> org.springframework.http.HttpStatus;
+<span class="kw">import</span> org.springframework.web.bind.annotation.*;
+<span class="kw">import</span> org.springframework.web.server.ResponseStatusException;
+
+<span class="kw">import</span> java.util.ArrayList;
+
+<span class="ty">@RestController</span>
+<span class="ty">@RequestMapping</span>(<span class="st">"/api/employees"</span>)
+<span class="kw">public class</span> <span class="ty">EmployeeController</span> {
+
+    <span class="kw">private int</span> idCounter = <span class="nu">3</span>;
+
+    <span class="cm">// GET http://localhost:8080/api/employees</span>
+    <span class="ty">@GetMapping</span>
+    <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.OK)
+    <span class="kw">public</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Employee</span>&gt; getAllEmployees() {
+        <span class="kw">return</span> <span class="ty">DemoApplication</span>.employees;
+    }
+
+    <span class="cm">// GET http://localhost:8080/api/employees/{id}</span>
+    <span class="ty">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.OK)
+    <span class="kw">public</span> <span class="ty">Employee</span> getEmployeeById(<span class="ty">@PathVariable</span> <span class="kw">int</span> id) {
+        <span class="kw">for</span> (<span class="ty">Employee</span> employee : <span class="ty">DemoApplication</span>.employees) {
+            <span class="kw">if</span> (employee.id == id) {
+                <span class="kw">return</span> employee;
+            }
+        }
+        <span class="kw">throw new</span> <span class="ty">ResponseStatusException</span>(<span class="ty">HttpStatus</span>.NOT_FOUND);
+    }
+
+    <span class="cm">// POST http://localhost:8080/api/employees</span>
+    <span class="ty">@PostMapping</span>
+    <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.CREATED)
+    <span class="kw">public</span> <span class="ty">Employee</span> createEmployee(<span class="ty">@RequestBody</span> <span class="ty">Employee</span> employee) {
+        employee.id = idCounter;
+        idCounter = idCounter + <span class="nu">1</span>;
+        <span class="ty">DemoApplication</span>.employees.add(employee);
+        <span class="kw">return</span> employee;
+    }
+
+    <span class="cm">// DELETE http://localhost:8080/api/employees/{id}</span>
+    <span class="ty">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.NO_CONTENT)
+    <span class="kw">public void</span> deleteEmployee(<span class="ty">@PathVariable</span> <span class="kw">int</span> id) {
+        <span class="kw">for</span> (<span class="ty">Employee</span> employee : <span class="ty">DemoApplication</span>.employees) {
+            <span class="kw">if</span> (employee.id == id) {
+                <span class="ty">DemoApplication</span>.employees.remove(employee);
+                <span class="kw">return</span>;
+            }
+        }
+        <span class="kw">throw new</span> <span class="ty">ResponseStatusException</span>(<span class="ty">HttpStatus</span>.NOT_FOUND);
+    }
+}</code></pre>
+      </div>
+
+      <h3>2. <code>controller/DepartmentController.java</code></h3>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">package</span> com.example.demo.controller;
+
+<span class="kw">import</span> com.example.demo.DemoApplication;
+<span class="kw">import</span> com.example.demo.model.Department;
+<span class="kw">import</span> org.springframework.http.HttpStatus;
+<span class="kw">import</span> org.springframework.web.bind.annotation.*;
+<span class="kw">import</span> org.springframework.web.server.ResponseStatusException;
+
+<span class="kw">import</span> java.util.ArrayList;
+
+<span class="ty">@RestController</span>
+<span class="ty">@RequestMapping</span>(<span class="st">"/api/departments"</span>)
+<span class="kw">public class</span> <span class="ty">DepartmentController</span> {
+
+    <span class="kw">private int</span> idCounter = <span class="nu">3</span>;
+
+    <span class="cm">// GET http://localhost:8080/api/departments</span>
+    <span class="ty">@GetMapping</span>
+    <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.OK)
+    <span class="kw">public</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Department</span>&gt; getAllDepartments() {
+        <span class="kw">return</span> <span class="ty">DemoApplication</span>.departments;
+    }
+
+    <span class="cm">// GET http://localhost:8080/api/departments/{id}</span>
+    <span class="ty">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.OK)
+    <span class="kw">public</span> <span class="ty">Department</span> getDepartmentById(<span class="ty">@PathVariable</span> <span class="kw">int</span> id) {
+        <span class="kw">for</span> (<span class="ty">Department</span> department : <span class="ty">DemoApplication</span>.departments) {
+            <span class="kw">if</span> (department.id == id) {
+                <span class="kw">return</span> department;
+            }
+        }
+        <span class="kw">throw new</span> <span class="ty">ResponseStatusException</span>(<span class="ty">HttpStatus</span>.NOT_FOUND);
+    }
+
+    <span class="cm">// POST http://localhost:8080/api/departments</span>
+    <span class="ty">@PostMapping</span>
+    <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.CREATED)
+    <span class="kw">public</span> <span class="ty">Department</span> createDepartment(<span class="ty">@RequestBody</span> <span class="ty">Department</span> department) {
+        department.id = idCounter;
+        idCounter = idCounter + <span class="nu">1</span>;
+        <span class="ty">DemoApplication</span>.departments.add(department);
+        <span class="kw">return</span> department;
+    }
+
+    <span class="cm">// DELETE http://localhost:8080/api/departments/{id}</span>
+    <span class="ty">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.NO_CONTENT)
+    <span class="kw">public void</span> deleteDepartment(<span class="ty">@PathVariable</span> <span class="kw">int</span> id) {
+        <span class="kw">for</span> (<span class="ty">Department</span> department : <span class="ty">DemoApplication</span>.departments) {
+            <span class="kw">if</span> (department.id == id) {
+                <span class="ty">DemoApplication</span>.departments.remove(department);
+                <span class="kw">return</span>;
+            }
+        }
+        <span class="kw">throw new</span> <span class="ty">ResponseStatusException</span>(<span class="ty">HttpStatus</span>.NOT_FOUND);
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- STEP 7 -->
+    <section class="card">
+      <h2><span class="badge">Step 7</span> Run &amp; Test the API</h2>
+      <ol>
+        <li>In Eclipse, right-click <strong><code>DemoApplication.java</code></strong> &rarr; <strong>Run As</strong> &rarr; <strong>Java Application</strong> (or <strong>Spring Boot App</strong>).</li>
+        <li>The server starts on port <strong><code>8080</code></strong> by default.</li>
+        <li>Open the interactive API docs (Swagger UI) in your browser:
+          <p style="margin-top: 8px;"><a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html</a></p>
+        </li>
+        <li>Click any endpoint (<code>GET</code>, <code>POST</code>, or <code>DELETE</code>) &rarr; click <strong>Try it out</strong> &rarr; enter the JSON body or ID &rarr; click <strong>Execute</strong> to test it right in the browser.</li>
+      </ol>
+    </section>
+
+    <!-- STEP 8 -->
+    <section class="card exercise">
+      <h2><span class="badge">Step 8</span> Student Exercise: Add the <code>Task</code> Resource</h2>
+      <p>Now it's your turn! Using <code>Employee</code> and <code>Department</code> as your guide, add a <strong><code>Task</code></strong> resource from scratch.</p>
+
+      <h3>Requirements</h3>
+      <ol>
+        <li><strong>Create <code>model/Task.java</code>:</strong>
+          <ul>
+            <li><code>public int id;</code></li>
+            <li><code>public String title;</code></li>
+            <li><code>public String status;</code> <em>(e.g. <code>"TODO"</code>, <code>"IN_PROGRESS"</code>, <code>"DONE"</code>)</em></li>
+            <li><code>public int employeeId;</code></li>
+            <li>Constructors: <code>public Task() {}</code> and <code>public Task(int id, String title, String status, int employeeId)</code></li>
+          </ul>
+        </li>
+        <li><strong>Update <code>DemoApplication.java</code>:</strong>
+          <ul>
+            <li>Add <code>public static ArrayList&lt;Task&gt; tasks = new ArrayList&lt;&gt;();</code></li>
+            <li>Add 2 sample tasks inside <code>main()</code> (with IDs <code>1</code> and <code>2</code>).</li>
+          </ul>
+        </li>
+        <li><strong>Create <code>controller/TaskController.java</code>:</strong>
+          <ul>
+            <li>Base path: <code>/api/tasks</code> and <code>private int idCounter = 3;</code></li>
+            <li><code>GET /api/tasks</code> &rarr; return all tasks (<code>200 OK</code>)</li>
+            <li><code>GET /api/tasks/{id}</code> &rarr; return one task by ID (<code>200 OK</code>), or <code>404 Not Found</code></li>
+            <li><code>POST /api/tasks</code> &rarr; assign <code>idCounter</code>, increment <code>idCounter</code>, add to <code>DemoApplication.tasks</code>, return it (<code>201 Created</code>)</li>
+            <li><code>DELETE /api/tasks/{id}</code> &rarr; remove task by ID (<code>204 No Content</code>), or <code>404 Not Found</code></li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Test Checklist</h3>
+      <ul class="checklist">
+        <li><input type="checkbox" /> <span><code>GET http://localhost:8080/api/tasks</code> returns your 2 sample tasks as JSON.</span></li>
+        <li><input type="checkbox" /> <span><code>GET http://localhost:8080/api/tasks/1</code> returns task <code>1</code>, and <code>/api/tasks/99</code> returns <code>404</code>.</span></li>
+        <li><input type="checkbox" /> <span><code>POST http://localhost:8080/api/tasks</code> with <code>{"title":"Learn Spring Boot","status":"TODO","employeeId":1}</code> returns <code>201 Created</code> with <code>"id": 3</code>.</span></li>
+        <li><input type="checkbox" /> <span><code>DELETE http://localhost:8080/api/tasks/1</code> returns <code>204 No Content</code>, and task <code>1</code> is gone from <code>GET /api/tasks</code>.</span></li>
+      </ul>
+
+      <details class="starter">
+        <summary>Show Starter Template (Click if you get stuck)</summary>
+
+        <h3><code>model/Task.java</code></h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code><span class="kw">package</span> com.example.demo.model;
+
+<span class="kw">public class</span> <span class="ty">Task</span> {
+    <span class="cm">// TODO: Add public fields: id, title, status, employeeId</span>
+
+    <span class="kw">public</span> Task() {
+    }
+
+    <span class="cm">// TODO: Add full constructor Task(int id, String title, String status, int employeeId)</span>
+}</code></pre>
+        </div>
+
+        <h3><code>controller/TaskController.java</code></h3>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code><span class="kw">package</span> com.example.demo.controller;
+
+<span class="kw">import</span> com.example.demo.DemoApplication;
+<span class="kw">import</span> com.example.demo.model.Task;
+<span class="kw">import</span> org.springframework.http.HttpStatus;
+<span class="kw">import</span> org.springframework.web.bind.annotation.*;
+<span class="kw">import</span> org.springframework.web.server.ResponseStatusException;
+
+<span class="kw">import</span> java.util.ArrayList;
+
+<span class="ty">@RestController</span>
+<span class="ty">@RequestMapping</span>(<span class="st">"/api/tasks"</span>)
+<span class="kw">public class</span> <span class="ty">TaskController</span> {
+
+    <span class="kw">private int</span> idCounter = <span class="nu">3</span>;
+
+    <span class="cm">// TODO: GET /api/tasks</span>
+
+    <span class="cm">// TODO: GET /api/tasks/{id}</span>
+
+    <span class="cm">// TODO: POST /api/tasks</span>
+
+    <span class="cm">// TODO: DELETE /api/tasks/{id}</span>
+}</code></pre>
+        </div>
+      </details>
+
+      <h3>Bonus Challenge</h3>
+      <p>Add <code>PUT /api/tasks/{id}</code> to update a task's <code>title</code> or <code>status</code> (e.g. from <code>"TODO"</code> to <code>"DONE"</code>).</p>
+    </section>
+  </div>
+
+  <script>
+    function copyCode(button) {
+      const code = button.parentElement.querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const original = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => { button.textContent = original; }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
