@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Java OOP Cheat Sheet &amp; Examples</title>
+  <title>Java OOP Cheat Sheet: Classes, Objects &amp; Inheritance</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -199,39 +199,43 @@
   <div class="container">
     <header>
       <h1>Java OOP Cheat Sheet &amp; Examples</h1>
-      <p>Quick reference for Classes, Objects, Constructors, Methods, and the 4 Pillars of OOP.</p>
+      <p>The 3 core OOP building blocks for beginners: <strong>Classes</strong>, <strong>Objects</strong>, and <strong>Inheritance</strong>.</p>
     </header>
 
     <!-- QUICK OVERVIEW -->
     <section class="card">
-      <h2><span class="badge">Quick Glance</span> The 4 Pillars of OOP</h2>
+      <h2><span class="badge">Overview</span> The 3 Core Concepts</h2>
       <table>
         <thead>
-          <tr><th>Pillar</th><th>Plain English</th><th>Analogy</th><th>Java Keyword</th></tr>
+          <tr><th>Concept</th><th>Plain English</th><th>Analogy</th><th>Example</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>Encapsulation</strong></td><td>Hide data &amp; control how it changes</td><td>Bank vault with a teller window</td><td><code>private</code> + getters/setters</td></tr>
-          <tr><td><strong>Inheritance</strong></td><td>Reuse code from a parent class</td><td>Child inheriting traits from parent</td><td><code>extends</code></td></tr>
-          <tr><td><strong>Polymorphism</strong></td><td>Same action, different behavior</td><td>&ldquo;Speak&rdquo; &rarr; Dog barks, Cat meows</td><td><code>@Override</code></td></tr>
-          <tr><td><strong>Abstraction</strong></td><td>Hide complex details behind a simple rule</td><td>TV remote buttons</td><td><code>interface</code> / <code>implements</code></td></tr>
+          <tr><td><strong>Class</strong></td><td>The blueprint (defines fields &amp; methods)</td><td>A house blueprint</td><td><code>class Employee { ... }</code></td></tr>
+          <tr><td><strong>Object</strong></td><td>A real item built from the blueprint</td><td>An actual house</td><td><code>new Employee(...)</code></td></tr>
+          <tr><td><strong>Inheritance</strong></td><td>A child class reuses a parent class's code</td><td>Child inheriting from parent</td><td><code>class Employee extends Person</code></td></tr>
         </tbody>
       </table>
+      <p style="margin-top: 14px; margin-bottom: 0;">
+        <a href="java-reference.webp" target="_blank" rel="noopener" style="color: var(--primary); font-weight: 600; text-decoration: none;">
+          View Java Reference Image (<code>java-reference.webp</code>) &rarr;
+        </a>
+      </p>
     </section>
 
-    <!-- 1. CLASS & OBJECT -->
+    <!-- 1. CLASSES & OBJECTS -->
     <section class="card">
-      <h2><span class="badge">1</span> Class vs. Object (<code>new</code>)</h2>
-      <p>A <strong>Class</strong> is the blueprint. An <strong>Object</strong> is a real item built from that blueprint using <code>new</code>.</p>
+      <h2><span class="badge">1</span> Classes &amp; Objects (<code>new</code>)</h2>
+      <p>A <strong>Class</strong> describes what an item has (fields) and can do (methods). An <strong>Object</strong> is a real item created from that class using <code>new</code>.</p>
       <div class="code-wrap">
         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre><code><span class="cm">// The Blueprint (Class)</span>
+        <pre><code><span class="cm">// 1. The Blueprint (Class)</span>
 <span class="kw">public class</span> <span class="ty">Employee</span> {
     <span class="kw">public int</span> id;
     <span class="kw">public</span> <span class="ty">String</span> name;
     <span class="kw">public</span> <span class="ty">String</span> role;
 }
 
-<span class="cm">// Creating Real Items (Objects) inside main()</span>
+<span class="cm">// 2. Creating Real Items (Objects) inside main()</span>
 <span class="ty">Employee</span> emp1 = <span class="kw">new</span> <span class="ty">Employee</span>();
 emp1.id = <span class="nu">1</span>;
 emp1.name = <span class="st">"Alice"</span>;
@@ -244,10 +248,10 @@ emp2.role = <span class="st">"Designer"</span>;</code></pre>
       </div>
     </section>
 
-    <!-- 2. CONSTRUCTORS -->
+    <!-- 2. CONSTRUCTORS & METHODS -->
     <section class="card">
-      <h2><span class="badge">2</span> Constructors &amp; <code>this</code></h2>
-      <p>A <strong>Constructor</strong> lets you fill in the fields in 1 line when calling <code>new</code>. It has the exact same name as the class and no return type.</p>
+      <h2><span class="badge">2</span> Constructors &amp; Methods on a Class</h2>
+      <p>A <strong>Constructor</strong> fills in fields in 1 line when calling <code>new</code>. A <strong>Method</strong> is an action the object can perform.</p>
       <div class="code-wrap">
         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         <pre><code><span class="kw">public class</span> <span class="ty">Employee</span> {
@@ -255,130 +259,82 @@ emp2.role = <span class="st">"Designer"</span>;</code></pre>
     <span class="kw">public</span> <span class="ty">String</span> name;
     <span class="kw">public</span> <span class="ty">String</span> role;
 
-    <span class="cm">// Empty constructor</span>
-    <span class="kw">public</span> Employee() {}
-
-    <span class="cm">// Full constructor</span>
+    <span class="cm">// Constructor: runs automatically on "new"</span>
     <span class="kw">public</span> Employee(<span class="kw">int</span> id, <span class="ty">String</span> name, <span class="ty">String</span> role) {
         <span class="kw">this</span>.id = id;
         <span class="kw">this</span>.name = name;
         <span class="kw">this</span>.role = role;
     }
-}
 
-<span class="cm">// Now 1 line creates and fills the object!</span>
-<span class="ty">Employee</span> emp1 = <span class="kw">new</span> <span class="ty">Employee</span>(<span class="nu">1</span>, <span class="st">"Alice"</span>, <span class="st">"Developer"</span>);</code></pre>
-      </div>
-      <div class="tip"><strong>Tip:</strong> <code>this.name</code> means <em>&ldquo;this object's field&rdquo;</em>, while <code>name</code> on the right is the value passed into the constructor.</div>
-    </section>
-
-    <!-- 3. METHODS -->
-    <section class="card">
-      <h2><span class="badge">3</span> Methods (Actions)</h2>
-      <p>Methods are functions inside a class. Use <code>void</code> if the method returns nothing, or a type (like <code>String</code> or <code>int</code>) if it sends a value back with <code>return</code>.</p>
-      <div class="code-wrap">
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre><code><span class="kw">public class</span> <span class="ty">Employee</span> {
-    <span class="kw">public</span> <span class="ty">String</span> name;
-    <span class="kw">public double</span> salary;
-
-    <span class="cm">// Returns nothing (void)</span>
+    <span class="cm">// Method: what the object can do</span>
     <span class="kw">public void</span> sayHello() {
-        <span class="ty">System</span>.out.println(<span class="st">"Hi, I'm "</span> + name);
-    }
-
-    <span class="cm">// Takes an input and returns a result</span>
-    <span class="kw">public double</span> getYearlySalary() {
-        <span class="kw">return</span> salary * <span class="nu">12</span>;
+        <span class="ty">System</span>.out.println(<span class="st">"Hi, I'm "</span> + name + <span class="st">" ("</span> + role + <span class="st">")"</span>);
     }
 }
 
-<span class="cm">// Calling the methods:</span>
-emp1.sayHello();
-<span class="kw">double</span> yearly = emp1.getYearlySalary();</code></pre>
+<span class="cm">// Using the constructor and method:</span>
+<span class="ty">Employee</span> emp1 = <span class="kw">new</span> <span class="ty">Employee</span>(<span class="nu">1</span>, <span class="st">"Alice"</span>, <span class="st">"Developer"</span>);
+emp1.sayHello(); <span class="cm">// prints: Hi, I'm Alice (Developer)</span></code></pre>
       </div>
+      <div class="tip"><strong>Tip:</strong> <code>this.name</code> means <em>&ldquo;this object's own field&rdquo;</em>, while <code>name</code> on the right is the value passed into the constructor.</div>
     </section>
 
-    <!-- 4. ENCAPSULATION -->
+    <!-- 3. INHERITANCE -->
     <section class="card">
-      <h2><span class="badge">4</span> Encapsulation (<code>public</code> vs. <code>private</code>)</h2>
-      <p>Make sensitive fields <code>private</code> so outside code cannot set invalid values, and expose safe <code>public</code> methods (getters/setters).</p>
+      <h2><span class="badge">3</span> Inheritance (<code>extends</code>)</h2>
+      <p><strong>Inheritance</strong> lets a child class reuse all fields and methods from a parent class using the <code>extends</code> keyword, so you don't repeat yourself.</p>
       <div class="code-wrap">
         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre><code><span class="kw">public class</span> <span class="ty">BankAccount</span> {
-    <span class="kw">private double</span> balance = <span class="nu">0</span>;
-
-    <span class="kw">public void</span> deposit(<span class="kw">double</span> amount) {
-        <span class="kw">if</span> (amount &gt; <span class="nu">0</span>) {
-            balance = balance + amount;
-        }
-    }
-
-    <span class="kw">public double</span> getBalance() {
-        <span class="kw">return</span> balance;
-    }
-}</code></pre>
-      </div>
-    </section>
-
-    <!-- 5. INHERITANCE & POLYMORPHISM -->
-    <section class="card">
-      <h2><span class="badge">5</span> Inheritance (<code>extends</code>) &amp; Polymorphism (<code>@Override</code>)</h2>
-      <p>A child class inherits fields &amp; methods from a parent class using <code>extends</code>, and can customize a method using <code>@Override</code>.</p>
-      <div class="code-wrap">
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre><code><span class="cm">// Parent class</span>
-<span class="kw">public class</span> <span class="ty">Animal</span> {
+        <pre><code><span class="cm">// Parent class (shared fields &amp; methods)</span>
+<span class="kw">public class</span> <span class="ty">Person</span> {
     <span class="kw">public</span> <span class="ty">String</span> name;
+    <span class="kw">public int</span> age;
 
-    <span class="kw">public void</span> makeSound() {
-        <span class="ty">System</span>.out.println(<span class="st">"Some sound..."</span>);
+    <span class="kw">public void</span> introduce() {
+        <span class="ty">System</span>.out.println(<span class="st">"My name is "</span> + name);
     }
 }
 
-<span class="cm">// Child classes</span>
-<span class="kw">public class</span> <span class="ty">Dog</span> <span class="kw">extends</span> <span class="ty">Animal</span> {
-    <span class="ty">@Override</span>
-    <span class="kw">public void</span> makeSound() {
-        <span class="ty">System</span>.out.println(name + <span class="st">" says: Woof!"</span>);
-    }
+<span class="cm">// Child class automatically gets "name", "age", and "introduce()"</span>
+<span class="kw">public class</span> <span class="ty">Employee</span> <span class="kw">extends</span> <span class="ty">Person</span> {
+    <span class="kw">public</span> <span class="ty">String</span> role;
 }
 
-<span class="kw">public class</span> <span class="ty">Cat</span> <span class="kw">extends</span> <span class="ty">Animal</span> {
-    <span class="ty">@Override</span>
-    <span class="kw">public void</span> makeSound() {
-        <span class="ty">System</span>.out.println(name + <span class="st">" says: Meow!"</span>);
-    }
-}</code></pre>
+<span class="cm">// Using the child class:</span>
+<span class="ty">Employee</span> emp = <span class="kw">new</span> <span class="ty">Employee</span>();
+emp.name = <span class="st">"Alice"</span>;      <span class="cm">// inherited from Person!</span>
+emp.role = <span class="st">"Developer"</span>;  <span class="cm">// defined on Employee</span>
+emp.introduce();         <span class="cm">// inherited from Person!</span></code></pre>
       </div>
+      <div class="tip"><strong>Rule of thumb:</strong> Use <code>extends</code> when one class <em>&ldquo;is a&rdquo;</em> type of another class (an <code>Employee</code> <strong>is a</strong> <code>Person</code>).</div>
     </section>
 
-    <!-- 6. ABSTRACTION -->
+    <!-- 4. COMPILING & RUNNING WITH JAVAC / JAVA -->
     <section class="card">
-      <h2><span class="badge">6</span> Abstraction (<code>interface</code> &amp; <code>implements</code>)</h2>
-      <p>An <code>interface</code> defines a rule/contract. Any class that <code>implements</code> it must write the code for those methods.</p>
+      <h2><span class="badge">4</span> Compile &amp; Run in the Terminal (<code>javac</code> &amp; <code>java</code>)</h2>
+      <p>To run a Java file from your terminal, there are 2 simple commands:</p>
+      <ol>
+        <li><strong><code>javac FileName.java</code></strong> — <strong>Compiles</strong> your code into a <code>.class</code> bytecode file (include <code>.java</code>).</li>
+        <li><strong><code>java ClassName</code></strong> — <strong>Runs</strong> the compiled program (do <strong>NOT</strong> add <code>.class</code> or <code>.java</code>).</li>
+      </ol>
       <div class="code-wrap">
         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre><code><span class="kw">public interface</span> <span class="ty">Printable</span> {
-    <span class="kw">void</span> print();
-}
+        <pre><code><span class="cm"># Step 1: Compile Employee.java (creates Employee.class)</span>
+javac Employee.java
 
-<span class="kw">public class</span> <span class="ty">Invoice</span> <span class="kw">implements</span> <span class="ty">Printable</span> {
-    <span class="kw">public void</span> print() {
-        <span class="ty">System</span>.out.println(<span class="st">"Printing invoice..."</span>);
-    }
-}</code></pre>
+<span class="cm"># Step 2: Run the compiled class</span>
+java Employee</code></pre>
       </div>
+      <div class="tip"><strong>Common mistake:</strong> Writing <code>java Employee.class</code> will fail — only write the class name (<code>java Employee</code>)!</div>
     </section>
 
     <!-- MINI PRACTICE -->
     <section class="card practice">
-      <h2><span class="badge">Practice</span> Try It Yourself: Build a <code>Car</code> Class</h2>
+      <h2><span class="badge">Practice</span> Try It Yourself: Build a <code>Car</code> &amp; <code>ElectricCar</code></h2>
       <ul>
-        <li>Create a <code>Car</code> class with <code>public String brand;</code> and <code>public int speed;</code></li>
-        <li>Add a constructor <code>Car(String brand, int speed)</code></li>
-        <li>Add a method <code>drive()</code> that prints: <code>"Toyota is driving at 80 km/h"</code></li>
-        <li>In <code>main()</code>, create 2 <code>Car</code> objects and call <code>drive()</code> on both!</li>
+        <li>Create a <code>Car</code> class with <code>public String brand;</code>, <code>public int speed;</code>, a constructor, and a <code>drive()</code> method that prints <code>"Toyota is driving at 80 km/h"</code>.</li>
+        <li>Create an <code>ElectricCar</code> class that <code>extends Car</code> and adds <code>public int batteryPercent;</code>.</li>
+        <li>In <code>main()</code>, create 1 <code>Car</code> and 1 <code>ElectricCar</code> and call <code>drive()</code> on both!</li>
       </ul>
 
       <details>
@@ -389,6 +345,8 @@ emp1.sayHello();
     <span class="kw">public</span> <span class="ty">String</span> brand;
     <span class="kw">public int</span> speed;
 
+    <span class="kw">public</span> Car() {}
+
     <span class="kw">public</span> Car(<span class="ty">String</span> brand, <span class="kw">int</span> speed) {
         <span class="kw">this</span>.brand = brand;
         <span class="kw">this</span>.speed = speed;
@@ -397,15 +355,21 @@ emp1.sayHello();
     <span class="kw">public void</span> drive() {
         <span class="ty">System</span>.out.println(brand + <span class="st">" is driving at "</span> + speed + <span class="st">" km/h"</span>);
     }
+}
 
-    <span class="kw">public static void</span> main(<span class="ty">String</span>[] args) {
-        <span class="ty">Car</span> car1 = <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"Toyota"</span>, <span class="nu">80</span>);
-        <span class="ty">Car</span> car2 = <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"BMW"</span>, <span class="nu">120</span>);
+<span class="kw">public class</span> <span class="ty">ElectricCar</span> <span class="kw">extends</span> <span class="ty">Car</span> {
+    <span class="kw">public int</span> batteryPercent;
+}
 
-        car1.drive();
-        car2.drive();
-    }
-}</code></pre>
+<span class="cm">// In main():</span>
+<span class="ty">Car</span> car1 = <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"Toyota"</span>, <span class="nu">80</span>);
+car1.drive();
+
+<span class="ty">ElectricCar</span> tesla = <span class="kw">new</span> <span class="ty">ElectricCar</span>();
+tesla.brand = <span class="st">"Tesla"</span>;
+tesla.speed = <span class="nu">110</span>;
+tesla.batteryPercent = <span class="nu">95</span>;
+tesla.drive(); <span class="cm">// inherited from Car!</span></code></pre>
         </div>
       </details>
     </section>

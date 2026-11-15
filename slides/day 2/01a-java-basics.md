@@ -117,7 +117,12 @@
         B -->|"Same .jar shared"| E["JVM (Linux)"]
     ```
   - **What You Share:** You compile **once**, then share **one single `.jar` file** that runs on Windows, macOS, and Linux!
-  - **Commands:** `javac Employee.java` (compile) → `java Employee` or `java -jar app.jar` (run)
+  - **Commands:**
+    ```bash
+    javac Employee.java   # 1. Compile (.java -> .class)
+    java Employee         # 2. Run (no .class extension!)
+    java -jar app.jar     # Or run a packaged .jar app
+    ```
   - **`.class` vs. `.jar`:** `.class` is one compiled file; `.jar` bundles **all `.class` files + libraries** into one runnable file
 - **Talking Points:**
   - *(0:28–0:34)* Analogy: Bytecode is like **sheet music**, and the **JVM** is the **musician** who can read it on Windows, Mac, or Linux. Real apps are shipped as one `.jar` file and started with `java -jar app.jar`.
@@ -267,6 +272,29 @@
     ```
 - **Talking Points:**
   - *(0:37–0:41)* Classes have **data** (fields like `firstName`) and **actions** (methods like `getFullName()`). In Spring Boot, every API endpoint simply calls a Java method!
+
+---
+
+### Slide 14: Building Blocks — Inheritance (`extends`)
+- **Slide Points:**
+  - **Inheritance** lets a child class reuse fields and methods from a parent class using **`extends`**:
+    ```java
+    // Parent class
+    public class Person {
+        String name;
+    }
+
+    // Child class gets "name" automatically!
+    public class Employee extends Person {
+        String role;
+    }
+
+    Employee emp = new Employee();
+    emp.name = "Sarah";      // from Person!
+    emp.role = "Developer";  // from Employee
+    ```
+- **Talking Points:**
+  - *(0:41–0:44)* Together, **Classes**, **Objects**, and **Inheritance** are the 3 core OOP building blocks: a **Class** is the blueprint, an **Object** is the real item built with `new`, and **Inheritance** (`extends`) lets you share code from a parent class without copy-pasting!
 
 ---
 
