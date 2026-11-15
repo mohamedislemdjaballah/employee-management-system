@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java OOP Cheat Sheet &amp; Examples</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #4f46e5;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --tip-bg: #eef2ff;
+      --tip-border: #6366f1;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #3730a3, #4f46e5);
+      color: #ffffff;
+      padding: 32px 28px;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 1.85rem;
+      line-height: 1.25;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 1.02rem;
+    }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.28rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    p { margin: 0 0 12px; color: var(--muted); }
+    ul { margin: 8px 0 14px; padding-left: 22px; color: var(--muted); }
+    li { margin-bottom: 6px; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.9em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 4px;
+      font-size: 0.94rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .tip {
+      background: var(--tip-bg);
+      border-left: 4px solid var(--tip-border);
+      padding: 11px 15px;
+      border-radius: 8px;
+      margin: 12px 0;
+      color: #312e81;
+      font-size: 0.94rem;
+    }
+
+    .code-wrap {
+      position: relative;
+      margin: 10px 0 14px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 0;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.22); }
+
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+
+    .practice {
+      border: 2px solid #c7d2fe;
+      background: linear-gradient(to bottom, #eef2ff, #ffffff 90px);
+    }
+
+    details {
+      margin-top: 14px;
+      border: 1px solid #c7d2fe;
+      border-radius: 10px;
+      background: #ffffff;
+      padding: 12px 16px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--primary);
+      user-select: none;
+    }
+
+    details[open] summary { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Java OOP Cheat Sheet &amp; Examples</h1>
+      <p>Quick reference for Classes, Objects, Constructors, Methods, and the 4 Pillars of OOP.</p>
+    </header>
+
+    <!-- QUICK OVERVIEW -->
+    <section class="card">
+      <h2><span class="badge">Quick Glance</span> The 4 Pillars of OOP</h2>
+      <table>
+        <thead>
+          <tr><th>Pillar</th><th>Plain English</th><th>Analogy</th><th>Java Keyword</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Encapsulation</strong></td><td>Hide data &amp; control how it changes</td><td>Bank vault with a teller window</td><td><code>private</code> + getters/setters</td></tr>
+          <tr><td><strong>Inheritance</strong></td><td>Reuse code from a parent class</td><td>Child inheriting traits from parent</td><td><code>extends</code></td></tr>
+          <tr><td><strong>Polymorphism</strong></td><td>Same action, different behavior</td><td>&ldquo;Speak&rdquo; &rarr; Dog barks, Cat meows</td><td><code>@Override</code></td></tr>
+          <tr><td><strong>Abstraction</strong></td><td>Hide complex details behind a simple rule</td><td>TV remote buttons</td><td><code>interface</code> / <code>implements</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 1. CLASS & OBJECT -->
+    <section class="card">
+      <h2><span class="badge">1</span> Class vs. Object (<code>new</code>)</h2>
+      <p>A <strong>Class</strong> is the blueprint. An <strong>Object</strong> is a real item built from that blueprint using <code>new</code>.</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="cm">// The Blueprint (Class)</span>
+<span class="kw">public class</span> <span class="ty">Employee</span> {
+    <span class="kw">public int</span> id;
+    <span class="kw">public</span> <span class="ty">String</span> name;
+    <span class="kw">public</span> <span class="ty">String</span> role;
+}
+
+<span class="cm">// Creating Real Items (Objects) inside main()</span>
+<span class="ty">Employee</span> emp1 = <span class="kw">new</span> <span class="ty">Employee</span>();
+emp1.id = <span class="nu">1</span>;
+emp1.name = <span class="st">"Alice"</span>;
+emp1.role = <span class="st">"Developer"</span>;
+
+<span class="ty">Employee</span> emp2 = <span class="kw">new</span> <span class="ty">Employee</span>();
+emp2.id = <span class="nu">2</span>;
+emp2.name = <span class="st">"Bob"</span>;
+emp2.role = <span class="st">"Designer"</span>;</code></pre>
+      </div>
+    </section>
+
+    <!-- 2. CONSTRUCTORS -->
+    <section class="card">
+      <h2><span class="badge">2</span> Constructors &amp; <code>this</code></h2>
+      <p>A <strong>Constructor</strong> lets you fill in the fields in 1 line when calling <code>new</code>. It has the exact same name as the class and no return type.</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">public class</span> <span class="ty">Employee</span> {
+    <span class="kw">public int</span> id;
+    <span class="kw">public</span> <span class="ty">String</span> name;
+    <span class="kw">public</span> <span class="ty">String</span> role;
+
+    <span class="cm">// Empty constructor</span>
+    <span class="kw">public</span> Employee() {}
+
+    <span class="cm">// Full constructor</span>
+    <span class="kw">public</span> Employee(<span class="kw">int</span> id, <span class="ty">String</span> name, <span class="ty">String</span> role) {
+        <span class="kw">this</span>.id = id;
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.role = role;
+    }
+}
+
+<span class="cm">// Now 1 line creates and fills the object!</span>
+<span class="ty">Employee</span> emp1 = <span class="kw">new</span> <span class="ty">Employee</span>(<span class="nu">1</span>, <span class="st">"Alice"</span>, <span class="st">"Developer"</span>);</code></pre>
+      </div>
+      <div class="tip"><strong>Tip:</strong> <code>this.name</code> means <em>&ldquo;this object's field&rdquo;</em>, while <code>name</code> on the right is the value passed into the constructor.</div>
+    </section>
+
+    <!-- 3. METHODS -->
+    <section class="card">
+      <h2><span class="badge">3</span> Methods (Actions)</h2>
+      <p>Methods are functions inside a class. Use <code>void</code> if the method returns nothing, or a type (like <code>String</code> or <code>int</code>) if it sends a value back with <code>return</code>.</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">public class</span> <span class="ty">Employee</span> {
+    <span class="kw">public</span> <span class="ty">String</span> name;
+    <span class="kw">public double</span> salary;
+
+    <span class="cm">// Returns nothing (void)</span>
+    <span class="kw">public void</span> sayHello() {
+        <span class="ty">System</span>.out.println(<span class="st">"Hi, I'm "</span> + name);
+    }
+
+    <span class="cm">// Takes an input and returns a result</span>
+    <span class="kw">public double</span> getYearlySalary() {
+        <span class="kw">return</span> salary * <span class="nu">12</span>;
+    }
+}
+
+<span class="cm">// Calling the methods:</span>
+emp1.sayHello();
+<span class="kw">double</span> yearly = emp1.getYearlySalary();</code></pre>
+      </div>
+    </section>
+
+    <!-- 4. ENCAPSULATION -->
+    <section class="card">
+      <h2><span class="badge">4</span> Encapsulation (<code>public</code> vs. <code>private</code>)</h2>
+      <p>Make sensitive fields <code>private</code> so outside code cannot set invalid values, and expose safe <code>public</code> methods (getters/setters).</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">public class</span> <span class="ty">BankAccount</span> {
+    <span class="kw">private double</span> balance = <span class="nu">0</span>;
+
+    <span class="kw">public void</span> deposit(<span class="kw">double</span> amount) {
+        <span class="kw">if</span> (amount &gt; <span class="nu">0</span>) {
+            balance = balance + amount;
+        }
+    }
+
+    <span class="kw">public double</span> getBalance() {
+        <span class="kw">return</span> balance;
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- 5. INHERITANCE & POLYMORPHISM -->
+    <section class="card">
+      <h2><span class="badge">5</span> Inheritance (<code>extends</code>) &amp; Polymorphism (<code>@Override</code>)</h2>
+      <p>A child class inherits fields &amp; methods from a parent class using <code>extends</code>, and can customize a method using <code>@Override</code>.</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="cm">// Parent class</span>
+<span class="kw">public class</span> <span class="ty">Animal</span> {
+    <span class="kw">public</span> <span class="ty">String</span> name;
+
+    <span class="kw">public void</span> makeSound() {
+        <span class="ty">System</span>.out.println(<span class="st">"Some sound..."</span>);
+    }
+}
+
+<span class="cm">// Child classes</span>
+<span class="kw">public class</span> <span class="ty">Dog</span> <span class="kw">extends</span> <span class="ty">Animal</span> {
+    <span class="ty">@Override</span>
+    <span class="kw">public void</span> makeSound() {
+        <span class="ty">System</span>.out.println(name + <span class="st">" says: Woof!"</span>);
+    }
+}
+
+<span class="kw">public class</span> <span class="ty">Cat</span> <span class="kw">extends</span> <span class="ty">Animal</span> {
+    <span class="ty">@Override</span>
+    <span class="kw">public void</span> makeSound() {
+        <span class="ty">System</span>.out.println(name + <span class="st">" says: Meow!"</span>);
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- 6. ABSTRACTION -->
+    <section class="card">
+      <h2><span class="badge">6</span> Abstraction (<code>interface</code> &amp; <code>implements</code>)</h2>
+      <p>An <code>interface</code> defines a rule/contract. Any class that <code>implements</code> it must write the code for those methods.</p>
+      <div class="code-wrap">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code><span class="kw">public interface</span> <span class="ty">Printable</span> {
+    <span class="kw">void</span> print();
+}
+
+<span class="kw">public class</span> <span class="ty">Invoice</span> <span class="kw">implements</span> <span class="ty">Printable</span> {
+    <span class="kw">public void</span> print() {
+        <span class="ty">System</span>.out.println(<span class="st">"Printing invoice..."</span>);
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <!-- MINI PRACTICE -->
+    <section class="card practice">
+      <h2><span class="badge">Practice</span> Try It Yourself: Build a <code>Car</code> Class</h2>
+      <ul>
+        <li>Create a <code>Car</code> class with <code>public String brand;</code> and <code>public int speed;</code></li>
+        <li>Add a constructor <code>Car(String brand, int speed)</code></li>
+        <li>Add a method <code>drive()</code> that prints: <code>"Toyota is driving at 80 km/h"</code></li>
+        <li>In <code>main()</code>, create 2 <code>Car</code> objects and call <code>drive()</code> on both!</li>
+      </ul>
+
+      <details>
+        <summary>Show Solution</summary>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code><span class="kw">public class</span> <span class="ty">Car</span> {
+    <span class="kw">public</span> <span class="ty">String</span> brand;
+    <span class="kw">public int</span> speed;
+
+    <span class="kw">public</span> Car(<span class="ty">String</span> brand, <span class="kw">int</span> speed) {
+        <span class="kw">this</span>.brand = brand;
+        <span class="kw">this</span>.speed = speed;
+    }
+
+    <span class="kw">public void</span> drive() {
+        <span class="ty">System</span>.out.println(brand + <span class="st">" is driving at "</span> + speed + <span class="st">" km/h"</span>);
+    }
+
+    <span class="kw">public static void</span> main(<span class="ty">String</span>[] args) {
+        <span class="ty">Car</span> car1 = <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"Toyota"</span>, <span class="nu">80</span>);
+        <span class="ty">Car</span> car2 = <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"BMW"</span>, <span class="nu">120</span>);
+
+        car1.drive();
+        car2.drive();
+    }
+}</code></pre>
+        </div>
+      </details>
+    </section>
+  </div>
+
+  <script>
+    function copyCode(button) {
+      const code = button.parentElement.querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const original = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => { button.textContent = original; }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>

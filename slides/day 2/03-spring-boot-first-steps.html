@@ -419,20 +419,19 @@
 <span class="kw">import</span> java.util.ArrayList;
 
 <span class="ty">@RestController</span>
-<span class="ty">@RequestMapping</span>(<span class="st">"/api/employees"</span>)
 <span class="kw">public class</span> <span class="ty">EmployeeController</span> {
 
     <span class="kw">private int</span> idCounter = <span class="nu">3</span>;
 
     <span class="cm">// GET http://localhost:8080/api/employees</span>
-    <span class="ty">@GetMapping</span>
+    <span class="ty">@GetMapping</span>(<span class="st">"/api/employees"</span>)
     <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.OK)
     <span class="kw">public</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Employee</span>&gt; getAllEmployees() {
         <span class="kw">return</span> <span class="ty">DemoApplication</span>.employees;
     }
 
     <span class="cm">// GET http://localhost:8080/api/employees/{id}</span>
-    <span class="ty">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="ty">@GetMapping</span>(<span class="st">"/api/employees/{id}"</span>)
     <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.OK)
     <span class="kw">public</span> <span class="ty">Employee</span> getEmployeeById(<span class="ty">@PathVariable</span> <span class="kw">int</span> id) {
         <span class="kw">for</span> (<span class="ty">Employee</span> employee : <span class="ty">DemoApplication</span>.employees) {
@@ -444,7 +443,7 @@
     }
 
     <span class="cm">// POST http://localhost:8080/api/employees</span>
-    <span class="ty">@PostMapping</span>
+    <span class="ty">@PostMapping</span>(<span class="st">"/api/employees"</span>)
     <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.CREATED)
     <span class="kw">public</span> <span class="ty">Employee</span> createEmployee(<span class="ty">@RequestBody</span> <span class="ty">Employee</span> employee) {
         employee.id = idCounter;
@@ -454,7 +453,7 @@
     }
 
     <span class="cm">// DELETE http://localhost:8080/api/employees/{id}</span>
-    <span class="ty">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="ty">@DeleteMapping</span>(<span class="st">"/api/employees/{id}"</span>)
     <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.NO_CONTENT)
     <span class="kw">public void</span> deleteEmployee(<span class="ty">@PathVariable</span> <span class="kw">int</span> id) {
         <span class="kw">for</span> (<span class="ty">Employee</span> employee : <span class="ty">DemoApplication</span>.employees) {
@@ -482,20 +481,19 @@
 <span class="kw">import</span> java.util.ArrayList;
 
 <span class="ty">@RestController</span>
-<span class="ty">@RequestMapping</span>(<span class="st">"/api/departments"</span>)
 <span class="kw">public class</span> <span class="ty">DepartmentController</span> {
 
     <span class="kw">private int</span> idCounter = <span class="nu">3</span>;
 
     <span class="cm">// GET http://localhost:8080/api/departments</span>
-    <span class="ty">@GetMapping</span>
+    <span class="ty">@GetMapping</span>(<span class="st">"/api/departments"</span>)
     <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.OK)
     <span class="kw">public</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Department</span>&gt; getAllDepartments() {
         <span class="kw">return</span> <span class="ty">DemoApplication</span>.departments;
     }
 
     <span class="cm">// GET http://localhost:8080/api/departments/{id}</span>
-    <span class="ty">@GetMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="ty">@GetMapping</span>(<span class="st">"/api/departments/{id}"</span>)
     <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.OK)
     <span class="kw">public</span> <span class="ty">Department</span> getDepartmentById(<span class="ty">@PathVariable</span> <span class="kw">int</span> id) {
         <span class="kw">for</span> (<span class="ty">Department</span> department : <span class="ty">DemoApplication</span>.departments) {
@@ -507,7 +505,7 @@
     }
 
     <span class="cm">// POST http://localhost:8080/api/departments</span>
-    <span class="ty">@PostMapping</span>
+    <span class="ty">@PostMapping</span>(<span class="st">"/api/departments"</span>)
     <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.CREATED)
     <span class="kw">public</span> <span class="ty">Department</span> createDepartment(<span class="ty">@RequestBody</span> <span class="ty">Department</span> department) {
         department.id = idCounter;
@@ -517,7 +515,7 @@
     }
 
     <span class="cm">// DELETE http://localhost:8080/api/departments/{id}</span>
-    <span class="ty">@DeleteMapping</span>(<span class="st">"/{id}"</span>)
+    <span class="ty">@DeleteMapping</span>(<span class="st">"/api/departments/{id}"</span>)
     <span class="ty">@ResponseStatus</span>(<span class="ty">HttpStatus</span>.NO_CONTENT)
     <span class="kw">public void</span> deleteDepartment(<span class="ty">@PathVariable</span> <span class="kw">int</span> id) {
         <span class="kw">for</span> (<span class="ty">Department</span> department : <span class="ty">DemoApplication</span>.departments) {
@@ -618,7 +616,6 @@
 <span class="kw">import</span> java.util.ArrayList;
 
 <span class="ty">@RestController</span>
-<span class="ty">@RequestMapping</span>(<span class="st">"/api/tasks"</span>)
 <span class="kw">public class</span> <span class="ty">TaskController</span> {
 
     <span class="kw">private int</span> idCounter = <span class="nu">3</span>;
