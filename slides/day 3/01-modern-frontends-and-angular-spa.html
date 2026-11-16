@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 3 (Part 1): Modern Frontends, SPAs & Angular Architecture</title>
+  <style>
+    :root {
+      --navy: #0a2540;
+      --navy-light: #1e3a5f;
+      --blue: #0284c7;
+      --blue-bg: #e0f2fe;
+      --gold: #f59e0b;
+      --gold-bg: #fef3c7;
+      --green: #15803d;
+      --green-bg: #dcfce7;
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #cbd5e1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    .stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+    .slide { display: none; width: 100%; max-width: 1120px; aspect-ratio: 16 / 9; background: var(--bg); border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); flex-direction: column; overflow: hidden; position: relative; }
+    .slide.active { display: flex; }
+    .slide.title-slide { background: linear-gradient(135deg, var(--navy) 0%, #102a43 100%); color: #fff; padding: 3.5rem 4rem; justify-content: center; }
+    .title-accent { width: 80px; height: 6px; background: var(--gold); margin-bottom: 1.2rem; border-radius: 3px; }
+    .tag { font-size: 0.9rem; font-weight: 700; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; margin-bottom: 0.75rem; }
+    .title-slide h1 { font-size: 2.8rem; line-height: 1.15; margin-bottom: 1rem; }
+    .title-slide p.sub { font-size: 1.25rem; color: #cbd5e1; max-width: 780px; margin-bottom: 2.5rem; }
+    .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .meta-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 1rem 1.2rem; }
+    .meta-card small { display: block; color: var(--gold); font-weight: 700; font-size: 0.75rem; margin-bottom: 0.35rem; letter-spacing: 0.8px; }
+    .meta-card span { font-size: 1rem; color: #fff; font-weight: 500; }
+
+    .slide-header { background: var(--navy); color: #fff; padding: 1.15rem 2.2rem; border-bottom: 4px solid var(--gold); }
+    .slide-header .sec { font-size: 0.75rem; font-weight: 700; color: var(--gold); letter-spacing: 1.2px; text-transform: uppercase; }
+    .slide-header h2 { font-size: 1.55rem; margin-top: 0.2rem; }
+    .slide-body { flex: 1; padding: 1.6rem 2.2rem; display: flex; flex-direction: column; gap: 1.1rem; overflow-y: auto; }
+    .slide-footer { padding: 0.65rem 2.2rem; font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; background: #fff; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; flex: 1; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.15rem; flex: 1; }
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; display: flex; flex-direction: column; border-top: 4px solid var(--blue); }
+    .card.gold { border-top-color: var(--gold); }
+    .card.green { border-top-color: var(--green); background: var(--green-bg); border-color: var(--green); }
+    .card.blue-box { background: var(--blue-bg); border-color: var(--blue); }
+    .card.gold-box { background: var(--gold-bg); border-color: var(--gold); border-top-color: var(--gold); }
+    .card h3 { font-size: 1.1rem; color: var(--navy); margin-bottom: 0.75rem; }
+    .card ul { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.98rem; line-height: 1.45; }
+    .banner { background: var(--navy); color: #fff; padding: 0.9rem 1.2rem; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.98rem; }
+
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); font-size: 0.95rem; }
+    th { background: var(--navy); color: #fff; text-align: left; padding: 0.75rem 1rem; }
+    td { padding: 0.7rem 1rem; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) td { background: #f1f5f9; }
+    code { background: #e2e8f0; padding: 0.12rem 0.38rem; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.9em; color: #0f172a; }
+
+    .notes-panel { display: none; background: #1e293b; color: #f8fafc; padding: 0.9rem 2rem; border-top: 2px solid var(--gold); font-size: 0.92rem; line-height: 1.5; }
+    .notes-panel.open { display: block; }
+    .notes-panel strong { color: var(--gold); }
+
+    .controls { background: #020617; color: #cbd5e1; padding: 0.6rem 1.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; }
+    .controls button { background: #1e293b; color: #fff; border: 1px solid #334155; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .controls button:hover { background: var(--blue); border-color: var(--blue); }
+  </style>
+</head>
+<body>
+
+<div class="stage">
+  <!-- SLIDE 1 -->
+  <section class="slide title-slide active" data-notes="Welcome to Day 3! Over Days 1 and 2 you learned REST APIs, Spring Boot, and PostgreSQL. Today we explore the front half of the system: what users click, how Angular works in Chrome, and how to inspect it.">
+    <div class="title-accent"></div>
+    <div class="tag">Day 3 • Morning Session (08:00 – 12:00)</div>
+    <h1>Modern Frontends, SPAs &amp; Angular Architecture</h1>
+    <p class="sub">Understanding, Operating &amp; Investigating Decoupled Enterprise Web Applications</p>
+    <div class="meta-grid">
+      <div class="meta-card"><small>AUDIENCE</small><span>Senior Engineers (No Coding Required)</span></div>
+      <div class="meta-card"><small>METHODOLOGY</small><span>20% Theory • 20% Demo • 60% Hands-On</span></div>
+      <div class="meta-card"><small>SYSTEM USED</small><span>Employee Management System (EMS)</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 -->
+  <section class="slide" data-notes="Reassure the room: NO TypeScript or Java code will be written today. Compare this to inspecting an automobile—you don't need to weld the engine block to read the dashboard or report a brake noise.">
+    <div class="slide-header"><div class="sec">Orientation</div><h2>Morning Objectives &amp; Workshop Ground Rules</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>What You Will Master This Morning</h3>
+          <ul>
+            <li>Why modern apps separate <strong>Frontend (Angular)</strong> from <strong>Backend (Spring Boot)</strong>.</li>
+            <li>How <strong>Single-Page Applications (SPAs)</strong> navigate without page reloads.</li>
+            <li>Recognizing visual building blocks (<strong>Components</strong>) on screen.</li>
+            <li>Performing full CRUD business operations in the Employee System.</li>
+            <li>Distinguishing <strong>Frontend Validation (UX)</strong> from <strong>Backend Validation (Security)</strong>.</li>
+          </ul>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div class="card green" style="flex:1;">
+            <h3>NO CODING REQUIRED</h3>
+            <ul>
+              <li>Zero TypeScript or Java coding today.</li>
+              <li>Focus on operating, observing, and diagnosing.</li>
+            </ul>
+          </div>
+          <div class="card gold-box" style="flex:1;">
+            <h3>Our Metaphor Today</h3>
+            <p style="font-size:1rem; line-height:1.5;">You are learning how to read the dashboard and look under the hood—not rebuild the engine from scratch.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 2 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 3 -->
+  <section class="slide" data-notes="Laravel context: Traditional Blade renders full HTML on the server per route. Angular loads a single HTML shell once and renders screens inside Chrome RAM. Ask: Have you noticed Gmail never blinks when opening an email? That is an SPA.">
+    <div class="slide-header"><div class="sec">Web Evolution</div><h2>Traditional Websites vs. Single-Page Applications (SPAs)</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card" style="border-top-color:#64748b;">
+          <h3>Traditional Websites (JSP / PHP / Forms)</h3>
+          <ul>
+            <li>Every click sends a request for a brand-new HTML page.</li>
+            <li>Server rebuilds the entire layout (Header + Menu + Table).</li>
+            <li>Browser wipes the screen white and redraws everything.</li>
+            <li>Slower navigation; UI tightly coupled to backend.</li>
+          </ul>
+        </div>
+        <div class="card blue-box">
+          <h3>Single-Page Applications (Angular)</h3>
+          <ul>
+            <li>Browser downloads <code>index.html</code> &amp; app engine <strong>ONCE</strong>.</li>
+            <li>Clicking buttons only requests small <strong>JSON data</strong>.</li>
+            <li>Angular swaps only the changed area in browser RAM.</li>
+            <li><strong>Zero white-page flickering</strong>; desktop-like speed!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 3 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 4 -->
+  <section class="slide" data-notes="Restaurant Analogy: PostgreSQL is the locked pantry. Spring Boot is the kitchen where hygiene and recipes are enforced. Angular is the dining room. The customer never walks into the kitchen! Demo: Show ports 4200 and 8080 running separately.">
+    <div class="slide-header"><div class="sec">Core Architecture</div><h2>The 3 Tiers: Dining Room, Kitchen &amp; Pantry</h2></div>
+    <div class="slide-body">
+      <div class="grid-3">
+        <div class="card blue-box" style="text-align:center;">
+          <h3>1. DINING ROOM (Port 4200)</h3>
+          <p style="font-weight:700; margin-bottom:0.8rem;">Angular Frontend</p>
+          <p style="font-size:0.95rem; line-height:1.5;">Runs inside Chrome browser.<br/>Draws buttons, tables &amp; forms.<br/><strong>NEVER talks to PostgreSQL.</strong></p>
+        </div>
+        <div class="card gold-box" style="text-align:center;">
+          <h3>2. KITCHEN (Port 8080)</h3>
+          <p style="font-weight:700; margin-bottom:0.8rem;">Spring Boot Backend</p>
+          <p style="font-size:0.95rem; line-height:1.5;">Runs on application server.<br/>Enforces security &amp; business rules.<br/><strong>NEVER produces HTML.</strong></p>
+        </div>
+        <div class="card green" style="text-align:center;">
+          <h3>3. PANTRY (Port 5432)</h3>
+          <p style="font-weight:700; margin-bottom:0.8rem;">PostgreSQL Database</p>
+          <p style="font-size:0.95rem; line-height:1.5;">Persistent relational storage.<br/>Tables: <code>departments</code>, <code>employees</code>.<br/><strong>Accessible ONLY by Spring Boot.</strong></p>
+        </div>
+      </div>
+      <div class="banner">KEY RULE: Angular communicates ONLY with Spring Boot using REST APIs (HTTP + JSON) — never directly with PostgreSQL.</div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 4 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <section class="slide" data-notes="Laravel Context: Think of Blade components like <x-navbar /> except each Angular block carries its own interactive HTML, CSS, and browser logic. Ask: If the Ministry updates its logo, how many files change? Just 1 (NavbarComponent).">
+    <div class="slide-header"><div class="sec">UI Anatomy</div><h2>Angular Components — Building with Visual Lego Blocks</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>How a Page is Assembled</h3>
+          <ul>
+            <li><strong>Navbar Component:</strong> Top blue header (<code>MF / SIT</code>) &amp; navigation links.</li>
+            <li><strong>KPI Summary Cards:</strong> Live counters (Total, Active, On Leave, Payroll).</li>
+            <li><strong>Filter Toolbar:</strong> Search input &amp; Department dropdown.</li>
+            <li><strong>Employee Table:</strong> Rows, status badges &amp; action buttons.</li>
+          </ul>
+        </div>
+        <div class="card gold">
+          <h3>Why Teams Use Components</h3>
+          <ul>
+            <li><strong>Reusability:</strong> Build a Status Badge once, reuse it across 10 screens.</li>
+            <li><strong>Isolation:</strong> Updating styles inside one block won't break unrelated pages.</li>
+            <li><strong>Maintainability:</strong> Faster to identify which visual block has a display bug.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 5 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 6 -->
+  <section class="slide" data-notes="Point out that KPI cards at the top of EMS are not hardcoded numbers from the database—they are calculated live from the employee array currently displayed in browser memory.">
+    <div class="slide-header"><div class="sec">UI Behavior</div><h2>Templates &amp; Real-Time Data Binding</h2></div>
+    <div class="slide-body">
+      <div class="card" style="flex:0;">
+        <h3>What is Data Binding?</h3>
+        <ul>
+          <li>Automatic synchronization between data in browser memory and what is painted on screen.</li>
+          <li>When underlying data changes, Angular automatically updates text, badges, and totals—no manual refresh needed.</li>
+        </ul>
+      </div>
+      <div class="grid-3">
+        <div class="card gold"><h3>1. Filter Binding</h3><p>Typing <code>Karim</code> or selecting <code>SIT</code> triggers an instant list update.</p></div>
+        <div class="card" style="border-top-color:var(--green);"><h3>2. Dynamic KPI Cards</h3><p>Filtering from 6 to 3 agents immediately updates <strong>Effectif Affiché</strong> &amp; Payroll.</p></div>
+        <div class="card" style="border-top-color:var(--navy);"><h3>3. Conditional Badges</h3><p><code>ACTIVE</code> renders Green; <code>ON_LEAVE</code> renders Yellow automatically.</p></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 6 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 7 -->
+  <section class="slide" data-notes="Demo live: Click '+ Ajouter un Agent'. Point directly at Chrome's refresh arrow icon in the top-left—it never spins! Note that Create (/employees/new) and Edit (/employees/3/edit) reuse the exact same Form Component.">
+    <div class="slide-header"><div class="sec">Navigation</div><h2>Client-Side Routing — Moving Without Page Reloads</h2></div>
+    <div class="slide-body">
+      <table>
+        <thead><tr><th>URL in Browser Address Bar</th><th>Screen Displayed</th><th>Server HTML Page Download?</th></tr></thead>
+        <tbody>
+          <tr><td><code>http://localhost:4200/employees</code></td><td>Employee Directory &amp; KPI Cards</td><td>No (Swapped in browser RAM)</td></tr>
+          <tr><td><code>http://localhost:4200/employees/new</code></td><td>Blank Employee Creation Form</td><td>No (Swapped in browser RAM)</td></tr>
+          <tr><td><code>http://localhost:4200/employees/3/edit</code></td><td>Pre-filled Form for Agent #3</td><td>No (Fetches JSON only for ID 3)</td></tr>
+          <tr><td><code>http://localhost:4200/login-demo</code></td><td>Day 5 Security &amp; Token Screen</td><td>No (Swapped in browser RAM)</td></tr>
+        </tbody>
+      </table>
+      <div class="card blue-box" style="flex:0;">
+        <h3>How to Spot Client-Side Routing</h3>
+        <p>Watch Chrome's circular reload icon in the top-left toolbar: in an Angular SPA, navigating between screens <strong>NEVER</strong> triggers a browser page reload!</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 7 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 8 -->
+  <section class="slide" data-notes="Keep the async/sync explanation intuitive and non-code: Java backend handles each request on a dedicated worker thread that can pause for PostgreSQL. JavaScript in Chrome has only 1 main UI thread—if it waited synchronously, your mouse would freeze!">
+    <div class="slide-header"><div class="sec">Business Input</div><h2>Web Forms &amp; Why Browser Apps Stay Responsive</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Inside the Employee Form</h3>
+          <ul>
+            <li><strong>Required Markers (*):</strong> Matricule, Last Name, First Name, Email, Salary, Date.</li>
+            <li><strong>Dynamic Dropdowns:</strong> Direction list is fetched live from PostgreSQL via Spring Boot.</li>
+            <li><strong>Action Controls:</strong> Clear distinction between <code>Annuler</code> and <code>Créer l'agent</code>.</li>
+          </ul>
+        </div>
+        <div class="card gold">
+          <h3>Why Browser Calls Are Asynchronous</h3>
+          <ul>
+            <li><strong>Java (Backend):</strong> Multi-threaded. One thread can pause waiting for DB without blocking others.</li>
+            <li><strong>JavaScript (Browser):</strong> Single UI thread responsible for mouse clicks, typing, and drawing pixels.</li>
+            <li><strong>Result:</strong> Angular fetches dropdown data in the background so your screen never freezes!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 8 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 9 -->
+  <section class="slide" data-notes="Laravel Context: Frontend validation is HTML5/JS UX guidance; Backend validation is your Laravel FormRequest rules + DB unique constraints. Stress: Never rely on frontend validation for security!">
+    <div class="slide-header"><div class="sec">Data Integrity</div><h2>Two Lines of Defense: Frontend vs. Backend Validation</h2></div>
+    <div class="slide-body">
+      <table>
+        <thead><tr><th>Characteristic</th><th>Frontend Validation (Angular)</th><th>Backend Validation (Spring Boot)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Where It Runs</strong></td><td>Inside user's Chrome browser</td><td>On the application server (<code>:8080</code>)</td></tr>
+          <tr><td><strong>Primary Purpose</strong></td><td>User Experience (fast typo feedback)</td><td>Security &amp; Database Integrity</td></tr>
+          <tr><td><strong>Visual Feedback</strong></td><td>Red input border &amp; helper text</td><td>Server JSON error banner</td></tr>
+          <tr><td><strong>Can It Be Bypassed?</strong></td><td><strong>YES</strong> (via scripts or API tools)</td><td><strong>NO</strong> (Authoritative gatekeeper)</td></tr>
+          <tr><td><strong>EMS Example</strong></td><td>Email missing <code>@</code> symbol</td><td>Duplicate Matricule (<code>409 Conflict</code>)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 9 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 10 -->
+  <section class="slide" data-notes="Walk around the room while participants complete Mission 1 in their workbooks. Common trap: forgetting to clear the search text box before changing the department dropdown.">
+    <div class="slide-header"><div class="sec">Hands-On Lab • 09:15 – 10:00</div><h2>Practical Mission 1: Application Exploration &amp; Audit</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card" style="border-top-color:var(--green);">
+          <h3>Participant Instructions (45 Minutes)</h3>
+          <ul>
+            <li>Open <code>http://localhost:4200</code> in Google Chrome.</li>
+            <li>Record the initial 4 KPI card values in your Workbook.</li>
+            <li>Filter by Direction: select <code>SIT — Système d'Information du Trésor</code>.</li>
+            <li>Observe which 3 agents remain and verify KPI recalculation.</li>
+            <li>Search for <code>Amina</code>, then click <strong>Réinitialiser</strong> to restore all 6 agents.</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Expected Findings</h3>
+          <ul>
+            <li>Initial Staff: <strong>6</strong> (5 Active, 1 On Leave).</li>
+            <li>SIT Filter: <strong>3 Agents</strong> (Karim, Amina, Mourad).</li>
+            <li>Screen updates instantaneously without browser page reload.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 10 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 11 -->
+  <section class="slide" data-notes="Guide students through creating Sofiane CHIKHI and then modifying him. If anyone hits a 409 error by submitting twice, tell them to remember that red error—we will dissect it in the afternoon!">
+    <div class="slide-header"><div class="sec">Hands-On Lab • 10:40 – 11:30</div><h2>Practical Mission 2: Performing Business Operations (CRUD)</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Participant Instructions (50 Minutes)</h3>
+          <ul>
+            <li>Click <strong>+ Ajouter un Agent</strong> (URL becomes <code>/employees/new</code>).</li>
+            <li>Create: <code>FIN-2026-008</code> | Sofiane CHIKHI | DGT | <code>125000 DA</code>.</li>
+            <li>Click <strong>Créer l'agent</strong> and verify Sofiane appears in the table.</li>
+            <li>Click <strong>Modifier</strong> on Sofiane's row (<code>/employees/:id/edit</code>).</li>
+            <li>Change salary to <code>140000</code> and status to <code>ON_LEAVE</code>, then save.</li>
+          </ul>
+        </div>
+        <div class="card blue-box">
+          <h3>What to Observe</h3>
+          <ul>
+            <li>Same Form component handles both Create &amp; Edit.</li>
+            <li>Yellow <strong>En Congé</strong> badge appears automatically.</li>
+            <li>Try invalid email to see instant red border validation.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 11 / 12</span></div>
+  </section>
+
+  <!-- SLIDE 12 -->
+  <section class="slide" data-notes="Administer Quiz 1 (5 minutes) from 07-quizzes-and-answers.md before breaking for lunch at 12:00. Review answers out loud.">
+    <div class="slide-header"><div class="sec">Morning Synthesis • 11:30 – 12:00</div><h2>Morning Recap &amp; Knowledge Check (Quiz 1)</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card" style="border-top-color:var(--navy);">
+          <h3>4 Morning Takeaways</h3>
+          <ul>
+            <li>Angular (<code>:4200</code>) and Spring Boot (<code>:8080</code>) are decoupled—Angular never touches PostgreSQL.</li>
+            <li>SPAs swap Components in browser memory via Client-Side Routing.</li>
+            <li>KPIs and tables react dynamically via Data Binding.</li>
+            <li>Frontend validation guides users; Backend validation protects DB.</li>
+          </ul>
+        </div>
+        <div class="card gold-box">
+          <h3>Coming Up After Lunch (13:00)</h3>
+          <ul>
+            <li>Looking under the hood with <strong>Chrome DevTools (F12)</strong>.</li>
+            <li>Inspecting real HTTP Requests, Status Codes &amp; JSON.</li>
+            <li>Diagnosing failures and writing <strong>Golden Bug Reports</strong>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 12 / 12</span></div>
+  </section>
+</div>
+
+<div id="notesPanel" class="notes-panel">
+  <strong>Instructor Speaker Notes:</strong> <span id="notesText"></span>
+</div>
+
+<div class="controls">
+  <div><strong>Day 3 — Part 1:</strong> Modern Frontends &amp; Angular SPA</div>
+  <div style="display:flex; gap:0.6rem; align-items:center;">
+    <button onclick="prevSlide()">← Previous</button>
+    <span id="counter">1 / 12</span>
+    <button onclick="nextSlide()">Next →</button>
+    <button onclick="toggleNotes()" style="margin-left:0.6rem;">Notes (N)</button>
+  </div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesText = document.getElementById('notesText');
+  const counter = document.getElementById('counter');
+  let current = 0;
+
+  function showSlide(idx) {
+    slides[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${slides.length}`;
+    notesText.textContent = slides[current].getAttribute('data-notes') || '';
+  }
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
+  function toggleNotes() { notesPanel.classList.toggle('open'); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key.toLowerCase() === 'n') toggleNotes();
+  });
+  showSlide(0);
+</script>
+</body>
+</html>
