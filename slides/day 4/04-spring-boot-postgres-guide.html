@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spring Boot + PostgreSQL Setup Guide</title>
+  <title>Day 4 (2/2) — Spring Boot + PostgreSQL Setup Guide</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -139,6 +139,34 @@
       font-size: 0.95rem;
     }
 
+    .screenshot {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin: 14px 0 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+      display: block;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      transition: background 0.15s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.28);
+      text-decoration: none;
+    }
+
     .code-wrap {
       position: relative;
       margin: 10px 0 18px;
@@ -234,14 +262,17 @@
 <body>
   <div class="container">
     <header>
-      <h1>Spring Boot + PostgreSQL Setup Guide</h1>
-      <p>Create a REST API from <strong>start.spring.io</strong> connected to a real <strong>PostgreSQL</strong> database using Spring Data JPA.</p>
+      <a class="back-btn" href="01-pgadmin-create-db.html">&larr; Back to Part 1: Create demo_db in pgAdmin</a>
+      <div style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.88; margin-bottom: 6px;">Part 2 of 2 &bull; Spring Boot Setup</div>
+      <h1>2. Spring Boot + PostgreSQL Setup Guide</h1>
+      <p>Create a REST API from <strong>start.spring.io</strong> connected to your <strong><code>demo_db</code></strong> PostgreSQL database using Spring Data JPA.</p>
     </header>
 
     <!-- STEP 1 -->
     <section class="card">
       <h2><span class="badge">Step 1</span> Generate the Project on start.spring.io</h2>
       <p>Open <a href="https://start.spring.io/" target="_blank" rel="noopener">https://start.spring.io/</a> and choose:</p>
+      <img src="spring-setup.png" alt="Spring Initializr Setup" class="screenshot" />
       <table>
         <thead>
           <tr><th>Setting</th><th>Value to Select</th><th>Why</th></tr>
@@ -271,14 +302,9 @@
 
     <!-- STEP 2 -->
     <section class="card">
-      <h2><span class="badge">Step 2</span> Create the Database &amp; Open in VS Code</h2>
+      <h2><span class="badge">Step 2</span> Make Sure <code>demo_db</code> Is Running &amp; Open in VS Code</h2>
       <ol>
-        <li>Make sure your <strong>PostgreSQL server</strong> is running, and create an empty database named <code>demo_db</code> (via pgAdmin or terminal):
-          <div class="code-wrap">
-            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            <pre><code>CREATE DATABASE demo_db;</code></pre>
-          </div>
-        </li>
+        <li>Make sure you completed <strong>Part 1</strong> (<code>docker compose up -d postgres pgadmin</code> and created <code>demo_db</code> in pgAdmin at <a href="http://localhost:5050" target="_blank" rel="noopener">http://localhost:5050</a>).</li>
         <li>Open <strong>VS Code</strong> &rarr; <strong>File</strong> &rarr; <strong>Open Folder...</strong> &rarr; select the extracted <code>demo</code> folder (containing <code>pom.xml</code>).</li>
         <li>Make sure the <strong>Extension Pack for Java</strong> is installed and wait a few seconds for Maven dependencies to finish loading.</li>
       </ol>
@@ -293,14 +319,14 @@
         <pre><code>spring.application.name=demo
 
 spring.datasource.url=jdbc:postgresql://localhost:5432/demo_db
-spring.datasource.username=postgres
-spring.datasource.password=your_password
+spring.datasource.username=ems_user
+spring.datasource.password=ems_password
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true</code></pre>
       </div>
       <div class="callout">
-        <strong>Note:</strong> Replace <code>your_password</code> with your local Postgres password. <code>ddl-auto=update</code> creates your tables automatically!
+        <strong>Note:</strong> These credentials match <code>docker-compose.yml</code> (<code>ems_user</code> / <code>ems_password</code>). Your Spring Boot app runs outside Docker, so it connects to <code>localhost:5432</code>. <code>ddl-auto=update</code> creates your tables automatically!
       </div>
     </section>
 
@@ -420,7 +446,6 @@ spring.jpa.show-sql=true</code></pre>
     <!-- STEP 7 -->
     <section class="card">
       <h2><span class="badge">Step 7</span> Create the Controllers (<code>controller/</code>)</h2>
-      <p>Inject the repository with <code>@Autowired</code> and send real database queries (<code>findAll</code>, <code>findById</code>, <code>save</code>, <code>deleteById</code>).</p>
 
       <h3>1. <code>controller/DepartmentController.java</code></h3>
       <div class="code-wrap">
