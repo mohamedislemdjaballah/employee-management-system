@@ -286,14 +286,13 @@
 
     <!-- STEP 2 -->
     <section class="card">
-      <h2><span class="badge">Step 2</span> Import the Project into Eclipse</h2>
-      <p>In Eclipse, import the folder from the UI (do not use right-click &ldquo;Open with&rdquo;):</p>
+      <h2><span class="badge">Step 2</span> Open the Project in VS Code</h2>
+      <p>Open the extracted <code>demo</code> folder in VS Code:</p>
       <ol>
-        <li>Open <strong>Eclipse</strong> &rarr; <strong>File</strong> &rarr; <strong>Import...</strong></li>
-        <li>Expand <strong>Maven</strong> &rarr; select <strong>Existing Maven Projects</strong> &rarr; click <strong>Next</strong>.</li>
-        <li>Click <strong>Browse...</strong> next to <strong>Root Directory</strong> and select the extracted <code>demo</code> folder (the folder containing <code>pom.xml</code>).</li>
-        <li>Make sure <code>/pom.xml</code> is checked, then click <strong>Finish</strong>.</li>
-        <li>Wait a few seconds (bottom-right progress bar) for Maven to download dependencies.</li>
+        <li>Open <strong>VS Code</strong> &rarr; <strong>File</strong> &rarr; <strong>Open Folder...</strong> (or right-click the extracted <code>demo</code> folder &rarr; <strong>Open with Code</strong>).</li>
+        <li>Select the extracted <code>demo</code> folder (the folder containing <code>pom.xml</code>).</li>
+        <li>Make sure the <strong>Extension Pack for Java</strong> (and optionally <strong>Spring Boot Extension Pack</strong>) is installed in VS Code.</li>
+        <li>Wait a few seconds (bottom-right status bar) for VS Code to load <code>pom.xml</code> and download Maven dependencies.</li>
       </ol>
     </section>
 
@@ -534,7 +533,7 @@
     <section class="card">
       <h2><span class="badge">Step 7</span> Run &amp; Test the API</h2>
       <ol>
-        <li>In Eclipse, right-click <strong><code>DemoApplication.java</code></strong> &rarr; <strong>Run As</strong> &rarr; <strong>Java Application</strong> (or <strong>Spring Boot App</strong>).</li>
+        <li>In VS Code, open <strong><code>DemoApplication.java</code></strong> and click <strong>Run</strong> above <code>main()</code> (or press <strong><code>F5</code></strong>).</li>
         <li>The server starts on port <strong><code>8080</code></strong> by default.</li>
         <li>Open the interactive API docs (Swagger UI) in your browser:
           <p style="margin-top: 8px;"><a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html</a></p>
