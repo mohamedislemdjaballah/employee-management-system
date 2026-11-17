@@ -393,6 +393,8 @@ spring.jpa.show-sql=true</code></pre>
 <span class="kw">import</span> jakarta.persistence.GenerationType;
 <span class="kw">import</span> jakarta.persistence.Id;
 <span class="kw">import</span> jakarta.persistence.ManyToOne;
+<span class="kw">import</span> org.hibernate.annotations.OnDelete;
+<span class="kw">import</span> org.hibernate.annotations.OnDeleteAction;
 
 <span class="ty">@Entity</span>
 <span class="kw">public class</span> <span class="ty">Employee</span> {
@@ -405,11 +407,15 @@ spring.jpa.show-sql=true</code></pre>
     <span class="kw">public</span> <span class="ty">String</span> role;
 
     <span class="ty">@ManyToOne</span>
+    <span class="ty">@OnDelete</span>(action = <span class="ty">OnDeleteAction</span>.CASCADE)
     <span class="kw">public</span> <span class="ty">Department</span> department; <span class="cm">// creates foreign key column department_id!</span>
 
     <span class="kw">public</span> Employee() {
     }
 }</code></pre>
+      </div>
+      <div class="callout">
+        <strong>Why <code>@OnDelete(action = OnDeleteAction.CASCADE)</code>?</strong> When you delete a <code>Department</code>, PostgreSQL automatically deletes its employees too. <em>(If you already ran the app before adding this, drop the <code>employee</code> table in pgAdmin once so Hibernate recreates the foreign key with <code>ON DELETE CASCADE</code>.)</em>
       </div>
     </section>
 
@@ -454,7 +460,6 @@ spring.jpa.show-sql=true</code></pre>
 
 <span class="kw">import</span> com.example.demo.model.Department;
 <span class="kw">import</span> com.example.demo.repository.DepartmentRepository;
-<span class="kw">import</span> org.springframework.beans.factory.annotation.Autowired;
 <span class="kw">import</span> org.springframework.http.HttpStatus;
 <span class="kw">import</span> org.springframework.web.bind.annotation.*;
 <span class="kw">import</span> org.springframework.web.server.ResponseStatusException;
@@ -464,8 +469,11 @@ spring.jpa.show-sql=true</code></pre>
 <span class="ty">@RestController</span>
 <span class="kw">public class</span> <span class="ty">DepartmentController</span> {
 
-    <span class="ty">@Autowired</span>
-    <span class="kw">private</span> <span class="ty">DepartmentRepository</span> departmentRepository;
+    <span class="kw">private final</span> <span class="ty">DepartmentRepository</span> departmentRepository;
+
+    DepartmentController(<span class="ty">DepartmentRepository</span> departmentRepository) {
+        <span class="kw">this</span>.departmentRepository = departmentRepository;
+    }
 
     <span class="cm">// GET http://localhost:8080/api/departments</span>
     <span class="ty">@GetMapping</span>(<span class="st">"/api/departments"</span>)
@@ -511,7 +519,6 @@ spring.jpa.show-sql=true</code></pre>
 
 <span class="kw">import</span> com.example.demo.model.Employee;
 <span class="kw">import</span> com.example.demo.repository.EmployeeRepository;
-<span class="kw">import</span> org.springframework.beans.factory.annotation.Autowired;
 <span class="kw">import</span> org.springframework.http.HttpStatus;
 <span class="kw">import</span> org.springframework.web.bind.annotation.*;
 <span class="kw">import</span> org.springframework.web.server.ResponseStatusException;
@@ -521,8 +528,11 @@ spring.jpa.show-sql=true</code></pre>
 <span class="ty">@RestController</span>
 <span class="kw">public class</span> <span class="ty">EmployeeController</span> {
 
-    <span class="ty">@Autowired</span>
-    <span class="kw">private</span> <span class="ty">EmployeeRepository</span> employeeRepository;
+    <span class="kw">private final</span> <span class="ty">EmployeeRepository</span> employeeRepository;
+
+    EmployeeController(<span class="ty">EmployeeRepository</span> employeeRepository) {
+        <span class="kw">this</span>.employeeRepository = employeeRepository;
+    }
 
     <span class="cm">// GET http://localhost:8080/api/employees</span>
     <span class="ty">@GetMapping</span>(<span class="st">"/api/employees"</span>)
@@ -596,7 +606,7 @@ spring.jpa.show-sql=true</code></pre>
             <li><code>@Id @GeneratedValue(strategy = GenerationType.IDENTITY) public int id;</code></li>
             <li><code>public String title;</code></li>
             <li><code>public boolean completed;</code> <em>(e.g. <code>false</code> or <code>true</code>)</em></li>
-            <li><code>@ManyToOne public Employee employee;</code> <em>(foreign key to <code>Employee</code>!)</em></li>
+            <li><code>@ManyToOne @OnDelete(action = OnDeleteAction.CASCADE) public Employee employee;</code> <em>(foreign key to <code>Employee</code> with cascade delete!)</em></li>
             <li>Empty constructor: <code>public Task() {}</code></li>
           </ul>
         </li>
@@ -628,6 +638,8 @@ spring.jpa.show-sql=true</code></pre>
 <span class="kw">import</span> jakarta.persistence.GenerationType;
 <span class="kw">import</span> jakarta.persistence.Id;
 <span class="kw">import</span> jakarta.persistence.ManyToOne;
+<span class="kw">import</span> org.hibernate.annotations.OnDelete;
+<span class="kw">import</span> org.hibernate.annotations.OnDeleteAction;
 
 <span class="ty">@Entity</span>
 <span class="kw">public class</span> <span class="ty">Task</span> {
@@ -638,7 +650,7 @@ spring.jpa.show-sql=true</code></pre>
 
     <span class="cm">// TODO: Add public String title; and public boolean completed;</span>
 
-    <span class="cm">// TODO: Add @ManyToOne public Employee employee;</span>
+    <span class="cm">// TODO: Add @ManyToOne and @OnDelete(action = OnDeleteAction.CASCADE) on public Employee employee;</span>
 
     <span class="kw">public</span> Task() {
     }
@@ -652,7 +664,6 @@ spring.jpa.show-sql=true</code></pre>
 
 <span class="kw">import</span> com.example.demo.model.Task;
 <span class="kw">import</span> com.example.demo.repository.TaskRepository;
-<span class="kw">import</span> org.springframework.beans.factory.annotation.Autowired;
 <span class="kw">import</span> org.springframework.http.HttpStatus;
 <span class="kw">import</span> org.springframework.web.bind.annotation.*;
 <span class="kw">import</span> org.springframework.web.server.ResponseStatusException;
@@ -662,8 +673,11 @@ spring.jpa.show-sql=true</code></pre>
 <span class="ty">@RestController</span>
 <span class="kw">public class</span> <span class="ty">TaskController</span> {
 
-    <span class="ty">@Autowired</span>
-    <span class="kw">private</span> <span class="ty">TaskRepository</span> taskRepository;
+    <span class="kw">private final</span> <span class="ty">TaskRepository</span> taskRepository;
+
+    TaskController(<span class="ty">TaskRepository</span> taskRepository) {
+        <span class="kw">this</span>.taskRepository = taskRepository;
+    }
 
     <span class="cm">// TODO: GET /api/tasks</span>
 
