@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Série 03 — Appeler une API REST avec fetch (GET, POST, DELETE)</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --tip-bg: #eff6ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a:hover { text-decoration: underline; }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      padding: 30px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 1.75rem; }
+    header p { margin: 0; opacity: 0.92; }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.24rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    p { margin: 0 0 12px; color: var(--muted); }
+    ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--muted); }
+    li { margin-bottom: 6px; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 10px 0;
+    }
+
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+
+    .example-box {
+      background: var(--tip-bg);
+      border-left: 4px solid var(--primary);
+      padding: 10px 14px;
+      border-radius: 0 10px 10px 0;
+      margin: 10px 0 12px;
+      font-size: 0.94rem;
+    }
+
+    details { margin-top: 10px; }
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #059669;
+    }
+
+    .code-wrap { position: relative; }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.25); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="02-js-dom-innerhtml.html">&larr; S&eacute;rie 02</a>
+      <a href="index.html">Tous les Exercices</a>
+      <a href="../00-javascript-presentation.html" target="_blank" rel="noopener">Slides JS</a>
+    </div>
+
+    <header>
+      <h1>S&eacute;rie 03 &mdash; Appeler une API REST avec <code>fetch()</code></h1>
+      <p>3 exercices pour pratiquer les requ&ecirc;tes <code>GET</code>, <code>POST</code> et <code>DELETE</code> sur une API publique.</p>
+    </header>
+
+    <section class="card">
+      <h2><span class="badge">Pr&eacute;paration</span> Comment tester votre code avec <code>fetch()</code></h2>
+      <ol>
+        <li>Cr&eacute;ez un fichier nomm&eacute; <code>fetch-test.html</code> sur votre ordinateur.</li>
+        <li>Utilisez une fonction <code>async function</code> avec <code>await fetch(...)</code> dans <code>&lt;script&gt;</code>, puis <strong>appelez la fonction juste apr&egrave;s</strong>.</li>
+        <li><strong>Double-cliquez sur <code>fetch-test.html</code></strong>, appuyez sur <code>F12</code> et v&eacute;rifiez les onglets <strong>Console</strong> et <strong>Network (R&eacute;seau)</strong>.</li>
+      </ol>
+      <pre><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+  <span class="kw">&lt;h1&gt;</span>Ouvrez la Console (F12)<span class="kw">&lt;/h1&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="cm">// 1. D&eacute;finissez une fonction async</span>
+    <span class="kw">async function</span> <span class="ty">getExample</span>() {
+      <span class="kw">const</span> response = <span class="kw">await</span> <span class="ty">fetch</span>(<span class="st">'https://jsonplaceholder.typicode.com/posts/1'</span>);
+      <span class="kw">const</span> data = <span class="kw">await</span> response.json();
+      <span class="ty">console</span>.log(data);
+    }
+
+    <span class="cm">// 2. Appelez la fonction juste apr&egrave;s</span>
+    getExample();
+  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></pre>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 1</span> Lire un Utilisateur (<code>GET</code>)</h2>
+      <p>&Eacute;crivez une fonction <code>getUser(id)</code> qui envoie une requ&ecirc;te <code>GET</code> vers l&rsquo;API publique <strong>JSONPlaceholder</strong> et affiche le nom de l&rsquo;utilisateur dans la console :</p>
+      <ul>
+        <li><strong>URL :</strong> <code>https://jsonplaceholder.typicode.com/users/</code> + <code>id</code></li>
+        <li><strong>M&eacute;thode :</strong> <code>GET</code></li>
+      </ul>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>getUser(1)</code> &rarr; <code>GET https://jsonplaceholder.typicode.com/users/1</code><br />
+        Sortie : <code>Nom : Leanne Graham</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>getUser(2)</code> &rarr; <code>GET https://jsonplaceholder.typicode.com/users/2</code><br />
+        Sortie : <code>Nom : Ervin Howell</code>
+      </div>
+      <details>
+        <summary>Voir la Solution</summary>
+        <pre><span class="kw">async function</span> <span class="ty">getUser</span>(id) {
+  <span class="kw">const</span> response = <span class="kw">await</span> <span class="ty">fetch</span>(<span class="st">'https://jsonplaceholder.typicode.com/users/'</span> + id, {
+    method: <span class="st">'GET'</span>
+  });
+  <span class="kw">const</span> user = <span class="kw">await</span> response.json();
+  <span class="ty">console</span>.log(<span class="st">'Nom : '</span> + user.name);
+}
+
+getUser(<span class="nu">1</span>);
+getUser(<span class="nu">2</span>);</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 2</span> Cr&eacute;er un Post (<code>POST</code>)</h2>
+      <p>&Eacute;crivez une fonction <code>createPost(title, bodyText)</code> qui envoie un nouvel article en JSON vers l&rsquo;API :</p>
+      <ul>
+        <li><strong>URL :</strong> <code>https://jsonplaceholder.typicode.com/posts</code></li>
+        <li><strong>M&eacute;thode :</strong> <code>POST</code></li>
+        <li><strong>Headers :</strong> <code>{ 'Content-Type': 'application/json' }</code></li>
+        <li><strong>Body (JSON) :</strong> <code>{ title: title, body: bodyText, userId: 1 }</code></li>
+      </ul>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>createPost('Mon Post', 'Bonjour API')</code><br />
+        Sortie : <code>Statut : 201</code> et <code>{ id: 101, title: 'Mon Post', body: 'Bonjour API', userId: 1 }</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>createPost('Test JS', 'Fetch fonctionne')</code><br />
+        Sortie : <code>Statut : 201</code> et <code>{ id: 101, title: 'Test JS', body: 'Fetch fonctionne', userId: 1 }</code>
+      </div>
+      <details>
+        <summary>Voir la Solution</summary>
+        <pre><span class="kw">async function</span> <span class="ty">createPost</span>(title, bodyText) {
+  <span class="kw">const</span> response = <span class="kw">await</span> <span class="ty">fetch</span>(<span class="st">'https://jsonplaceholder.typicode.com/posts'</span>, {
+    method: <span class="st">'POST'</span>,
+    headers: {
+      <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span>
+    },
+    body: <span class="ty">JSON</span>.stringify({
+      title: title,
+      body: bodyText,
+      userId: <span class="nu">1</span>
+    })
+  });
+
+  <span class="kw">const</span> created = <span class="kw">await</span> response.json();
+  <span class="ty">console</span>.log(<span class="st">'Statut : '</span> + response.status);
+  <span class="ty">console</span>.log(created);
+}
+
+createPost(<span class="st">'Mon Post'</span>, <span class="st">'Bonjour API'</span>);</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 3</span> Supprimer un Post (<code>DELETE</code>)</h2>
+      <p>&Eacute;crivez une fonction <code>deletePost(id)</code> qui envoie une requ&ecirc;te <code>DELETE</code> pour supprimer un article et affiche le code de statut HTTP dans la console :</p>
+      <ul>
+        <li><strong>URL :</strong> <code>https://jsonplaceholder.typicode.com/posts/</code> + <code>id</code></li>
+        <li><strong>M&eacute;thode :</strong> <code>DELETE</code></li>
+      </ul>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>deletePost(1)</code> &rarr; <code>DELETE https://jsonplaceholder.typicode.com/posts/1</code><br />
+        Sortie : <code>Post 1 supprim&eacute;, statut : 200</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>deletePost(5)</code> &rarr; <code>DELETE https://jsonplaceholder.typicode.com/posts/5</code><br />
+        Sortie : <code>Post 5 supprim&eacute;, statut : 200</code>
+      </div>
+      <details>
+        <summary>Voir la Solution</summary>
+        <pre><span class="kw">async function</span> <span class="ty">deletePost</span>(id) {
+  <span class="kw">const</span> response = <span class="kw">await</span> <span class="ty">fetch</span>(<span class="st">'https://jsonplaceholder.typicode.com/posts/'</span> + id, {
+    method: <span class="st">'DELETE'</span>
+  });
+  <span class="ty">console</span>.log(<span class="st">'Post '</span> + id + <span class="st">' supprim&eacute;, statut : '</span> + response.status);
+}
+
+deletePost(<span class="nu">1</span>);
+deletePost(<span class="nu">5</span>);</pre>
+      </details>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const blocks = document.querySelectorAll('pre');
+      for (const pre of blocks) {
+        const wrap = document.createElement('div');
+        wrap.className = 'code-wrap';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy';
+        btn.addEventListener('click', function () {
+          navigator.clipboard.writeText(pre.textContent.trim());
+          btn.textContent = 'Copied!';
+          btn.blur();
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+        });
+        wrap.appendChild(btn);
+      }
+    })();
+  </script>
+</body>
+</html>

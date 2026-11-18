@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 3 — JavaScript for Beginners</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --slide-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --primary: #2563eb;
+      --primary-dark: #1e3a8a;
+      --accent: #16a34a;
+      --border: #e2e8f0;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .deck {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px 16px;
+    }
+
+    .progress-track {
+      width: 100%;
+      max-width: 1040px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #facc15, #eab308);
+      transition: width 0.25s ease;
+    }
+
+    .stage {
+      width: 100%;
+      max-width: 1040px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      padding: 14px 0;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      max-height: 620px;
+      background: var(--slide-bg);
+      border-radius: 20px;
+      padding: 36px 44px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide.cover {
+      background: #ffffff;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .js-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 78px;
+      height: 78px;
+      border-radius: 16px;
+      background: #f7df1e;
+      color: #0f172a;
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin: 0 auto 14px;
+      box-shadow: 0 8px 20px rgba(234, 179, 8, 0.35);
+    }
+
+    .slide.cover h1 {
+      font-size: 2.6rem;
+      margin: 0 0 10px;
+      color: #0f172a;
+    }
+
+    .slide.cover p {
+      font-size: 1.12rem;
+      color: var(--muted);
+      margin: 0 auto 24px;
+      max-width: 680px;
+    }
+
+    .cover-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .cover-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-top: 4px solid #eab308;
+      border-radius: 12px;
+      padding: 16px 14px;
+      text-align: left;
+    }
+
+    .cover-card strong {
+      display: block;
+      font-size: 1rem;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .cover-card span {
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .slide.part-slide {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #ffffff;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .slide.part-slide .part-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+
+    .slide.part-slide h2 {
+      font-size: 2.4rem;
+      margin: 0 0 12px;
+      color: #ffffff;
+    }
+
+    .slide.part-slide p {
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.88);
+      margin: 0;
+      max-width: 620px;
+    }
+
+    .slide-top { margin-bottom: 12px; }
+
+    .tag {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 1.7rem;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+
+    .card.blue { background: #eff6ff; border-color: #bfdbfe; }
+    .card.green { background: #f0fdf4; border-color: #bbf7d0; }
+    .card.amber { background: #fffbeb; border-color: #fde68a; }
+    .card.red { background: #fef2f2; border-color: #fecaca; }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      color: #0f172a;
+    }
+
+    .card p, .card li {
+      margin: 0 0 6px;
+      font-size: 0.94rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    ul { margin: 4px 0 0; padding-left: 20px; }
+
+    code {
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.88em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 0;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    pre code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+
+    .diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .d-box {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+      min-width: 140px;
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 0.92rem;
+    }
+
+    .d-box.info { background: #eff6ff; border-color: #60a5fa; color: #1e3a8a; }
+    .d-box.ok { background: #f0fdf4; border-color: #4ade80; color: #14532d; }
+    .d-box small { display: block; font-weight: 500; color: var(--muted); margin-top: 4px; font-size: 0.78rem; }
+    .arrow { font-size: 1.3rem; font-weight: 800; color: #64748b; }
+
+    .controls {
+      width: 100%;
+      max-width: 1040px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #cbd5e1;
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .nav-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.22); }
+    .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .counter { font-size: 0.95rem; font-weight: 600; color: #e2e8f0; }
+
+    @media (max-width: 820px) {
+      .cover-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .slide { padding: 24px 20px; }
+    }
+    .code-wrap { position: relative; }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.25); }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+    <div class="stage">
+      <!-- COVER -->
+      <section class="slide cover active">
+        <div class="js-badge">JS</div>
+        <h1>JavaScript</h1>
+        <p>The Programming Language That Brings Web Pages to Life</p>
+        <div class="cover-grid">
+          <div class="cover-card">
+            <strong>1. History &amp; Role</strong>
+            <span>From 1995 Netscape to modern web apps</span>
+          </div>
+          <div class="cover-card">
+            <strong>2. JS in HTML</strong>
+            <span>Inline <code>&lt;script&gt;</code> &amp; linking external <code>.js</code> files</span>
+          </div>
+          <div class="cover-card">
+            <strong>3. Syntax &amp; Examples</strong>
+            <span>Variables, loops, functions, objects &amp; DOM</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 1 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 1</span>
+        <h2>History &amp; What JavaScript Does</h2>
+        <p>Why JavaScript was invented and how it evolved into the most popular web language.</p>
+      </section>
+
+      <!-- SLIDE 1: WHAT IS JAVASCRIPT -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 1 &bull; Introduction</span>
+          <h2>What Is JavaScript?</h2>
+          <p class="subtitle">The only programming language that runs natively inside every web browser.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card">
+              <h3>HTML = Skeleton</h3>
+              <p>Defines structure: headings, paragraphs, tables, and buttons.</p>
+              <div style="margin-top: 12px; padding: 14px; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 10px; text-align: center;">
+                <button type="button" style="all: revert; cursor: default;">Click me</button>
+              </div>
+            </div>
+            <div class="card blue">
+              <h3>CSS = Styling</h3>
+              <p>Controls colors, fonts, spacing, and page layout.</p>
+              <div style="margin-top: 12px; padding: 14px; background: #ffffff; border: 1px dashed #93c5fd; border-radius: 10px; text-align: center;">
+                <button type="button" style="background: #2563eb; color: #ffffff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 3px 8px rgba(37,99,235,0.3); cursor: default;">Click me</button>
+              </div>
+            </div>
+            <div class="card amber">
+              <h3>JavaScript = Brain</h3>
+              <p>Handles clicks, fetches data from APIs, and updates the page live.</p>
+              <div style="margin-top: 10px; padding: 10px 12px; background: #ffffff; border: 1px dashed #fcd34d; border-radius: 10px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" id="demoCounterBtn" onclick="incrementDemoCounter(); this.blur();" style="background: #2563eb; color: #ffffff; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.84rem; box-shadow: 0 3px 8px rgba(37,99,235,0.3); cursor: pointer;">Click me</button>
+                  <span id="demoCounterText" style="font-weight: 700; color: #0f172a; font-size: 0.86rem;">Count: 0</span>
+                  <button type="button" onclick="addDemoItem(); this.blur();" style="background: #16a34a; color: #ffffff; border: none; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.84rem; box-shadow: 0 3px 8px rgba(22,163,74,0.3); cursor: pointer;">+ Add item</button>
+                </div>
+                <div id="demoItemList" style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card red">
+            <p><strong>Remember:</strong> <strong>Java</strong> and <strong>JavaScript</strong> are completely different languages! Java runs on the backend (Spring Boot); JavaScript runs in the browser.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 1B: MOST POPULAR LANGUAGE -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 1 &bull; Popularity</span>
+          <h2>The #1 Most Popular Programming Language</h2>
+          <p class="subtitle">JavaScript is the most widely used programming language in the world today.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card amber">
+              <h3>#1 in Developer Surveys</h3>
+              <p>Year after year, JavaScript ranks at the top among developers worldwide because it runs natively in every web browser &mdash; and on servers via Node.js.</p>
+            </div>
+            <div class="card blue">
+              <h3>Used Everywhere</h3>
+              <ul>
+                <li><strong>Frontend:</strong> Angular, React, Vue</li>
+                <li><strong>Backend:</strong> Node.js, Express</li>
+                <li><strong>Mobile &amp; Desktop:</strong> React Native, Electron</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card green">
+            <p><strong>Reference:</strong> <a href="https://survey.stackoverflow.co/2026/technology/data/languages" target="_blank" rel="noopener" style="color: #16a34a; font-weight: 600;">Stack Overflow Developer Survey 2026 &mdash; Programming Languages</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 2 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 2</span>
+        <h2>Including JavaScript in HTML</h2>
+        <p>Two ways to add JavaScript to a web page: directly inside HTML or via an external <code>.js</code> file.</p>
+      </section>
+
+      <!-- SLIDE 3: INLINE SCRIPT -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 2 &bull; JS in HTML</span>
+          <h2>Way 1: Writing JavaScript Directly in HTML</h2>
+          <p class="subtitle">Put a <code>&lt;script&gt;</code> tag right before the closing <code>&lt;/body&gt;</code> tag.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+  <span class="kw">&lt;title&gt;</span>My App<span class="kw">&lt;/title&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+  <span class="kw">&lt;button</span> id=<span class="st">"btn"</span><span class="kw">&gt;</span>Click me<span class="kw">&lt;/button&gt;</span>
+
+  <span class="cm">&lt;!-- JavaScript placed right before &lt;/body&gt; --&gt;</span>
+  <span class="kw">&lt;script&gt;</span>
+    <span class="kw">const</span> btn = <span class="ty">document</span>.getElementById(<span class="st">'btn'</span>);
+
+    <span class="kw">function</span> <span class="ty">handleClick</span>() {
+      <span class="ty">alert</span>(<span class="st">'Button clicked!'</span>);
+    }
+
+    btn.addEventListener(<span class="st">'click'</span>, handleClick);
+  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></code></pre>
+          <div class="card blue">
+            <p><strong>Why at the bottom of <code>&lt;body&gt;</code>?</strong> So the browser finishes loading the HTML elements (like <code>#btn</code>) <em>before</em> JavaScript tries to find them.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: EXTERNAL JS FILE -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 2 &bull; JS in HTML</span>
+          <h2>Way 2: Linking an External <code>.js</code> File (Best Practice)</h2>
+          <p class="subtitle">Keep HTML and JavaScript in separate files using <code>&lt;script src="..." defer&gt;</code>.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;"><code>index.html</code></p>
+              <pre><code><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+  <span class="kw">&lt;title&gt;</span>My App<span class="kw">&lt;/title&gt;</span>
+  <span class="cm">&lt;!-- defer waits for HTML to load --&gt;</span>
+  <span class="kw">&lt;script</span> src=<span class="st">"app.js"</span> <span class="ty">defer</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+  <span class="kw">&lt;button</span> id=<span class="st">"btn"</span><span class="kw">&gt;</span>Click me<span class="kw">&lt;/button&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></code></pre>
+            </div>
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;"><code>app.js</code></p>
+              <pre><code><span class="cm">// Runs after HTML is ready!</span>
+<span class="kw">const</span> btn = <span class="ty">document</span>.getElementById(<span class="st">'btn'</span>);
+
+<span class="kw">function</span> <span class="ty">handleClick</span>() {
+  <span class="ty">alert</span>(<span class="st">'Button clicked!'</span>);
+}
+
+btn.addEventListener(<span class="st">'click'</span>, handleClick);</code></pre>
+              <div class="card green" style="margin-top: 12px;">
+                <p><strong>Why external + <code>defer</code>?</strong> Cleaner code, reusable across pages, and <code>defer</code> guarantees HTML loads before JS runs.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 3 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 3</span>
+        <h2>JavaScript Syntax &amp; Code Examples</h2>
+        <p>Variables, conditionals, loops, functions, objects, and interacting with the page.</p>
+      </section>
+
+      <!-- SLIDE 5: VARIABLES & DATA TYPES -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Basic Syntax</span>
+          <h2>1. Variables &amp; Data Types (<code>const</code> &amp; <code>let</code>)</h2>
+          <p class="subtitle">Store values in named containers &mdash; use <code>const</code> by default, <code>let</code> if it changes.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="kw">const</span> companyName = <span class="st">'Acme Corp'</span>;   <span class="cm">// String (cannot be reassigned)</span>
+<span class="kw">let</span> employeeCount = <span class="nu">42</span>;            <span class="cm">// Number (can be changed later)</span>
+employeeCount = <span class="nu">43</span>;
+
+<span class="kw">const</span> isActive = <span class="kw">true</span>;             <span class="cm">// Boolean (true or false)</span>
+<span class="kw">const</span> skills = [<span class="st">'Java'</span>, <span class="st">'SQL'</span>];    <span class="cm">// Array (list of items)</span>
+<span class="kw">const</span> user = { name: <span class="st">'Alice'</span>, age: <span class="nu">28</span> }; <span class="cm">// Object (key-value pairs)</span>
+
+<span class="ty">console</span>.log(companyName, employeeCount); <span class="cm">// Prints to DevTools Console</span></code></pre>
+          <div class="card blue">
+            <p><strong>Tip:</strong> In modern JavaScript, avoid the old <code>var</code> keyword &mdash; always use <code>const</code> or <code>let</code>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: CONDITIONALS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Basic Syntax</span>
+          <h2>2. Conditionals (<code>if</code> / <code>else</code>)</h2>
+          <p class="subtitle">Make decisions in code; always use <code>===</code> (strict equality) instead of <code>==</code>.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="kw">const</span> role = <span class="st">'Admin'</span>;
+<span class="kw">const</span> age = <span class="nu">22</span>;
+
+<span class="kw">if</span> (role === <span class="st">'Admin'</span> &amp;&amp; age &gt;= <span class="nu">18</span>) {
+  <span class="ty">console</span>.log(<span class="st">'Full access granted'</span>);
+} <span class="kw">else if</span> (role === <span class="st">'Guest'</span>) {
+  <span class="ty">console</span>.log(<span class="st">'Read-only access'</span>);
+} <span class="kw">else</span> {
+  <span class="ty">console</span>.log(<span class="st">'Access denied'</span>);
+}</code></pre>
+          <div class="card amber">
+            <p><strong>Why <code>===</code>?</strong> <code>5 === '5'</code> is <code>false</code> (checks value AND type), preventing tricky bugs.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: LOOPS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Basic Syntax</span>
+          <h2>3. Loops (<code>for</code> &amp; <code>for...of</code>)</h2>
+          <p class="subtitle">Repeat an action multiple times or go through every item in a list.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;">Classic <code>for</code> loop</p>
+              <pre><code><span class="kw">for</span> (<span class="kw">let</span> i = <span class="nu">1</span>; i &lt;= <span class="nu">3</span>; i++) {
+  <span class="ty">console</span>.log(<span class="st">'Step '</span> + i);
+}
+<span class="cm">// Step 1, Step 2, Step 3</span></code></pre>
+            </div>
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;">Looping an Array (<code>for...of</code>)</p>
+              <pre><code><span class="kw">const</span> names = [<span class="st">'Alice'</span>, <span class="st">'Bob'</span>, <span class="st">'Sara'</span>];
+
+<span class="kw">for</span> (<span class="kw">const</span> name <span class="kw">of</span> names) {
+  <span class="ty">console</span>.log(<span class="st">'Hello, '</span> + name + <span class="st">'!'</span>);
+}</code></pre>
+            </div>
+          </div>
+          <div class="card green">
+            <p><strong>String Concatenation:</strong> Use <code>+</code> to join text and variables together (e.g. <code>'Hello, ' + name + '!'</code>).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: FUNCTIONS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Basic Syntax</span>
+          <h2>4. Functions</h2>
+          <p class="subtitle">Reusable blocks of logic that take inputs (parameters) and return an output.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;">Function with 1 Parameter</p>
+              <pre><code><span class="kw">function</span> <span class="ty">greet</span>(name) {
+  <span class="kw">return</span> <span class="st">'Welcome, '</span> + name + <span class="st">'!'</span>;
+}
+
+<span class="ty">console</span>.log(greet(<span class="st">'Alice'</span>));
+<span class="cm">// "Welcome, Alice!"</span></code></pre>
+            </div>
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;">Function with 2 Parameters</p>
+              <pre><code><span class="kw">function</span> <span class="ty">add</span>(a, b) {
+  <span class="kw">return</span> a + b;
+}
+
+<span class="ty">console</span>.log(add(<span class="nu">5</span>, <span class="nu">3</span>));
+<span class="cm">// 8</span></code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: ARRAYS & OBJECTS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Basic Syntax</span>
+          <h2>5. Working with Arrays &amp; Objects</h2>
+          <p class="subtitle">Most REST APIs return an array of JSON objects &mdash; here is how JS handles them.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="kw">const</span> employees = [
+  { id: <span class="nu">1</span>, name: <span class="st">'Alice'</span>, role: <span class="st">'Developer'</span> },
+  { id: <span class="nu">2</span>, name: <span class="st">'Bob'</span>,   role: <span class="st">'Designer'</span> }
+];
+
+<span class="ty">console</span>.log(employees[<span class="nu">0</span>].name);  <span class="cm">// "Alice"</span>
+<span class="ty">console</span>.log(employees.length);   <span class="cm">// 2</span>
+
+employees.push({ id: <span class="nu">3</span>, name: <span class="st">'Sara'</span>, role: <span class="st">'Manager'</span> }); <span class="cm">// Add item</span></code></pre>
+        </div>
+      </section>
+
+      <!-- SLIDE 10A: SELECTING ELEMENTS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Basic Syntax</span>
+          <h2>6. Selecting Elements (<code>id</code> &amp; <code>class</code>)</h2>
+          <p class="subtitle">Before changing an element or listening for clicks, JavaScript needs to find it in the HTML.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;">HTML</p>
+              <pre><code><span class="kw">&lt;h1</span> id=<span class="st">"main-title"</span><span class="kw">&gt;</span>Welcome<span class="kw">&lt;/h1&gt;</span>
+
+<span class="kw">&lt;p</span> class=<span class="st">"note"</span><span class="kw">&gt;</span>First note<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;p</span> class=<span class="st">"note"</span><span class="kw">&gt;</span>Second note<span class="kw">&lt;/p&gt;</span></code></pre>
+            </div>
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;">JavaScript</p>
+              <pre><code><span class="cm">// Select 1 element by id</span>
+<span class="kw">const</span> title = <span class="ty">document</span>.getElementById(<span class="st">'main-title'</span>);
+
+<span class="cm">// Select ALL elements by class</span>
+<span class="kw">const</span> notes = <span class="ty">document</span>.getElementsByClassName(<span class="st">'note'</span>);
+<span class="kw">const</span> firstNote = notes[<span class="nu">0</span>];</code></pre>
+            </div>
+          </div>
+          <div class="card blue">
+            <p><strong>Remember:</strong> With <code>getElementById</code> and <code>getElementsByClassName</code>, pass the name directly &mdash; <strong>no <code>#</code> or <code>.</code></strong> needed!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: DOM & EVENTS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Basic Syntax</span>
+          <h2>7. Interacting with the Page (DOM &amp; Events)</h2>
+          <p class="subtitle">Find an HTML element, listen for a click, and update the screen without reloading.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2" style="align-items: start;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div>
+                <p style="font-weight: 700; margin: 0 0 4px; font-size: 0.88rem; color: #0f172a;">HTML</p>
+                <pre style="font-size: 0.78rem; padding: 9px 12px;"><code><span class="kw">&lt;p</span> id=<span class="st">"count"</span><span class="kw">&gt;</span>Clicked 0 times<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;button</span> id=<span class="st">"addBtn"</span><span class="kw">&gt;</span>Add 1<span class="kw">&lt;/button&gt;</span></code></pre>
+              </div>
+              <div>
+                <p style="font-weight: 700; margin: 0 0 4px; font-size: 0.88rem; color: #0f172a;">CSS</p>
+                <pre style="font-size: 0.78rem; padding: 9px 12px;"><code><span class="ty">#count</span> { font-weight: bold; }
+<span class="ty">#addBtn</span> {
+  background: <span class="st">#2563eb</span>;
+  color: white;
+  padding: <span class="nu">8px 16px</span>;
+  border-radius: <span class="nu">8px</span>;
+}</code></pre>
+              </div>
+              <div class="card green" style="padding: 10px 14px;">
+                <h3 style="margin-bottom: 6px; font-size: 0.95rem;">Working Example</h3>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #ffffff; border: 1px dashed #86efac; border-radius: 10px; padding: 8px 12px;">
+                  <span id="liveCount" style="font-weight: 700; color: #0f172a; font-size: 0.92rem;">Clicked 0 times</span>
+                  <button type="button" id="liveAddBtn" style="background: #2563eb; color: #ffffff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer;">Add 1</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p style="font-weight: 700; margin: 0 0 6px; color: #0f172a;">JavaScript</p>
+              <pre style="font-size: 0.82rem; padding: 12px 14px;"><code><span class="cm">// 1. Find HTML elements</span>
+<span class="kw">const</span> countText = <span class="ty">document</span>.getElementById(<span class="st">'count'</span>);
+<span class="kw">const</span> addBtn    = <span class="ty">document</span>.getElementById(<span class="st">'addBtn'</span>);
+
+<span class="kw">let</span> count = <span class="nu">0</span>;
+
+<span class="cm">// 2. Define a handler function</span>
+<span class="kw">function</span> <span class="ty">incrementCount</span>() {
+  count = count + <span class="nu">1</span>;
+  countText.textContent = <span class="st">'Clicked '</span> + count + <span class="st">' times'</span>;
+}
+
+<span class="cm">// 3. Pass it by name as a callback</span>
+addBtn.addEventListener(<span class="st">'click'</span>, incrementCount);</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10B: ADDING TABLE ROWS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Basic Syntax</span>
+          <h2>8. Adding Rows to an Empty Table</h2>
+          <p class="subtitle">Append new HTML rows directly into a table&rsquo;s <code>&lt;tbody&gt;</code> using <code>innerHTML</code>.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2" style="align-items: start;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div>
+                <p style="font-weight: 700; margin: 0 0 4px; font-size: 0.85rem; color: #0f172a;">HTML</p>
+                <pre style="font-size: 0.74rem; padding: 8px 10px;"><code><span class="kw">&lt;h3&gt;</span>Employees<span class="kw">&lt;/h3&gt;</span>
+<span class="kw">&lt;table&gt;</span>
+  <span class="kw">&lt;thead&gt;&lt;tr&gt;&lt;th&gt;</span>ID<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Name<span class="kw">&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</span>
+  <span class="kw">&lt;tbody</span> id=<span class="st">"employeeTable"</span><span class="kw">&gt;&lt;/tbody&gt;</span>
+<span class="kw">&lt;/table&gt;</span>
+<span class="kw">&lt;button</span> id=<span class="st">"addRowBtn"</span><span class="kw">&gt;</span>Add Employee<span class="kw">&lt;/button&gt;</span></code></pre>
+              </div>
+              <div>
+                <p style="font-weight: 700; margin: 0 0 4px; font-size: 0.85rem; color: #0f172a;">JavaScript</p>
+                <pre style="font-size: 0.74rem; padding: 8px 10px;"><code><span class="kw">const</span> tbody = <span class="ty">document</span>.getElementById(<span class="st">'employeeTable'</span>);
+<span class="kw">const</span> btn   = <span class="ty">document</span>.getElementById(<span class="st">'addRowBtn'</span>);
+<span class="kw">let</span> nextId  = <span class="nu">1</span>;
+
+<span class="kw">function</span> <span class="ty">addEmployeeRow</span>() {
+  tbody.innerHTML = tbody.innerHTML +
+    <span class="st">'&lt;tr&gt;&lt;td&gt;'</span> + nextId + <span class="st">'&lt;/td&gt;&lt;td&gt;Alice&lt;/td&gt;&lt;/tr&gt;'</span>;
+  nextId = nextId + <span class="nu">1</span>;
+}
+
+btn.addEventListener(<span class="st">'click'</span>, addEmployeeRow);</code></pre>
+              </div>
+            </div>
+            <div class="card green" style="padding: 14px 16px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                <h3 style="margin: 0; font-size: 1rem;">Employees</h3>
+                <button type="button" id="liveAddRowBtn" style="background: #16a34a; color: #ffffff; border: none; padding: 7px 14px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">+ Add Employee</button>
+              </div>
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.86rem; background: #ffffff;">
+                <thead>
+                  <tr style="background: #f1f5f9;">
+                    <th style="border: 1px solid #cbd5e1; padding: 6px 10px; text-align: left;">ID</th>
+                    <th style="border: 1px solid #cbd5e1; padding: 6px 10px; text-align: left;">Name</th>
+                  </tr>
+                </thead>
+                <tbody id="liveEmpBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WRAP-UP -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Wrap-Up</span>
+          <h2>Quick Recap</h2>
+          <p class="subtitle">Everything you need to remember from this JavaScript intro:</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card blue">
+              <h3>History &amp; HTML Integration</h3>
+              <ul>
+                <li>Created in 1995 (10 days); runs in every browser</li>
+                <li>JavaScript &ne; Java</li>
+                <li>Inline: <code>&lt;script&gt;...&lt;/script&gt;</code> before <code>&lt;/body&gt;</code></li>
+                <li>External (best): <code>&lt;script src="app.js" defer&gt;&lt;/script&gt;</code></li>
+              </ul>
+            </div>
+            <div class="card green">
+              <h3>Core Syntax</h3>
+              <ul>
+                <li><code>const</code> &amp; <code>let</code> for variables</li>
+                <li><code>if / else</code> with strict <code>===</code></li>
+                <li><code>for...of</code> loops &amp; <code>function</code> declarations</li>
+                <li><code>document.getElementById()</code> + <code>addEventListener()</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="controls">
+      <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&larr; Previous</button>
+      <div class="counter" id="counter">1 / 14</div>
+      <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next &rarr;</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    let current = 0;
+
+    function showSlide(index) {
+      slides[current].classList.remove('active');
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides[current].classList.add('active');
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === slides.length - 1;
+      counter.textContent = (current + 1) + ' / ' + slides.length;
+      progress.style.width = (((current + 1) / slides.length) * 100) + '%';
+    }
+
+    function changeSlide(step) { showSlide(current + step); }
+
+    let demoCount = 0;
+    function incrementDemoCounter() {
+      demoCount = demoCount + 1;
+      document.getElementById('demoCounterText').textContent = 'Count: ' + demoCount;
+    }
+
+    let demoItemCount = 0;
+    function addDemoItem() {
+      demoItemCount = demoItemCount + 1;
+      const badge = document.createElement('span');
+      badge.textContent = 'Item ' + demoItemCount;
+      badge.style.cssText = 'background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 999px; font-size: 0.78rem; font-weight: 600;';
+      document.getElementById('demoItemList').appendChild(badge);
+    }
+
+    const liveCountText = document.querySelector('#liveCount');
+    const liveAddBtn = document.querySelector('#liveAddBtn');
+    let liveCount = 0;
+
+    function incrementLiveCount() {
+      liveCount = liveCount + 1;
+      liveCountText.textContent = 'Clicked ' + liveCount + ' times';
+      liveAddBtn.blur();
+    }
+
+    liveAddBtn.addEventListener('click', incrementLiveCount);
+
+    const liveEmpBody = document.querySelector('#liveEmpBody');
+    const liveAddRowBtn = document.querySelector('#liveAddRowBtn');
+    let liveNextId = 1;
+
+    function addLiveEmployeeRow() {
+      liveEmpBody.innerHTML = liveEmpBody.innerHTML +
+        '<tr>' +
+          '<td style="border: 1px solid #cbd5e1; padding: 5px 8px;">' + liveNextId + '</td>' +
+          '<td style="border: 1px solid #cbd5e1; padding: 5px 8px;">Alice</td>' +
+        '</tr>';
+      liveNextId = liveNextId + 1;
+      liveAddRowBtn.blur();
+    }
+
+    liveAddRowBtn.addEventListener('click', addLiveEmployeeRow);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+    });
+
+    showSlide(0);
+  </script>
+  <script>
+    (function () {
+      const blocks = document.querySelectorAll('pre');
+      for (const pre of blocks) {
+        const wrap = document.createElement('div');
+        wrap.className = 'code-wrap';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy';
+        btn.addEventListener('click', function () {
+          navigator.clipboard.writeText(pre.textContent.trim());
+          btn.textContent = 'Copied!';
+          btn.blur();
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+        });
+        wrap.appendChild(btn);
+      }
+    })();
+  </script>
+</body>
+</html>

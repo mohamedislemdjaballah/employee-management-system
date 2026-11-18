@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Série 02 — Sélectionner des Éléments &amp; innerHTML</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --tip-bg: #eff6ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a:hover { text-decoration: underline; }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      padding: 30px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 1.75rem; }
+    header p { margin: 0; opacity: 0.92; }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.24rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    p { margin: 0 0 12px; color: var(--muted); }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 10px 0;
+    }
+
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+
+    .example-box {
+      background: var(--tip-bg);
+      border-left: 4px solid var(--primary);
+      padding: 10px 14px;
+      border-radius: 0 10px 10px 0;
+      margin: 10px 0 12px;
+      font-size: 0.94rem;
+    }
+
+    details { margin-top: 10px; }
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .code-wrap { position: relative; }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .preview-box {
+      background: #f8fafc;
+      border: 1px dashed #94a3b8;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .preview-box.after {
+      background: #f0fdf4;
+      border-color: #4ade80;
+    }
+
+    .preview-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .preview-box.after .preview-label { color: #059669; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="01-js-syntax-basics.html">&larr; S&eacute;rie 01</a>
+      <a href="index.html">Tous les Exercices</a>
+      <a href="../00-javascript-presentation.html" target="_blank" rel="noopener">Slides JS</a>
+      <a href="03-js-fetch-api.html">S&eacute;rie 03 &rarr;</a>
+    </div>
+
+    <header>
+      <h1>S&eacute;rie 02 &mdash; S&eacute;lectionner des &Eacute;l&eacute;ments &amp; <code>innerHTML</code></h1>
+      <p>3 exercices pour pratiquer <code>getElementById()</code>, <code>getElementsByClassName()</code>, les &eacute;v&eacute;nements et <code>innerHTML</code>.</p>
+    </header>
+
+    <section class="card">
+      <h2><span class="badge">Pr&eacute;paration</span> Comment tester votre code</h2>
+      <ol style="margin: 8px 0 12px; padding-left: 22px; color: var(--muted);">
+        <li>Cr&eacute;ez un fichier nomm&eacute; <code>dom-test.html</code> sur votre ordinateur.</li>
+        <li>Placez le HTML de l&rsquo;exercice dans <code>&lt;body&gt;</code> et votre fonction JavaScript dans <code>&lt;script&gt;</code> juste avant <code>&lt;/body&gt;</code>, <strong>puis appelez-la juste apr&egrave;s</strong>.</li>
+        <li><strong>Double-cliquez sur <code>dom-test.html</code></strong> pour voir la page se mettre &agrave; jour dans votre navigateur (et ouvrez <code>F12</code> &rarr; <strong>Console</strong> si besoin).</li>
+      </ol>
+      <pre><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+  <span class="kw">&lt;h1</span> id=<span class="st">"demo"</span><span class="kw">&gt;</span>Bonjour<span class="kw">&lt;/h1&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="cm">// 1. D&eacute;finissez votre fonction</span>
+    <span class="kw">function</span> <span class="ty">changeDemo</span>() {
+      <span class="kw">const</span> el = <span class="ty">document</span>.getElementById(<span class="st">'demo'</span>);
+      el.innerHTML = <span class="st">'Modifi&eacute; par JS !'</span>;
+    }
+
+    <span class="cm">// 2. Appelez la fonction juste apr&egrave;s sa d&eacute;finition</span>
+    changeDemo();
+  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></pre>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 1</span> Modifier le Titre et un Paragraphe</h2>
+      <p>S&eacute;lectionnez le titre par son <code>id</code> (<code>#title</code>) et le paragraphe par sa <code>class</code> (<code>.info</code>), puis modifiez leur <code>innerHTML</code>.</p>
+      <p style="margin-bottom: 4px; font-weight: 600; color: #0f172a;">HTML initial :</p>
+      <pre><span class="kw">&lt;h1</span> id=<span class="st">"title"</span><span class="kw">&gt;</span>Bienvenue<span class="kw">&lt;/h1&gt;</span>
+<span class="kw">&lt;p</span> class=<span class="st">"info"</span><span class="kw">&gt;</span>Texte initial<span class="kw">&lt;/p&gt;</span></pre>
+      <p style="margin-bottom: 4px; font-weight: 600; color: #059669;">R&eacute;sultat HTML attendu :</p>
+      <pre><span class="kw">&lt;h1</span> id=<span class="st">"title"</span><span class="kw">&gt;</span>Bonjour <span class="kw">&lt;strong&gt;</span>JavaScript<span class="kw">&lt;/strong&gt;</span> !<span class="kw">&lt;/h1&gt;</span>
+<span class="kw">&lt;p</span> class=<span class="st">"info"</span><span class="kw">&gt;</span>Page charg&eacute;e avec succ&egrave;s.<span class="kw">&lt;/p&gt;</span></pre>
+      <div class="preview-grid">
+        <div class="preview-box">
+          <div class="preview-label">Aper&ccedil;u initial</div>
+          <h1 style="margin: 0 0 6px; font-size: 1.35rem; color: #0f172a;">Bienvenue</h1>
+          <p style="margin: 0; color: #334155;">Texte initial</p>
+        </div>
+        <div class="preview-box after">
+          <div class="preview-label">Aper&ccedil;u attendu</div>
+          <h1 style="margin: 0 0 6px; font-size: 1.35rem; color: #0f172a; font-weight: 400;">Bonjour <strong>JavaScript</strong> !</h1>
+          <p style="margin: 0; color: #334155;">Page charg&eacute;e avec succ&egrave;s.</p>
+        </div>
+      </div>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>#title</code> contient <code>Bienvenue</code><br />
+        Sortie : <code>#title</code> affiche <code>Bonjour &lt;strong&gt;JavaScript&lt;/strong&gt; !</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>.info</code> contient <code>Texte initial</code><br />
+        Sortie : <code>.info</code> affiche <code>Page charg&eacute;e avec succ&egrave;s.</code>
+      </div>
+      <details>
+        <summary style="color: #059669;">Voir la Solution</summary>
+        <pre><span class="kw">function</span> <span class="ty">updatePage</span>() {
+  <span class="kw">const</span> title = <span class="ty">document</span>.getElementById(<span class="st">'title'</span>);
+  <span class="kw">const</span> infos = <span class="ty">document</span>.getElementsByClassName(<span class="st">'info'</span>);
+
+  title.innerHTML    = <span class="st">'Bonjour &lt;strong&gt;JavaScript&lt;/strong&gt; !'</span>;
+  infos[<span class="nu">0</span>].innerHTML = <span class="st">'Page charg&eacute;e avec succ&egrave;s.'</span>;
+}
+
+updatePage();</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 2</span> Compteur de Clics avec <code>innerHTML</code></h2>
+      <p>D&eacute;finissez une fonction nomm&eacute;e <code>handleClick()</code> et passez-la par son nom &agrave; <code>addEventListener('click', handleClick)</code> pour compter les clics dans <code>#message</code>.</p>
+      <p style="margin-bottom: 4px; font-weight: 600; color: #0f172a;">HTML initial :</p>
+      <pre><span class="kw">&lt;p</span> id=<span class="st">"message"</span><span class="kw">&gt;</span>Clics : 0<span class="kw">&lt;/p&gt;</span>
+<span class="kw">&lt;button</span> id=<span class="st">"clickBtn"</span><span class="kw">&gt;</span>Cliquer<span class="kw">&lt;/button&gt;</span></pre>
+      <p style="margin-bottom: 4px; font-weight: 600; color: #059669;">R&eacute;sultat HTML attendu (apr&egrave;s 1 clic) :</p>
+      <pre><span class="kw">&lt;p</span> id=<span class="st">"message"</span><span class="kw">&gt;</span>Clics : <span class="kw">&lt;strong&gt;</span>1<span class="kw">&lt;/strong&gt;&lt;/p&gt;</span>
+<span class="kw">&lt;button</span> id=<span class="st">"clickBtn"</span><span class="kw">&gt;</span>Cliquer<span class="kw">&lt;/button&gt;</span></pre>
+      <div class="preview-grid">
+        <div class="preview-box">
+          <div class="preview-label">Aper&ccedil;u initial</div>
+          <p style="margin: 0 0 8px; color: #0f172a;">Clics : 0</p>
+          <button type="button" style="all: revert;">Cliquer</button>
+        </div>
+        <div class="preview-box after">
+          <div class="preview-label">Aper&ccedil;u attendu (apr&egrave;s 1 clic)</div>
+          <p style="margin: 0 0 8px; color: #0f172a;">Clics : <strong>1</strong></p>
+          <button type="button" style="all: revert;">Cliquer</button>
+        </div>
+      </div>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : 1er clic sur le bouton <code>#clickBtn</code><br />
+        Sortie : <code>#message</code> affiche <code>Clics : &lt;strong&gt;1&lt;/strong&gt;</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : 3&egrave;me clic sur le bouton <code>#clickBtn</code><br />
+        Sortie : <code>#message</code> affiche <code>Clics : &lt;strong&gt;3&lt;/strong&gt;</code>
+      </div>
+      <details>
+        <summary style="color: #059669;">Voir la Solution</summary>
+        <pre><span class="kw">function</span> <span class="ty">setupCounter</span>() {
+  <span class="kw">const</span> msg = <span class="ty">document</span>.getElementById(<span class="st">'message'</span>);
+  <span class="kw">const</span> btn = <span class="ty">document</span>.getElementById(<span class="st">'clickBtn'</span>);
+  <span class="kw">let</span> count = <span class="nu">0</span>;
+
+  <span class="kw">function</span> <span class="ty">handleClick</span>() {
+    count = count + <span class="nu">1</span>;
+    msg.innerHTML = <span class="st">'Clics : &lt;strong&gt;'</span> + count + <span class="st">'&lt;/strong&gt;'</span>;
+  }
+
+  btn.addEventListener(<span class="st">'click'</span>, handleClick);
+}
+
+setupCounter();</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 3</span> Ajouter des Lignes &agrave; un Tableau Vide</h2>
+      <p>S&eacute;lectionnez le <code>&lt;tbody id="studentTable"&gt;</code> et ajoutez une nouvelle ligne <code>&lt;tr&gt;&lt;td&gt;...&lt;/td&gt;&lt;td&gt;...&lt;/td&gt;&lt;/tr&gt;</code> avec <code>innerHTML</code> &agrave; chaque clic sur <code>#addBtn</code>.</p>
+      <p style="margin-bottom: 4px; font-weight: 600; color: #0f172a;">HTML initial :</p>
+      <pre><span class="kw">&lt;h3&gt;</span>&Eacute;tudiants<span class="kw">&lt;/h3&gt;</span>
+<span class="kw">&lt;table&gt;</span>
+  <span class="kw">&lt;thead&gt;&lt;tr&gt;&lt;th&gt;</span>ID<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Nom<span class="kw">&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</span>
+  <span class="kw">&lt;tbody</span> id=<span class="st">"studentTable"</span><span class="kw">&gt;&lt;/tbody&gt;</span>
+<span class="kw">&lt;/table&gt;</span>
+<span class="kw">&lt;button</span> id=<span class="st">"addBtn"</span><span class="kw">&gt;</span>Ajouter &Eacute;tudiant<span class="kw">&lt;/button&gt;</span></pre>
+      <p style="margin-bottom: 4px; font-weight: 600; color: #059669;">R&eacute;sultat HTML attendu (apr&egrave;s 2 clics) :</p>
+      <pre><span class="kw">&lt;h3&gt;</span>&Eacute;tudiants<span class="kw">&lt;/h3&gt;</span>
+<span class="kw">&lt;table&gt;</span>
+  <span class="kw">&lt;thead&gt;&lt;tr&gt;&lt;th&gt;</span>ID<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Nom<span class="kw">&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</span>
+  <span class="kw">&lt;tbody</span> id=<span class="st">"studentTable"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;tr&gt;&lt;td&gt;</span>1<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Sara<span class="kw">&lt;/td&gt;&lt;/tr&gt;</span>
+    <span class="kw">&lt;tr&gt;&lt;td&gt;</span>2<span class="kw">&lt;/td&gt;&lt;td&gt;</span>Sara<span class="kw">&lt;/td&gt;&lt;/tr&gt;</span>
+  <span class="kw">&lt;/tbody&gt;</span>
+<span class="kw">&lt;/table&gt;</span>
+<span class="kw">&lt;button</span> id=<span class="st">"addBtn"</span><span class="kw">&gt;</span>Ajouter &Eacute;tudiant<span class="kw">&lt;/button&gt;</span></pre>
+      <div class="preview-grid">
+        <div class="preview-box">
+          <div class="preview-label">Aper&ccedil;u initial</div>
+          <h3 style="margin: 0 0 6px; font-size: 1rem;">&Eacute;tudiants</h3>
+          <table style="border-collapse: collapse; width: 100%; margin-bottom: 8px; font-size: 0.85rem; background: #fff;">
+            <thead><tr><th style="border: 1px solid #cbd5e1; padding: 4px 8px; text-align: left;">ID</th><th style="border: 1px solid #cbd5e1; padding: 4px 8px; text-align: left;">Nom</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <button type="button" style="all: revert;">Ajouter &Eacute;tudiant</button>
+        </div>
+        <div class="preview-box after">
+          <div class="preview-label">Aper&ccedil;u attendu (apr&egrave;s 2 clics)</div>
+          <h3 style="margin: 0 0 6px; font-size: 1rem;">&Eacute;tudiants</h3>
+          <table style="border-collapse: collapse; width: 100%; margin-bottom: 8px; font-size: 0.85rem; background: #fff;">
+            <thead><tr><th style="border: 1px solid #cbd5e1; padding: 4px 8px; text-align: left;">ID</th><th style="border: 1px solid #cbd5e1; padding: 4px 8px; text-align: left;">Nom</th></tr></thead>
+            <tbody>
+              <tr><td style="border: 1px solid #cbd5e1; padding: 4px 8px;">1</td><td style="border: 1px solid #cbd5e1; padding: 4px 8px;">Sara</td></tr>
+              <tr><td style="border: 1px solid #cbd5e1; padding: 4px 8px;">2</td><td style="border: 1px solid #cbd5e1; padding: 4px 8px;">Sara</td></tr>
+            </tbody>
+          </table>
+          <button type="button" style="all: revert;">Ajouter &Eacute;tudiant</button>
+        </div>
+      </div>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : 1er clic sur <code>#addBtn</code><br />
+        Sortie : Le tableau contient <code>1 | Sara</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : 2&egrave;me clic sur <code>#addBtn</code><br />
+        Sortie : Le tableau contient <code>1 | Sara</code> et <code>2 | Sara</code>
+      </div>
+      <details>
+        <summary style="color: #059669;">Voir la Solution</summary>
+        <pre><span class="kw">function</span> <span class="ty">setupStudentTable</span>() {
+  <span class="kw">const</span> tbody = <span class="ty">document</span>.getElementById(<span class="st">'studentTable'</span>);
+  <span class="kw">const</span> btn   = <span class="ty">document</span>.getElementById(<span class="st">'addBtn'</span>);
+  <span class="kw">let</span> nextId  = <span class="nu">1</span>;
+
+  <span class="kw">function</span> <span class="ty">addStudent</span>() {
+    tbody.innerHTML = tbody.innerHTML +
+      <span class="st">'&lt;tr&gt;&lt;td&gt;'</span> + nextId + <span class="st">'&lt;/td&gt;&lt;td&gt;Sara&lt;/td&gt;&lt;/tr&gt;'</span>;
+    nextId = nextId + <span class="nu">1</span>;
+  }
+
+  btn.addEventListener(<span class="st">'click'</span>, addStudent);
+}
+
+setupStudentTable();</pre>
+      </details>
+    </section>
+  </div>
+  <script>
+    (function () {
+      const blocks = document.querySelectorAll('pre');
+      for (const pre of blocks) {
+        const wrap = document.createElement('div');
+        wrap.className = 'code-wrap';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy';
+        btn.addEventListener('click', function () {
+          navigator.clipboard.writeText(pre.textContent.trim());
+          btn.textContent = 'Copied!';
+          btn.blur();
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+        });
+        wrap.appendChild(btn);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -17,6 +17,22 @@
     .card h2 { margin: 0 0 10px; font-size: 1.15rem; color: var(--primary); }
     pre { background: #0f172a; color: #38bdf8; padding: 14px; border-radius: 8px; overflow-x: auto; font-family: Consolas, monospace; font-size: 0.9rem; line-height: 1.5; margin: 10px 0 0; }
     p { margin: 0 0 8px; color: #475569; font-size: 0.95rem; }
+    .code-wrap { position: relative; }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.25); }
   </style>
 </head>
 <body>
@@ -81,5 +97,28 @@ const sitOnly = employees.filter(function(emp) {
   });</pre>
     </div>
   </div>
+  <script>
+    (function () {
+      const blocks = document.querySelectorAll('pre');
+      for (const pre of blocks) {
+        const wrap = document.createElement('div');
+        wrap.className = 'code-wrap';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy';
+        btn.addEventListener('click', function () {
+          navigator.clipboard.writeText(pre.textContent.trim());
+          btn.textContent = 'Copied!';
+          btn.blur();
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+        });
+        wrap.appendChild(btn);
+      }
+    })();
+  </script>
 </body>
 </html>
