@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solution 02 — Loops, Badges &amp; Filtering</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+    .container { max-width: 880px; margin: 0 auto; padding: 28px 20px 60px; }
+    .nav { display: flex; justify-content: space-between; margin-bottom: 18px; }
+    .nav a { color: #0284c7; text-decoration: none; font-weight: 600; }
+    .card { background: #fff; border: 1px solid #cbd5e1; border-top: 5px solid #15803d; border-radius: 10px; padding: 20px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+    select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #0a2540; color: #fff; text-align: left; padding: 10px 12px; font-size: 0.85rem; text-transform: uppercase; }
+    td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+    .badge-active { background: #dcfce7; color: #15803d; }
+    .badge-leave { background: #fef3c7; color: #b45309; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="../02-loops-and-conditionals.html">← Back to Exercise 02</a>
+      <a href="index.html">All Solutions</a>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <strong>Employee Directory (<span id="emp-count">0</span> displayed)</strong>
+        <div>
+          <label for="dept-filter">Filter by Department: </label>
+          <select id="dept-filter">
+            <option value="">All Departments</option>
+            <option value="SIT">SIT — Information Systems</option>
+            <option value="DGT">DGT — Treasury</option>
+            <option value="DB">DB — Budget</option>
+          </select>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Matricule</th><th>Full Name</th><th>Department</th><th>Salary</th><th>Status</th></tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const allEmployees = [
+      { matricule: "FIN-2026-001", name: "Karim BENALI", dept: "SIT", salary: 145000, status: "ACTIVE" },
+      { matricule: "FIN-2026-002", name: "Amina MANSOURI", dept: "SIT", salary: 118000, status: "ACTIVE" },
+      { matricule: "FIN-2026-003", name: "Yacine TOUATI", dept: "DGT", salary: 132000, status: "ACTIVE" },
+      { matricule: "FIN-2026-004", name: "Nadia KHELIFI", dept: "DB",  salary: 112000, status: "ON_LEAVE" },
+      { matricule: "FIN-2026-005", name: "Mourad HADJADJ", dept: "SIT", salary: 125000, status: "ACTIVE" }
+    ];
+
+    const tbody = document.getElementById("table-body");
+    const countSpan = document.getElementById("emp-count");
+    const deptFilter = document.getElementById("dept-filter");
+
+    function renderTable(list) {
+      countSpan.textContent = list.length;
+      tbody.innerHTML = "";
+
+      list.forEach(function(emp) {
+        let badgeClass = "badge-leave";
+        let badgeLabel = "En Congé";
+        if (emp.status === "ACTIVE") {
+          badgeClass = "badge-active";
+          badgeLabel = "En Activité";
+        }
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><code>${emp.matricule}</code></td>
+          <td><strong>${emp.name}</strong></td>
+          <td>${emp.dept}</td>
+          <td>${emp.salary} DA</td>
+          <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    deptFilter.addEventListener("change", function() {
+      const selected = deptFilter.value;
+      if (selected === "") {
+        renderTable(allEmployees);
+      } else {
+        const filtered = allEmployees.filter(function(emp) {
+          return emp.dept === selected;
+        });
+        renderTable(filtered);
+      }
+    });
+
+    renderTable(allEmployees);
+  </script>
+</body>
+</html>

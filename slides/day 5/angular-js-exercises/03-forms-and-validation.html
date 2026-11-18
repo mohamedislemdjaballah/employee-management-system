@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 03 — Forms &amp; Client Validation in Plain JS</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+    .container { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
+    .nav { display: flex; justify-content: space-between; margin-bottom: 18px; }
+    .nav a { color: #0284c7; text-decoration: none; font-weight: 600; }
+    .instructions { background: #eff6ff; border-left: 4px solid #0284c7; padding: 16px 20px; border-radius: 8px; margin-bottom: 24px; }
+    .instructions h1 { margin: 0 0 8px; font-size: 1.4rem; color: #0a2540; }
+    .card { background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 24px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+    input { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box; }
+    input.invalid { border-color: #b91c1c; background: #fef2f2; }
+    .error-msg { color: #b91c1c; font-size: 0.82rem; margin-top: 4px; display: none; }
+    .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; display: none; font-weight: 600; }
+    .alert-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    button { background: #0a2540; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="index.html">← Back to Hub</a>
+      <a href="solutions/03-solution.html">View Working Solution →</a>
+    </div>
+
+    <div class="instructions">
+      <h1>Exercise 03: Client-Side Validation &amp; <code>preventDefault()</code></h1>
+      <p>Open this file in <strong>VS Code</strong> and complete the form validation inside <code>&lt;script&gt;</code>:</p>
+      <ol>
+        <li>Call <code>event.preventDefault()</code> inside the <code>submit</code> listener so Chrome does not reload the page.</li>
+        <li>Check if <code>fullName.trim() === ""</code>. If empty, add class <code>"invalid"</code> to the input and show <code>#name-error</code>.</li>
+        <li>Check if <code>!email.includes("@")</code>. If invalid, show <code>#email-error</code>.</li>
+        <li>Check if <code>Number(salary) &lt;= 0</code>. If invalid, show <code>#salary-error</code>.</li>
+        <li>If all 3 checks pass, display <code>#success-box</code>!</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div id="success-box" class="alert alert-success"></div>
+
+      <form id="employee-form" novalidate>
+        <div class="form-group">
+          <label for="fullName">Full Name *</label>
+          <input id="fullName" type="text" placeholder="Ex: Karim BENALI" />
+          <div id="name-error" class="error-msg">Full name is required.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Work Email *</label>
+          <input id="email" type="email" placeholder="Ex: k.benali@finances.gov" />
+          <div id="email-error" class="error-msg">Email must contain an @ symbol.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="salary">Monthly Salary (DA) *</label>
+          <input id="salary" type="number" value="120000" />
+          <div id="salary-error" class="error-msg">Salary must be greater than 0.</div>
+        </div>
+
+        <button type="submit">Validate &amp; Submit Form</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("employee-form");
+    const nameInput = document.getElementById("fullName");
+    const emailInput = document.getElementById("email");
+    const salaryInput = document.getElementById("salary");
+
+    const nameErr = document.getElementById("name-error");
+    const emailErr = document.getElementById("email-error");
+    const salaryErr = document.getElementById("salary-error");
+    const successBox = document.getElementById("success-box");
+
+    form.addEventListener("submit", function(event) {
+      // TODO 1: Stop the page from reloading!
+      // event.preventDefault();
+
+      // Reset previous error states
+      nameInput.classList.remove("invalid");
+      emailInput.classList.remove("invalid");
+      salaryInput.classList.remove("invalid");
+      nameErr.style.display = "none";
+      emailErr.style.display = "none";
+      salaryErr.style.display = "none";
+      successBox.style.display = "none";
+
+      let isValid = true;
+
+      // TODO 2: Validate nameInput.value.trim() === ""
+
+
+      // TODO 3: Validate !emailInput.value.includes("@")
+
+
+      // TODO 4: Validate Number(salaryInput.value) <= 0
+
+
+      // TODO 5: If isValid is true, show successBox with the employee's name!
+
+    });
+  </script>
+</body>
+</html>

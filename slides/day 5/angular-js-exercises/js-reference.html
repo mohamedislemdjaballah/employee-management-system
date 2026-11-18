@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plain JavaScript Cheat Sheet — Day 5</title>
+  <style>
+    :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --border: #e2e8f0; --primary: #0a2540; --accent: #0284c7; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { max-width: 860px; margin: 0 auto; padding: 28px 20px 64px; }
+    .nav { margin-bottom: 18px; }
+    .nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    header { background: var(--primary); color: #fff; padding: 24px 28px; border-radius: 12px; margin-bottom: 24px; }
+    header h1 { margin: 0 0 6px; font-size: 1.65rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 18px; }
+    .card h2 { margin: 0 0 10px; font-size: 1.15rem; color: var(--primary); }
+    pre { background: #0f172a; color: #38bdf8; padding: 14px; border-radius: 8px; overflow-x: auto; font-family: Consolas, monospace; font-size: 0.9rem; line-height: 1.5; margin: 10px 0 0; }
+    p { margin: 0 0 8px; color: #475569; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav"><a href="index.html">← Back to Exercises Hub</a></div>
+    <header>
+      <h1>Plain JavaScript Quick Reference</h1>
+      <p>Everything you need to complete today's 4 exercises—with Angular equivalents.</p>
+    </header>
+
+    <div class="card">
+      <h2>1. Variables &amp; Objects (No TypeScript types needed)</h2>
+      <p>Use <code>const</code> for values that don't get reassigned, and <code>let</code> for values that change.</p>
+      <pre>const employee = {
+  firstName: "Karim",
+  lastName: "BENALI",
+  salary: 145000,
+  status: "ACTIVE"
+};</pre>
+    </div>
+
+    <div class="card">
+      <h2>2. Updating Text on Screen (What Angular <code>{{ }}</code> compiles to)</h2>
+      <p>Find an HTML tag by its <code>id="..."</code> and set its <code>textContent</code>.</p>
+      <pre>const nameBox = document.getElementById("emp-name");
+nameBox.textContent = employee.firstName + " " + employee.lastName;</pre>
+    </div>
+
+    <div class="card">
+      <h2>3. Listening for Clicks (What Angular <code>(click)</code> compiles to)</h2>
+      <pre>const btn = document.getElementById("raise-btn");
+btn.addEventListener("click", function() {
+  employee.salary = employee.salary + 10000;
+});</pre>
+    </div>
+
+    <div class="card">
+      <h2>4. Looping &amp; Filtering Arrays (What Angular <code>@for</code> compiles to)</h2>
+      <pre>const tbody = document.getElementById("table-body");
+tbody.innerHTML = ""; // Clear existing rows first
+
+employees.forEach(function(emp) {
+  const row = document.createElement("tr");
+  row.innerHTML = `&lt;td&gt;${emp.firstName}&lt;/td&gt;&lt;td&gt;${emp.salary} DA&lt;/td&gt;`;
+  tbody.appendChild(row);
+});
+
+// Filtering an array:
+const sitOnly = employees.filter(function(emp) {
+  return emp.departmentCode === "SIT";
+});</pre>
+    </div>
+
+    <div class="card">
+      <h2>5. Calling a REST API (What Angular <code>HttpClient</code> compiles to)</h2>
+      <pre>fetch("http://localhost:8080/api/employees")
+  .then(function(response) {
+    return response.json(); // Convert JSON text to JS Array
+  })
+  .then(function(data) {
+    console.log("Employees loaded:", data);
+  });</pre>
+    </div>
+  </div>
+</body>
+</html>
