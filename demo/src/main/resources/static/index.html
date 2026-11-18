@@ -101,6 +101,17 @@
 
     .row-form input { margin-bottom: 0; }
 
+    .create-form {
+      min-height: 218px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .create-form button {
+      margin-top: auto;
+      align-self: flex-end;
+    }
+
     @media (max-width: 780px) {
       .grid { grid-template-columns: 1fr; }
     }
@@ -117,6 +128,23 @@
       <!-- EMPLOYEES SECTION -->
       <section class="card">
         <h2>Employees</h2>
+
+        <h3>Create Employee</h3>
+        <div class="create-form">
+          <input type="text" id="empName" placeholder="Name (e.g. Alice)" />
+          <input type="text" id="empLastName" placeholder="Last Name (e.g. Smith)" />
+          <input type="text" id="empRole" placeholder="Role (e.g. Developer)" />
+          <input type="number" id="empDeptId" placeholder="Department ID (optional)" />
+          <button type="button" id="createEmpBtn">Add Employee</button>
+        </div>
+
+        <h3>Delete Employee</h3>
+        <div class="row-form">
+          <input type="number" id="deleteEmpId" placeholder="Employee ID" />
+          <button type="button" id="deleteEmpBtn" class="danger">Delete</button>
+        </div>
+
+        <h3 style="margin-top: 20px;">Employee List</h3>
         <table>
           <thead>
             <tr>
@@ -129,24 +157,26 @@
           </thead>
           <tbody id="employeeTable"></tbody>
         </table>
-
-        <h3>Create Employee</h3>
-        <input type="text" id="empName" placeholder="Name (e.g. Alice)" />
-        <input type="text" id="empLastName" placeholder="Last Name (e.g. Smith)" />
-        <input type="text" id="empRole" placeholder="Role (e.g. Developer)" />
-        <input type="number" id="empDeptId" placeholder="Department ID (optional)" />
-        <button type="button" id="createEmpBtn">Add Employee</button>
-
-        <h3>Delete Employee</h3>
-        <div class="row-form">
-          <input type="number" id="deleteEmpId" placeholder="Employee ID" />
-          <button type="button" id="deleteEmpBtn" class="danger">Delete</button>
-        </div>
       </section>
 
       <!-- DEPARTMENTS SECTION -->
       <section class="card">
         <h2>Departments</h2>
+
+        <h3>Create Department</h3>
+        <div class="create-form">
+          <input type="text" id="deptName" placeholder="Name (e.g. Engineering)" />
+          <input type="text" id="deptLocation" placeholder="Location (e.g. Floor 3)" />
+          <button type="button" id="createDeptBtn">Add Department</button>
+        </div>
+
+        <h3>Delete Department</h3>
+        <div class="row-form">
+          <input type="number" id="deleteDeptId" placeholder="Department ID" />
+          <button type="button" id="deleteDeptBtn" class="danger">Delete</button>
+        </div>
+
+        <h3 style="margin-top: 20px;">Department List</h3>
         <table>
           <thead>
             <tr>
@@ -157,17 +187,6 @@
           </thead>
           <tbody id="departmentTable"></tbody>
         </table>
-
-        <h3>Create Department</h3>
-        <input type="text" id="deptName" placeholder="Name (e.g. Engineering)" />
-        <input type="text" id="deptLocation" placeholder="Location (e.g. Floor 3)" />
-        <button type="button" id="createDeptBtn">Add Department</button>
-
-        <h3>Delete Department</h3>
-        <div class="row-form">
-          <input type="number" id="deleteDeptId" placeholder="Department ID" />
-          <button type="button" id="deleteDeptBtn" class="danger">Delete</button>
-        </div>
       </section>
     </div>
   </div>
