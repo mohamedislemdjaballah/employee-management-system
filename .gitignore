@@ -53,5 +53,5 @@ Desktop.ini
 *.pyc
 *.db
 *.sqlite
-demo/
+# demo/
 demo.zip
