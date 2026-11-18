@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 1 — Periods 1 &amp; 2 Quiz</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --accent: #059669;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a:hover { text-decoration: underline; }
+
+    header {
+      background: linear-gradient(135deg, #065f46, #059669);
+      color: #ffffff;
+      padding: 30px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(5, 150, 105, 0.2);
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 1.75rem; }
+    header p { margin: 0; opacity: 0.92; }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .q {
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .q:first-of-type { border-top: none; padding-top: 0; }
+    .q p { margin: 0 0 8px; font-weight: 600; color: #0f172a; }
+    .q ul { margin: 0 0 8px; padding-left: 20px; color: var(--muted); list-style: none; }
+    .q li { margin-bottom: 4px; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
+    }
+
+    details summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .ans {
+      margin-top: 6px;
+      background: #ecfdf5;
+      border-left: 4px solid var(--accent);
+      padding: 8px 12px;
+      border-radius: 0 8px 8px 0;
+      color: #065f46;
+      font-size: 0.93rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="index.html">&larr; Day 1 Home</a>
+      <a href="04-quiz-buggy-spa.html">Next: Buggy SPA Quiz &rarr;</a>
+    </div>
+
+    <header>
+      <h1>Day 1 &mdash; Periods 1 &amp; 2 Quiz</h1>
+      <p>Coverage: Web History &amp; Evolution + Web Apps Architectures, REST APIs &amp; OpenAPI (22 Questions).</p>
+    </header>
+
+    <section class="card">
+      <h2><span class="badge">Part 1</span> Multiple Choice (One right answer)</h2>
+
+      <div class="q">
+        <p>1. In the Client&ndash;Server model, what is the &ldquo;Client&rdquo;?</p>
+        <ul>
+          <li>A) The database storing user passwords</li>
+          <li>B) The cloud data center hosting the website</li>
+          <li>C) Your web browser (Chrome, Firefox, Safari) or mobile app that sends requests</li>
+          <li>D) The programming language running on the backend</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>C)</strong> Your web browser (Chrome, Firefox, Safari) or mobile app that sends requests</div></details>
+      </div>
+
+      <div class="q">
+        <p>2. When you type a URL into your browser and press Enter, what happens first?</p>
+        <ul>
+          <li>A) The browser sends an HTTP Request to the server, and the server replies with an HTTP Response</li>
+          <li>B) The server opens a browser window on your computer</li>
+          <li>C) The database directly connects to your monitor</li>
+          <li>D) JavaScript compiles HTML into C code</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>A)</strong> The browser sends an HTTP Request to the server, and the server replies with an HTTP Response</div></details>
+      </div>
+
+      <div class="q">
+        <p>3. Why were early languages like C and Perl used on web servers in the 1990s?</p>
+        <ul>
+          <li>A) To style buttons and fonts in the browser</li>
+          <li>B) To generate dynamic HTML pages on the server instead of serving only static files</li>
+          <li>C) To replace the HTTP protocol</li>
+          <li>D) To run mobile apps offline</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> To generate dynamic HTML pages on the server instead of serving only static files</div></details>
+      </div>
+
+      <div class="q">
+        <p>4. Why did TypeScript become so popular for modern frontend web apps?</p>
+        <ul>
+          <li>A) It replaces HTML completely</li>
+          <li>B) It&rsquo;s faster than JavaScript</li>
+          <li>C) It adds strict type-checking on top of JavaScript to catch bugs before code runs</li>
+          <li>D) It is the only language Chrome understands</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>C)</strong> It adds strict type-checking on top of JavaScript to catch bugs before code runs</div></details>
+      </div>
+
+      <div class="q">
+        <p>5. What was the biggest shift in the &ldquo;Web 2.0 / Modern SPA&rdquo; era?</p>
+        <ul>
+          <li>A) Websites stopped using servers completely</li>
+          <li>B) Pages could update smoothly without reloading the whole page (via JavaScript &amp; APIs)</li>
+          <li>C) Browsers stopped supporting images</li>
+          <li>D) Every website had to be written in C</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> Pages could update smoothly without reloading the whole page (via JavaScript &amp; APIs)</div></details>
+      </div>
+
+      <div class="q">
+        <p>6. Which HTTP Status Code range means &ldquo;Success&rdquo;?</p>
+        <ul>
+          <li>A) 2xx</li>
+          <li>B) 3xx</li>
+          <li>C) 4xx</li>
+          <li>D) 5xx</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>A)</strong> <code>2xx</code></div></details>
+      </div>
+
+      <div class="q">
+        <p>7. Which statement best describes a &ldquo;Monolithic&rdquo; web architecture?</p>
+        <ul>
+          <li>A) Every feature runs in a separate cloud company</li>
+          <li>B) The UI and Backend live together in one single application/codebase</li>
+          <li>C) There is no database at all</li>
+          <li>D) It only works for mobile apps</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> The UI and Backend live together in one single application/codebase</div></details>
+      </div>
+
+      <div class="q">
+        <p>8. When does a company typically choose &ldquo;Microservices&rdquo; (like Netflix or Uber)?</p>
+        <ul>
+          <li>A) For a simple 1-person blog</li>
+          <li>B) When the system is massive and many independent teams need to scale and deploy features separately</li>
+          <li>C) Whenever they want the simplest possible setup</li>
+          <li>D) When they don&rsquo;t want to use HTTP</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> When the system is massive and many independent teams need to scale and deploy features separately</div></details>
+      </div>
+
+      <div class="q">
+        <p>9. In &ldquo;Representational State Transfer&rdquo; (REST), what is the &ldquo;Representation&rdquo;?</p>
+        <ul>
+          <li>A) The physical server rack in a data center</li>
+          <li>B) The readable snapshot of data (usually JSON) sent between client and server</li>
+          <li>C) The company logo on the homepage</li>
+          <li>D) Database files stored on disk</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> The readable snapshot of data (usually JSON) sent between client and server</div></details>
+      </div>
+
+      <div class="q">
+        <p>10. Which HTTP method is used in a REST API to CREATE a new resource?</p>
+        <ul>
+          <li>A) <code>GET</code></li>
+          <li>B) <code>POST</code></li>
+          <li>C) <code>DELETE</code></li>
+          <li>D) <code>HEAD</code></li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> <code>POST</code></div></details>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Part 2</span> Multi-Select (Pick every right answer)</h2>
+
+      <div class="q">
+        <p>11. Which three core technologies make up the foundation of almost every web page in your browser?</p>
+        <ul>
+          <li>A) HTML (structure)</li>
+          <li>B) CSS (styling)</li>
+          <li>C) JavaScript (interactivity)</li>
+          <li>D) SQLite (database)</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>A, B, C</strong> &mdash; HTML, CSS, and JavaScript</div></details>
+      </div>
+
+      <div class="q">
+        <p>12. What are the 3 logical layers of almost every business web application?</p>
+        <ul>
+          <li>A) Presentation Layer (UI)</li>
+          <li>B) Business Logic Layer (Backend)</li>
+          <li>C) Data Layer (Database)</li>
+          <li>D) Wi-Fi Router Layer</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>A, B, C</strong> &mdash; Presentation, Business Logic, and Data Layers</div></details>
+      </div>
+
+      <div class="q">
+        <p>13. Which of the following are benefits of a Decoupled architecture (Frontend SPA + Backend REST API)?</p>
+        <ul>
+          <li>A) Web and mobile apps can share the exact same backend API</li>
+          <li>B) Frontend and backend teams can work independently</li>
+          <li>C) You never need a database anymore</li>
+          <li>D) You can call or test the backend API directly without a browser (e.g., Postman)</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>A, B, D</strong></div></details>
+      </div>
+
+      <div class="q">
+        <p>14. What can you do with an OpenAPI Specification file?</p>
+        <ul>
+          <li>A) Get interactive API documentation (<code>/docs</code> Swagger UI)</li>
+          <li>B) Import it into Postman to auto-generate requests</li>
+          <li>C) Generate client code (e.g., Angular/TypeScript, Python) and server code</li>
+          <li>D) Replace CSS styling in the browser</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>A, B, C</strong></div></details>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Part 3</span> True or False</h2>
+
+      <div class="q">
+        <p>15. In a REST API, &ldquo;State&rdquo; means the physical server where the code runs.</p>
+        <details><summary>Show Answer</summary><div class="ans"><strong>False</strong> &mdash; State means the current data/values of a resource in the database right now.</div></details>
+      </div>
+
+      <div class="q">
+        <p>16. With a Decoupled architecture, both a web browser app and a mobile app can talk to the exact same Backend REST API.</p>
+        <details><summary>Show Answer</summary><div class="ans"><strong>True</strong></div></details>
+      </div>
+
+      <div class="q">
+        <p>17. An OpenAPI specification can be written in a JSON or YAML format.</p>
+        <details><summary>Show Answer</summary><div class="ans"><strong>True</strong></div></details>
+      </div>
+
+      <div class="q">
+        <p>18. In a REST API, <code>GET</code> requests are used to delete records from the database.</p>
+        <details><summary>Show Answer</summary><div class="ans"><strong>False</strong> &mdash; <code>GET</code> only reads data; <code>DELETE</code> removes records.</div></details>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Part 4</span> Core REST Concepts</h2>
+
+      <div class="q">
+        <p>19. What does &ldquo;REST&rdquo; stand for?</p>
+        <ul>
+          <li>A) Rapid Execution Server Technology</li>
+          <li>B) Remote Endpoint Storage Tool</li>
+          <li>C) Representational State Transfer</li>
+          <li>D) Reliable External System Transport</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>C)</strong> Representational State Transfer</div></details>
+      </div>
+
+      <div class="q">
+        <p>20. In a REST API, what format (<code>{ "key": "value" }</code>) is used to exchange data between client and server?</p>
+        <ul>
+          <li>A) CSS</li>
+          <li>B) JSON (JavaScript Object Notation)</li>
+          <li>C) SQL</li>
+          <li>D) PNG</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> JSON (JavaScript Object Notation)</div></details>
+      </div>
+
+      <div class="q">
+        <p>21. If <code>GET /posts</code> returns all posts, what URL path should you request to get only Post #42?</p>
+        <ul>
+          <li>A) <code>/posts?id=42</code></li>
+          <li>B) <code>/get-post/42</code></li>
+          <li>C) <code>/posts/42</code></li>
+          <li>D) <code>/42/posts/all</code></li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>C)</strong> <code>/posts/42</code></div></details>
+      </div>
+
+      <div class="q">
+        <p>22. Which HTTP method (verb) is used to update an existing resource (like editing a post)?</p>
+        <ul>
+          <li>A) <code>GET</code></li>
+          <li>B) <code>DELETE</code></li>
+          <li>C) <code>PUT</code></li>
+          <li>D) <code>HEAD</code></li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>C)</strong> <code>PUT</code></div></details>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

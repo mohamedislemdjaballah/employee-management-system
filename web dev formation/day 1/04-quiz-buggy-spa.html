@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 1 — Buggy SPA Challenge Quiz</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --accent: #059669;
+      --tip-bg: #eff6ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a:hover { text-decoration: underline; }
+
+    header {
+      background: linear-gradient(135deg, #065f46, #059669);
+      color: #ffffff;
+      padding: 30px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(5, 150, 105, 0.2);
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 1.75rem; }
+    header p { margin: 0; opacity: 0.92; }
+
+    .tip {
+      background: var(--tip-bg);
+      border-left: 4px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .q {
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .q:first-of-type { border-top: none; padding-top: 0; }
+    .q p { margin: 0 0 8px; font-weight: 600; color: #0f172a; }
+    .q ul { margin: 0 0 8px; padding-left: 20px; color: var(--muted); list-style: none; }
+    .q li { margin-bottom: 4px; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
+    }
+
+    details summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .ans {
+      margin-top: 6px;
+      background: #ecfdf5;
+      border-left: 4px solid var(--accent);
+      padding: 8px 12px;
+      border-radius: 0 8px 8px 0;
+      color: #065f46;
+      font-size: 0.93rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="03-quiz-period-1-and-2.html">&larr; Periods 1 &amp; 2 Quiz</a>
+      <a href="index.html">Day 1 Home</a>
+    </div>
+
+    <header>
+      <h1>Day 1 &mdash; Buggy SPA Challenge Quiz</h1>
+      <p>Inspect failed red requests in Chrome DevTools (<strong>Right-click &rarr; Inspect &rarr; Network</strong>) and diagnose each bug.</p>
+    </header>
+
+    <div class="tip">
+      <strong>App URL:</strong> <code>http://&lt;VPS_IP&gt;:8000/</code> (or <code>http://localhost:8000/</code>) &bull;
+      <strong>Swagger Docs:</strong> <code>/docs</code>
+    </div>
+
+    <section class="card">
+      <div class="q">
+        <p>1. When you click &ldquo;Publish Post&rdquo;, it fails with <code>405 Method Not Allowed</code>. Why?</p>
+        <ul>
+          <li>A) The database is offline</li>
+          <li>B) The SPA sent <code>PUT /posts</code> instead of <code>POST /posts</code></li>
+          <li>C) The post text was too short</li>
+          <li>D) The browser blocked JavaScript</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> The SPA sent <code>PUT /posts</code> instead of <code>POST /posts</code></div></details>
+      </div>
+
+      <div class="q">
+        <p>2. When you click &ldquo;View Author Profile&rdquo;, it fails with <code>404 Not Found</code>. What is wrong with the URL?</p>
+        <ul>
+          <li>A) It used <code>https://</code> instead of <code>http://</code></li>
+          <li>B) It requested <code>/user/{id}</code> (singular) instead of <code>/users/{id}</code> (plural)</li>
+          <li>C) It forgot the port <code>:8000</code></li>
+          <li>D) It used <code>DELETE</code> instead of <code>GET</code></li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>B)</strong> It requested <code>/user/{id}</code> (singular) instead of <code>/users/{id}</code> (plural)</div></details>
+      </div>
+
+      <div class="q">
+        <p>3. When you click &ldquo;Comment&rdquo;, it fails with <code>422 Unprocessable Entity</code>. What did the SPA send wrong in the JSON body?</p>
+        <ul>
+          <li>A) It sent <code>"message"</code> instead of <code>"text"</code> (check <code>/docs</code>!)</li>
+          <li>B) It sent XML instead of JSON</li>
+          <li>C) It forgot the <code>Content-Type</code> header</li>
+          <li>D) It sent <code>user_id</code> as a boolean</li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>A)</strong> It sent <code>"message"</code> instead of <code>"text"</code> (check <code>/docs</code>!)</div></details>
+      </div>
+
+      <div class="q">
+        <p>4. When Bob (#2) clicks &ldquo;Like&rdquo; on Post #1 (which he already liked), what 3-digit HTTP Status Code does the server return?</p>
+        <ul>
+          <li>A) <code>200 OK</code></li>
+          <li>B) <code>404 Not Found</code></li>
+          <li>C) <code>409 Conflict</code></li>
+          <li>D) <code>500 Internal Server Error</code></li>
+        </ul>
+        <details><summary>Show Answer</summary><div class="ans"><strong>C)</strong> <code>409 Conflict</code> &mdash; a user can only like a post once.</div></details>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
