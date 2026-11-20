@@ -43,6 +43,12 @@
     header h1 { margin: 0 0 8px; font-size: 2rem; }
     header p { margin: 0; opacity: 0.92; font-size: 1.05rem; }
 
+    h2.section-title {
+      margin: 28px 0 14px;
+      font-size: 1.25rem;
+      color: #0f172a;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -92,13 +98,17 @@
       <p>5-Day Modern Web Development Workshop &mdash; Slides, Guides &amp; Quizzes.</p>
     </header>
 
+    <h2 class="section-title">Required Tools</h2>
     <div class="grid">
       <a class="card" href="tools.html" target="_blank" rel="noopener">
         <span class="badge" style="background: #d97706;">Setup &amp; Tools</span>
         <h2>Required Tools &amp; Extensions</h2>
         <p>VS Code &amp; extensions, Java 25, PostgreSQL, pgAdmin 4, Browser DevTools &amp; Postman.</p>
       </a>
+    </div>
 
+    <h2 class="section-title">Workshop Days</h2>
+    <div class="grid">
       <a class="card" href="day 1/index.html" target="_blank" rel="noopener">
         <span class="badge ready">Day 1 &bull; Ready</span>
         <h2>Modern Web &amp; APIs</h2>
@@ -127,6 +137,15 @@
         <span class="badge ready">Day 5 &bull; Ready</span>
         <h2>JavaScript &amp; Frontend Practice</h2>
         <p>JavaScript for Beginners slides, DOM manipulation, and REST API <code>fetch()</code> exercises.</p>
+      </a>
+    </div>
+
+    <h2 class="section-title">Test the Apps</h2>
+    <div class="grid">
+      <a class="card" href="launch-guide.html" target="_blank" rel="noopener">
+        <span class="badge ready">Launch Guide</span>
+        <h2>Run Postgres &amp; Both Demo Apps</h2>
+        <p>Start PostgreSQL, create <code>demo_db</code> in pgAdmin, and run <code>demo-decoupled</code> &amp; <code>demo-monolith</code>.</p>
       </a>
     </div>
   </div>
