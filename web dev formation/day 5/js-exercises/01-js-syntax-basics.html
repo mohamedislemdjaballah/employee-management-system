@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Série 01 — Syntaxe JavaScript &amp; Problèmes Simples</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --tip-bg: #eff6ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a:hover { text-decoration: underline; }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      padding: 30px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 1.75rem; }
+    header p { margin: 0; opacity: 0.92; }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.24rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    p { margin: 0 0 12px; color: var(--muted); }
+    ul { margin: 8px 0 14px; padding-left: 22px; color: var(--muted); }
+    li { margin-bottom: 6px; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 10px 0;
+    }
+
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+
+    .example-box {
+      background: var(--tip-bg);
+      border-left: 4px solid var(--primary);
+      padding: 10px 14px;
+      border-radius: 0 10px 10px 0;
+      margin: 10px 0 12px;
+      font-size: 0.94rem;
+    }
+
+    details { margin-top: 10px; }
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .code-wrap { position: relative; }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: rgba(255, 255, 255, 0.25); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="index.html">&larr; Tous les Exercices</a>
+      <a href="../00-javascript-presentation.html" target="_blank" rel="noopener">Slides JS</a>
+      <a href="02-js-dom-innerhtml.html">S&eacute;rie 02 &rarr;</a>
+    </div>
+
+    <header>
+      <h1>S&eacute;rie 01 &mdash; Syntaxe JavaScript &amp; Probl&egrave;mes Simples</h1>
+      <p>5 exercices pour d&eacute;butants : variables, conditions, boucles, fonctions et objets.</p>
+    </header>
+
+    <section class="card">
+      <h2><span class="badge">Pr&eacute;paration</span> Comment tester votre code</h2>
+      <ol style="margin: 8px 0 12px; padding-left: 22px; color: var(--muted);">
+        <li>Cr&eacute;ez un fichier nomm&eacute; <code>test.html</code> sur votre ordinateur.</li>
+        <li>Collez le mod&egrave;le ci-dessous et &eacute;crivez votre code JavaScript &agrave; l&rsquo;int&eacute;rieur de la balise <code>&lt;script&gt;</code>.</li>
+        <li>Pour les exercices avec une fonction, <strong>appelez votre fonction dans <code>console.log()</code></strong> (ex. <code>console.log(checkEvenOrOdd(4));</code>) pour afficher son r&eacute;sultat.</li>
+        <li><strong>Double-cliquez sur <code>test.html</code></strong> pour l&rsquo;ouvrir dans votre navigateur, puis appuyez sur <code>F12</code> &rarr; onglet <strong>Console</strong>.</li>
+      </ol>
+      <pre><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+  <span class="kw">&lt;title&gt;</span>Pratique JS<span class="kw">&lt;/title&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+  <span class="kw">&lt;h1&gt;</span>Ouvrez la Console (F12)<span class="kw">&lt;/h1&gt;</span>
+
+  <span class="kw">&lt;script&gt;</span>
+    <span class="cm">// 1. &Eacute;crivez votre fonction</span>
+    <span class="kw">function</span> <span class="ty">add</span>(a, b) {
+      <span class="kw">return</span> a + b;
+    }
+
+    <span class="cm">// 2. Appelez-la dans console.log() pour voir le r&eacute;sultat</span>
+    <span class="ty">console</span>.log(add(<span class="nu">2</span>, <span class="nu">3</span>)); <span class="cm">// Affiche 5</span>
+  <span class="kw">&lt;/script&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></pre>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 1</span> Variables &amp; Concat&eacute;nation</h2>
+      <p>Cr&eacute;ez trois variables : <code>firstName</code> (cha&icirc;ne de caract&egrave;res), <code>lastName</code> (cha&icirc;ne) et <code>age</code> (nombre). Assemblez-les avec <code>+</code> pour afficher une phrase compl&egrave;te avec <code>console.log()</code>.</p>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>firstName = 'Alice'</code>, <code>lastName = 'Smith'</code>, <code>age = 25</code><br />
+        Sortie : <code>Bonjour, je m'appelle Alice Smith et j'ai 25 ans.</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>firstName = 'Omar'</code>, <code>lastName = 'Benali'</code>, <code>age = 30</code><br />
+        Sortie : <code>Bonjour, je m'appelle Omar Benali et j'ai 30 ans.</code>
+      </div>
+      <details>
+        <summary style="color: #059669;">Voir la Solution</summary>
+        <pre><span class="kw">function</span> <span class="ty">introduce</span>(firstName, lastName, age) {
+  <span class="kw">return</span> <span class="st">'Bonjour, je m\'appelle '</span> + firstName + <span class="st">' '</span> + lastName + <span class="st">' et j\'ai '</span> + age + <span class="st">' ans.'</span>;
+}
+
+<span class="ty">console</span>.log(introduce(<span class="st">'Alice'</span>, <span class="st">'Smith'</span>, <span class="nu">25</span>));
+<span class="ty">console</span>.log(introduce(<span class="st">'Omar'</span>, <span class="st">'Benali'</span>, <span class="nu">30</span>));</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 2</span> Pair ou Impair (<code>if / else</code>)</h2>
+      <p>&Eacute;crivez une fonction nomm&eacute;e <code>checkEvenOrOdd(number)</code> qui retourne <code>'Pair'</code> si le nombre est divisible par 2, et <code>'Impair'</code> sinon. Testez-la avec <code>4</code> et <code>7</code>.</p>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>checkEvenOrOdd(4)</code><br />
+        Sortie : <code>'Pair'</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>checkEvenOrOdd(7)</code><br />
+        Sortie : <code>'Impair'</code>
+      </div>
+      <details>
+        <summary style="color: #059669;">Voir la Solution</summary>
+        <pre><span class="kw">function</span> <span class="ty">checkEvenOrOdd</span>(number) {
+  <span class="kw">if</span> (number % <span class="nu">2</span> === <span class="nu">0</span>) {
+    <span class="kw">return</span> <span class="st">'Pair'</span>;
+  } <span class="kw">else</span> {
+    <span class="kw">return</span> <span class="st">'Impair'</span>;
+  }
+}
+
+<span class="ty">console</span>.log(checkEvenOrOdd(<span class="nu">4</span>)); <span class="cm">// 'Pair'</span>
+<span class="ty">console</span>.log(checkEvenOrOdd(<span class="nu">7</span>)); <span class="cm">// 'Impair'</span></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 3</span> Somme d&rsquo;un Tableau (<code>for...of</code>)</h2>
+      <p>&Agrave; partir d&rsquo;un tableau de prix, &eacute;crivez une boucle <code>for...of</code> pour calculer la somme totale et l&rsquo;afficher.</p>
+      <pre><span class="kw">const</span> prices = [<span class="nu">10</span>, <span class="nu">25</span>, <span class="nu">15</span>, <span class="nu">50</span>];</pre>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>[10, 25, 15, 50]</code><br />
+        Sortie : <code>Total : 100</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>[5, 5, 10]</code><br />
+        Sortie : <code>Total : 20</code>
+      </div>
+      <details>
+        <summary style="color: #059669;">Voir la Solution</summary>
+        <pre><span class="kw">function</span> <span class="ty">sumPrices</span>(prices) {
+  <span class="kw">let</span> total = <span class="nu">0</span>;
+  <span class="kw">for</span> (<span class="kw">const</span> price <span class="kw">of</span> prices) {
+    total = total + price;
+  }
+  <span class="kw">return</span> <span class="st">'Total : '</span> + total;
+}
+
+<span class="ty">console</span>.log(sumPrices([<span class="nu">10</span>, <span class="nu">25</span>, <span class="nu">15</span>, <span class="nu">50</span>]));
+<span class="ty">console</span>.log(sumPrices([<span class="nu">5</span>, <span class="nu">5</span>, <span class="nu">10</span>]));</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 4</span> Compter les Adultes (<code>for...of</code> + <code>if</code>)</h2>
+      <p>&Eacute;crivez une fonction <code>countAdults(ages)</code> qui prend un tableau d&rsquo;&acirc;ges et retourne combien de personnes ont <strong>18 ans ou plus</strong> (<code>&gt;= 18</code>).</p>
+      <pre><span class="kw">const</span> ages = [<span class="nu">12</span>, <span class="nu">19</span>, <span class="nu">25</span>, <span class="nu">16</span>, <span class="nu">30</span>];</pre>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>countAdults([12, 19, 25, 16, 30])</code><br />
+        Sortie : <code>3</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>countAdults([10, 15, 17])</code><br />
+        Sortie : <code>0</code>
+      </div>
+      <details>
+        <summary style="color: #059669;">Voir la Solution</summary>
+        <pre><span class="kw">function</span> <span class="ty">countAdults</span>(list) {
+  <span class="kw">let</span> count = <span class="nu">0</span>;
+
+  <span class="kw">for</span> (<span class="kw">const</span> age <span class="kw">of</span> list) {
+    <span class="kw">if</span> (age &gt;= <span class="nu">18</span>) {
+      count = count + <span class="nu">1</span>;
+    }
+  }
+
+  <span class="kw">return</span> count;
+}
+
+<span class="ty">console</span>.log(countAdults([<span class="nu">12</span>, <span class="nu">19</span>, <span class="nu">25</span>, <span class="nu">16</span>, <span class="nu">30</span>])); <span class="cm">// 3</span>
+<span class="ty">console</span>.log(countAdults([<span class="nu">10</span>, <span class="nu">15</span>, <span class="nu">17</span>]));         <span class="cm">// 0</span></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Exercice 5</span> Trouver un Employ&eacute; par Nom (Objets)</h2>
+      <p>&Agrave; partir d&rsquo;un tableau d&rsquo;objets employ&eacute;s, &eacute;crivez une fonction <code>findEmployee(employees, targetName)</code> qui retourne l&rsquo;objet employ&eacute; correspondant s&rsquo;il existe, ou <code>'Non trouv&eacute;'</code> sinon.</p>
+      <pre><span class="kw">const</span> employees = [
+  { id: <span class="nu">1</span>, name: <span class="st">'Alice'</span>, role: <span class="st">'Developer'</span> },
+  { id: <span class="nu">2</span>, name: <span class="st">'Bob'</span>,   role: <span class="st">'Designer'</span> },
+  { id: <span class="nu">3</span>, name: <span class="st">'Sara'</span>,  role: <span class="st">'Manager'</span> }
+];</pre>
+      <div class="example-box">
+        <strong>Exemple 1 :</strong><br />
+        Entr&eacute;e : <code>findEmployee(employees, 'Bob')</code><br />
+        Sortie : <code>{ id: 2, name: 'Bob', role: 'Designer' }</code><br /><br />
+        <strong>Exemple 2 :</strong><br />
+        Entr&eacute;e : <code>findEmployee(employees, 'Omar')</code><br />
+        Sortie : <code>'Non trouv&eacute;'</code>
+      </div>
+      <details>
+        <summary style="color: #059669;">Voir la Solution</summary>
+        <pre><span class="kw">function</span> <span class="ty">findEmployee</span>(employees, targetName) {
+  <span class="kw">for</span> (<span class="kw">const</span> emp <span class="kw">of</span> employees) {
+    <span class="kw">if</span> (emp.name === targetName) {
+      <span class="kw">return</span> emp;
+    }
+  }
+  <span class="kw">return</span> <span class="st">'Non trouv&eacute;'</span>;
+}
+
+<span class="ty">console</span>.log(findEmployee([
+  { id: <span class="nu">1</span>, name: <span class="st">'Alice'</span>, role: <span class="st">'Developer'</span> },
+  { id: <span class="nu">2</span>, name: <span class="st">'Bob'</span>,   role: <span class="st">'Designer'</span> }
+], <span class="st">'Bob'</span>));</pre>
+      </details>
+    </section>
+  </div>
+  <script>
+    (function () {
+      const blocks = document.querySelectorAll('pre');
+      for (const pre of blocks) {
+        const wrap = document.createElement('div');
+        wrap.className = 'code-wrap';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy';
+        btn.addEventListener('click', function () {
+          navigator.clipboard.writeText(pre.textContent.trim());
+          btn.textContent = 'Copied!';
+          btn.blur();
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+        });
+        wrap.appendChild(btn);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -217,99 +217,64 @@
   <div class="container">
     <header>
       <div style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.88; margin-bottom: 6px;">Part 1 of 2 &bull; Database Setup First</div>
-      <h1>1. Start Postgres &amp; Create <code>demo_db</code> in pgAdmin</h1>
-      <p>Launch PostgreSQL and pgAdmin with Docker Compose, then create an empty <strong><code>demo_db</code></strong> database.</p>
+      <h1>1. Open pgAdmin Desktop &amp; Create <code>demo_db</code></h1>
+      <p>Connect your installed <strong>pgAdmin 4</strong> desktop app to your local PostgreSQL server and create an empty <strong><code>demo_db</code></strong> database.</p>
     </header>
 
     <!-- STEP 1 -->
     <section class="card">
-      <h2><span class="badge">Step 1</span> Start PostgreSQL &amp; pgAdmin via Docker Compose</h2>
-      <p>Open a terminal in the project root folder (where <code>docker-compose.yml</code> is located) and run:</p>
-      <div class="code-wrap">
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        <pre><code>docker compose up -d postgres pgadmin</code></pre>
-      </div>
+      <h2><span class="badge">Step 1</span> Open pgAdmin 4 Desktop</h2>
+      <ol>
+        <li>Launch the <strong>pgAdmin 4</strong> desktop app on your computer.</li>
+        <li>In the left sidebar, expand <strong>Servers</strong> and click your local <strong>PostgreSQL</strong> server (enter your PostgreSQL password if asked).</li>
+      </ol>
       <div class="callout">
-        <strong>Why only <code>postgres pgadmin</code>?</strong> This starts PostgreSQL (port <code>5432</code>) and pgAdmin (port <code>5050</code>), while keeping port <code>8080</code> free for your <code>demo</code> Spring Boot app!
+        <strong>Server not listed yet?</strong> Right-click <strong>Servers</strong> &rarr; <strong>Register</strong> &rarr; <strong>Server...</strong>, name it <code>Local Postgres</code>, and in the <strong>Connection</strong> tab enter:
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Host name/address</strong></td><td><code>localhost</code></td></tr>
+            <tr><td><strong>Port</strong></td><td><code>5432</code></td></tr>
+            <tr><td><strong>Maintenance database</strong></td><td><code>postgres</code></td></tr>
+            <tr><td><strong>Username</strong></td><td><code>postgres</code></td></tr>
+            <tr><td><strong>Password</strong></td><td><em>(your PostgreSQL password)</em></td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
     <!-- STEP 2 -->
     <section class="card">
-      <h2><span class="badge">Step 2</span> Open pgAdmin &amp; Log In</h2>
+      <h2><span class="badge">Step 2</span> Create the <code>demo_db</code> Database</h2>
       <ol>
-        <li>Open pgAdmin in your browser: <a href="http://localhost:5050" target="_blank" rel="noopener">http://localhost:5050</a></li>
-        <li>Log in with the credentials from <code>docker-compose.yml</code>:
-          <table>
-            <thead>
-              <tr><th>Field</th><th>Value</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>Email Address / Username</strong></td><td><code>admin@finances.gov</code></td></tr>
-              <tr><td><strong>Password</strong></td><td><code>admin</code></td></tr>
-            </tbody>
-          </table>
-        </li>
-      </ol>
-    </section>
-
-    <!-- STEP 3 -->
-    <section class="card">
-      <h2><span class="badge">Step 3</span> Connect pgAdmin to the PostgreSQL Server</h2>
-      <ol>
-        <li>In the left sidebar, right-click <strong>Servers</strong> &rarr; hover over <strong>Register</strong> &rarr; click <strong>Server...</strong></li>
-        <li>In the <strong>General</strong> tab, set <strong>Name</strong> to <code>EMS Postgres</code>.</li>
-        <li>Click the <strong>Connection</strong> tab and enter:
-          <table>
-            <thead>
-              <tr><th>Field</th><th>Value</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>Host name/address</strong></td><td><code>postgres</code></td></tr>
-              <tr><td><strong>Port</strong></td><td><code>5432</code></td></tr>
-              <tr><td><strong>Maintenance database</strong></td><td><code>ems_db</code></td></tr>
-              <tr><td><strong>Username</strong></td><td><code>ems_user</code></td></tr>
-              <tr><td><strong>Password</strong></td><td><code>ems_password</code></td></tr>
-            </tbody>
-          </table>
-        </li>
-        <li>Check <strong>Save password?</strong> and click <strong>Save</strong>.</li>
-      </ol>
-      <div class="warn">
-        <strong>Important:</strong> Use <code>postgres</code> as the Host name (not <code>localhost</code>), because pgAdmin is running inside a Docker container and connects to the <code>postgres</code> service name.
-      </div>
-    </section>
-
-    <!-- STEP 4 -->
-    <section class="card">
-      <h2><span class="badge">Step 4</span> Create the <code>demo_db</code> Database</h2>
-      <ol>
-        <li>Expand <strong>EMS Postgres</strong> in the left sidebar.</li>
+        <li>Expand your <strong>PostgreSQL</strong> server in the left sidebar.</li>
         <li>Right-click on <strong>Databases</strong> &rarr; hover over <strong>Create</strong> &rarr; click <strong>Database...</strong></li>
         <li>In the popup window:
           <ul>
             <li><strong>Database:</strong> type <code>demo_db</code> <em>(exact spelling, lowercase, with an underscore <code>_</code>)</em></li>
-            <li><strong>Owner:</strong> leave as <code>ems_user</code></li>
+            <li><strong>Owner:</strong> leave as <code>postgres</code> (or select <code>ems_user</code> if created)</li>
           </ul>
         </li>
         <li>Click <strong>Save</strong>.</li>
       </ol>
       <div class="callout">
-        <strong>Tip:</strong> Don't create any tables manually! Once you start Spring Boot with <code>ddl-auto=update</code>, Spring will create the <code>department</code>, <code>employee</code>, and <code>task</code> tables inside <code>demo_db</code> automatically.
+        <strong>Tip:</strong> Don&rsquo;t create any tables manually! Once you start Spring Boot with <code>ddl-auto=update</code>, Spring will create the <code>department</code>, <code>employee</code>, and <code>task</code> tables inside <code>demo_db</code> automatically.
       </div>
     </section>
 
-    <!-- STEP 5 -->
+    <!-- STEP 3 -->
     <section class="card">
-      <h2><span class="badge">Step 5</span> Verify Your Database &amp; Tables</h2>
+      <h2><span class="badge">Step 3</span> Verify Your Database &amp; Tables</h2>
       <p>In the left sidebar, you should now see <code>demo_db</code> under <strong>Databases</strong>:</p>
       <div class="tree">
         Servers<br />
-        └── EMS Postgres<br />
+        └── PostgreSQL<br />
         &nbsp;&nbsp;&nbsp;&nbsp;└── Databases<br />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <strong>demo_db</strong><br />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── Schemas &rarr; public &rarr; Tables <em>(empty until Spring Boot runs!)</em><br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── ems_db
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── postgres
       </div>
       <p>After you run Spring Boot, right-click <strong>Tables</strong> &rarr; <strong>Refresh...</strong> to see your new tables appear, and right-click any table &rarr; <strong>View/Edit Data</strong> &rarr; <strong>All Rows</strong> to see saved rows.</p>
     </section>

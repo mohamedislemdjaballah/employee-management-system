@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solution 03 — Filtering Data with WHERE</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --accent: #059669;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a:hover { text-decoration: underline; }
+
+    header {
+      background: linear-gradient(135deg, #065f46, #059669);
+      color: #ffffff;
+      padding: 30px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(5, 150, 105, 0.2);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 1.75rem;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.92;
+    }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+      color: #0f172a;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 14px 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 8px 0 18px;
+    }
+
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="02-select-queries-solution.html">&larr; Solution 02</a>
+      <a href="index.html">All Solutions</a>
+      <a href="04-mini-challenge-solution.html">Next: Solution 04 &rarr;</a>
+    </div>
+
+    <header>
+      <h1>Solution 03 &mdash; Filtering Data with <code>WHERE</code></h1>
+      <p>Reference SQL queries for comparisons, logical operators, ranges, patterns, and <code>NULL</code> checks.</p>
+    </header>
+
+    <section class="card">
+      <span class="badge">Part A &mdash; Basic Comparisons</span>
+
+      <h2>1. Employees in Engineering</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> department = <span class="st">'Engineering'</span>;</pre>
+
+      <h2>2. Salary strictly greater than 70000</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> salary &gt; <span class="nu">70000</span>;</pre>
+
+      <h2>3. Not in Marketing</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> department != <span class="st">'Marketing'</span>;</pre>
+    </section>
+
+    <section class="card">
+      <span class="badge">Part B &mdash; Combining Conditions &amp; Ranges</span>
+
+      <h2>4. Engineering earning at least 80000</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> department = <span class="st">'Engineering'</span>
+  <span class="kw">AND</span> salary &gt;= <span class="nu">80000</span>;</pre>
+
+      <h2>5. In HR or Sales</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> department <span class="kw">IN</span> (<span class="st">'HR'</span>, <span class="st">'Sales'</span>);
+
+<span class="cm">-- Alternative using OR:</span>
+<span class="cm">-- WHERE department = 'HR' OR department = 'Sales';</span></pre>
+
+      <h2>6. Hired between 2020 and 2022</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> hire_year <span class="kw">BETWEEN</span> <span class="nu">2020</span> <span class="kw">AND</span> <span class="nu">2022</span>;</pre>
+
+      <h2>7. Salary between 55000 and 65000, sorted descending</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> salary <span class="kw">BETWEEN</span> <span class="nu">55000</span> <span class="kw">AND</span> <span class="nu">65000</span>
+<span class="kw">ORDER BY</span> salary <span class="kw">DESC</span>;</pre>
+    </section>
+
+    <section class="card">
+      <span class="badge">Part C &mdash; Patterns &amp; NULL Values</span>
+
+      <h2>8. First name starts with 'A' or 'a'</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> first_name <span class="kw">ILIKE</span> <span class="st">'a%'</span>;</pre>
+
+      <h2>9. Last name contains 'o'</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> last_name <span class="kw">ILIKE</span> <span class="st">'%o%'</span>;</pre>
+
+      <h2>10. Missing email address</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> email <span class="kw">IS NULL</span>;</pre>
+
+      <h2>11. Has email and works in Engineering</h2>
+      <pre><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> email <span class="kw">IS NOT NULL</span>
+  <span class="kw">AND</span> department = <span class="st">'Engineering'</span>;</pre>
+    </section>
+  </div>
+</body>
+</html>

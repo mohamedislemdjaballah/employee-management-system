@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 2 — Java &amp; Spring Boot</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --accent: #059669;
+      --amber: #d97706;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 36px 20px 64px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      padding: 34px 28px;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 1.9rem; }
+    header p { margin: 0; opacity: 0.92; font-size: 1.03rem; }
+
+    h2.section-title {
+      margin: 28px 0 14px;
+      font-size: 1.25rem;
+      color: #0f172a;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    a.card, div.card {
+      display: block;
+      text-decoration: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      color: inherit;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    a.card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .badge.guide { background: var(--amber); }
+    .badge.ex { background: var(--accent); }
+
+    .card h3 { margin: 0 0 8px; font-size: 1.12rem; color: #0f172a; }
+    .card p { margin: 0 0 10px; color: var(--muted); font-size: 0.94rem; }
+
+    .file-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.88rem;
+    }
+
+    .file-list li { margin-bottom: 4px; }
+    .file-list a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .file-list a:hover { text-decoration: underline; }
+    .file-list a.sol { color: var(--accent); margin-left: 6px; font-size: 0.84rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="margin-bottom: 14px;">
+      <a href="../index.html" style="color: #2563eb; text-decoration: none; font-weight: 600;">&larr; All Days</a>
+    </div>
+
+    <header>
+      <h1>Day 2 &mdash; Java &amp; Spring Boot</h1>
+      <p>Presentations, OOP cheatsheet, Spring Boot guide, and Java practice exercises.</p>
+    </header>
+
+    <h2 class="section-title">Presentations &amp; Guides</h2>
+    <div class="grid">
+      <a class="card" href="Day 2 - Period 1.pdf" target="_blank" rel="noopener">
+        <span class="badge">Period 1 &bull; Slides (PDF)</span>
+        <h3>Java Basics &amp; OOP</h3>
+        <p>Variables, types, conditionals, loops, methods, classes, and objects in Java.</p>
+      </a>
+
+      <a class="card" href="01b-java-oop-cheatsheet.html" target="_blank" rel="noopener">
+        <span class="badge guide">Cheatsheet</span>
+        <h3>Java OOP Cheatsheet</h3>
+        <p>Quick visual reference for Java classes, constructors, fields, and methods.</p>
+      </a>
+
+      <a class="card" href="03-spring-boot-first-steps.html" target="_blank" rel="noopener">
+        <span class="badge guide">Guide</span>
+        <h3>Spring Boot First Steps</h3>
+        <p>Step-by-step guide to creating your first Spring Boot REST API.</p>
+      </a>
+
+      <a class="card" href="exercices/java-cheatsheet.jpeg" target="_blank" rel="noopener">
+        <span class="badge guide">Reference</span>
+        <h3>Java Syntax Cheatsheet (Image)</h3>
+        <p>1-page Java syntax reference image for quick lookup during exercises.</p>
+      </a>
+    </div>
+
+    <h2 class="section-title">Java Exercises &amp; Solutions</h2>
+    <div class="grid">
+      <div class="card">
+        <span class="badge ex">Set 01</span>
+        <h3>Fix the Errors</h3>
+        <p>Find and fix syntax and logic bugs in 5 starter Java files.</p>
+        <ul class="file-list">
+          <li><a href="exercices/01-fix-the-errors/Greeting.java" target="_blank" rel="noopener">Greeting.java</a> (<a class="sol" href="exercices/solutions/01-fix-the-errors/Greeting.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/01-fix-the-errors/Calculator.java" target="_blank" rel="noopener">Calculator.java</a> (<a class="sol" href="exercices/solutions/01-fix-the-errors/Calculator.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/01-fix-the-errors/Temperature.java" target="_blank" rel="noopener">Temperature.java</a> (<a class="sol" href="exercices/solutions/01-fix-the-errors/Temperature.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/01-fix-the-errors/LoopPractice.java" target="_blank" rel="noopener">LoopPractice.java</a> (<a class="sol" href="exercices/solutions/01-fix-the-errors/LoopPractice.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/01-fix-the-errors/StudentReport.java" target="_blank" rel="noopener">StudentReport.java</a> (<a class="sol" href="exercices/solutions/01-fix-the-errors/StudentReport.java" target="_blank" rel="noopener">Solution</a>)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="badge ex">Set 02</span>
+        <h3>Translate Pseudocode</h3>
+        <p>Convert step-by-step pseudocode into working Java code.</p>
+        <ul class="file-list">
+          <li><a href="exercices/02-translate-pseudocode/FindMaximum.java" target="_blank" rel="noopener">FindMaximum.java</a> (<a class="sol" href="exercices/solutions/02-translate-pseudocode/FindMaximum.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/02-translate-pseudocode/SumEvenNumbers.java" target="_blank" rel="noopener">SumEvenNumbers.java</a> (<a class="sol" href="exercices/solutions/02-translate-pseudocode/SumEvenNumbers.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/02-translate-pseudocode/CountVowels.java" target="_blank" rel="noopener">CountVowels.java</a> (<a class="sol" href="exercices/solutions/02-translate-pseudocode/CountVowels.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/02-translate-pseudocode/IsPalindrome.java" target="_blank" rel="noopener">IsPalindrome.java</a> (<a class="sol" href="exercices/solutions/02-translate-pseudocode/IsPalindrome.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/02-translate-pseudocode/IsPrime.java" target="_blank" rel="noopener">IsPrime.java</a> (<a class="sol" href="exercices/solutions/02-translate-pseudocode/IsPrime.java" target="_blank" rel="noopener">Solution</a>)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="badge ex">Set 03</span>
+        <h3>Write Yourself</h3>
+        <p>Build 5 classic Java programs from scratch.</p>
+        <ul class="file-list">
+          <li><a href="exercices/03-write-yourself/MultiplicationTable.java" target="_blank" rel="noopener">MultiplicationTable.java</a> (<a class="sol" href="exercices/solutions/03-write-yourself/MultiplicationTable.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/03-write-yourself/GradeAverage.java" target="_blank" rel="noopener">GradeAverage.java</a> (<a class="sol" href="exercices/solutions/03-write-yourself/GradeAverage.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/03-write-yourself/WordStats.java" target="_blank" rel="noopener">WordStats.java</a> (<a class="sol" href="exercices/solutions/03-write-yourself/WordStats.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/03-write-yourself/BankAccount.java" target="_blank" rel="noopener">BankAccount.java</a> (<a class="sol" href="exercices/solutions/03-write-yourself/BankAccount.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/03-write-yourself/ShoppingCart.java" target="_blank" rel="noopener">ShoppingCart.java</a> (<a class="sol" href="exercices/solutions/03-write-yourself/ShoppingCart.java" target="_blank" rel="noopener">Solution</a>)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <span class="badge ex">Set 04</span>
+        <h3>Classes &amp; Objects</h3>
+        <p>Practice defining classes, fields, constructors, and methods.</p>
+        <ul class="file-list">
+          <li><a href="exercices/04-classes/Counter.java" target="_blank" rel="noopener">Counter.java</a> (<a class="sol" href="exercices/solutions/04-classes/Counter.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/04-classes/NumberPair.java" target="_blank" rel="noopener">NumberPair.java</a> (<a class="sol" href="exercices/solutions/04-classes/NumberPair.java" target="_blank" rel="noopener">Solution</a>)</li>
+          <li><a href="exercices/04-classes/Person.java" target="_blank" rel="noopener">Person.java</a> (<a class="sol" href="exercices/solutions/04-classes/Person.java" target="_blank" rel="noopener">Solution</a>)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

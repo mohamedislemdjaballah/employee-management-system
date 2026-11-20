@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workshop Tools &amp; Setup — Web Dev Formation</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --accent: #059669;
+      --amber: #d97706;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 36px 20px 64px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      padding: 34px 28px;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 1.9rem; }
+    header p { margin: 0; opacity: 0.92; font-size: 1.03rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .badge.db { background: var(--accent); }
+    .badge.api { background: var(--amber); }
+
+    .card h2 { margin: 0 0 8px; font-size: 1.18rem; color: #0f172a; }
+    .card p { margin: 0 0 10px; color: var(--muted); font-size: 0.95rem; }
+    ul { margin: 6px 0 0; padding-left: 20px; color: var(--muted); font-size: 0.93rem; }
+    li { margin-bottom: 6px; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.88em;
+    }
+
+    a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="margin-bottom: 14px;">
+      <a href="index.html">&larr; All Days</a>
+    </div>
+
+    <header>
+      <h1>Workshop Tools &amp; Setup</h1>
+      <p>Everything you need installed on your machine for the 5-day Web Dev Formation.</p>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <span class="badge">Code Editor</span>
+        <h2>VS Code &amp; Extensions</h2>
+        <p><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code</a> is our main editor for HTML, CSS, JavaScript, and Java.</p>
+        <ul>
+          <li><strong>Extension Pack for Java</strong> (<code>vscjava.vscode-java-pack</code>) &mdash; Java syntax, Maven &amp; debugger</li>
+          <li><strong>Spring Boot Extension Pack</strong> (<code>vmware.vscode-boot-dev-pack</code>) &mdash; Spring Boot Dashboard &amp; properties support</li>
+          <li><strong>Live Server</strong> (<code>ritwickdey.LiveServer</code>) &mdash; instant preview for HTML/JS files</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <span class="badge">Backend</span>
+        <h2>Java 25 (JDK 25)</h2>
+        <p>Required to compile and run the Spring Boot projects (<code>demo</code> and Java exercises).</p>
+        <ul>
+          <li>Download from <a href="https://adoptium.net/" target="_blank" rel="noopener">Eclipse Adoptium (Temurin JDK 25)</a></li>
+          <li>Verify in terminal: <code>java -version</code></li>
+          <li>Maven Wrapper (<code>./mvnw</code>) is already included in the project</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <span class="badge db">Database</span>
+        <h2>PostgreSQL &amp; pgAdmin 4</h2>
+        <p>Our relational database server (port <code>5432</code>) and desktop management UI.</p>
+        <ul>
+          <li><a href="https://www.postgresql.org/download/" target="_blank" rel="noopener">PostgreSQL</a> &mdash; database engine</li>
+          <li><a href="https://www.pgadmin.org/download/" target="_blank" rel="noopener">pgAdmin 4 Desktop</a> &mdash; create databases, inspect tables &amp; run SQL queries</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <span class="badge api">API &amp; Debugging</span>
+        <h2>Browser DevTools &amp; Postman</h2>
+        <p>Essential for inspecting HTTP requests, JSON payloads, and JavaScript console logs.</p>
+        <ul>
+          <li><strong>Chrome / Edge DevTools</strong> (<code>F12</code>) &mdash; Console &amp; Network tabs</li>
+          <li><a href="https://www.postman.com/downloads/" target="_blank" rel="noopener">Postman</a> &mdash; test <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code> endpoints</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

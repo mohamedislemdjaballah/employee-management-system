@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 3 (Part 2): Chrome DevTools, API Inspection & Bug Reporting</title>
+  <style>
+    :root {
+      --navy: #0a2540;
+      --blue: #0284c7;
+      --blue-bg: #e0f2fe;
+      --gold: #f59e0b;
+      --gold-bg: #fef3c7;
+      --green: #15803d;
+      --green-bg: #dcfce7;
+      --red: #b91c1c;
+      --red-bg: #fee2e2;
+      --bg: #f8fafc;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #cbd5e1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    .stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+    .slide { display: none; width: 100%; max-width: 1120px; aspect-ratio: 16 / 9; background: var(--bg); border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); flex-direction: column; overflow: hidden; }
+    .slide.active { display: flex; }
+    .slide.title-slide { background: linear-gradient(135deg, var(--navy) 0%, #102a43 100%); color: #fff; padding: 3.5rem 4rem; justify-content: center; }
+    .title-accent { width: 80px; height: 6px; background: var(--gold); margin-bottom: 1.2rem; border-radius: 3px; }
+    .tag { font-size: 0.9rem; font-weight: 700; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; margin-bottom: 0.75rem; }
+    .title-slide h1 { font-size: 2.7rem; line-height: 1.15; margin-bottom: 1rem; }
+    .title-slide p.sub { font-size: 1.25rem; color: #cbd5e1; max-width: 780px; margin-bottom: 2.5rem; }
+    .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .meta-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 1rem 1.2rem; }
+    .meta-card small { display: block; color: var(--gold); font-weight: 700; font-size: 0.75rem; margin-bottom: 0.35rem; letter-spacing: 0.8px; }
+    .meta-card span { font-size: 1rem; color: #fff; font-weight: 500; }
+
+    .slide-header { background: var(--navy); color: #fff; padding: 1.15rem 2.2rem; border-bottom: 4px solid var(--gold); }
+    .slide-header .sec { font-size: 0.75rem; font-weight: 700; color: var(--gold); letter-spacing: 1.2px; text-transform: uppercase; }
+    .slide-header h2 { font-size: 1.55rem; margin-top: 0.2rem; }
+    .slide-body { flex: 1; padding: 1.5rem 2.2rem; display: flex; flex-direction: column; gap: 1rem; overflow-y: auto; }
+    .slide-footer { padding: 0.65rem 2.2rem; font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; background: #fff; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; flex: 1; }
+    .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; flex: 1; }
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.15rem 1.25rem; display: flex; flex-direction: column; border-top: 4px solid var(--blue); }
+    .card.gold { border-top-color: var(--gold); }
+    .card.green { border-top-color: var(--green); background: var(--green-bg); border-color: var(--green); }
+    .card.red { border-top-color: var(--red); background: var(--red-bg); border-color: var(--red); }
+    .card.gold-box { background: var(--gold-bg); border-color: var(--gold); border-top-color: var(--gold); }
+    .card.code-box { background: #0f172a; color: #38bdf8; border-color: #334155; font-family: Consolas, monospace; border-top-color: var(--gold); }
+    .card h3 { font-size: 1.08rem; color: var(--navy); margin-bottom: 0.65rem; }
+    .card.red h3 { color: var(--red); }
+    .card.green h3 { color: var(--green); }
+    .card.code-box h3 { color: var(--gold); font-family: 'Segoe UI', sans-serif; font-size: 0.95rem; }
+    .card ul { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.95rem; line-height: 1.45; }
+
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); font-size: 0.92rem; }
+    th { background: var(--navy); color: #fff; text-align: left; padding: 0.65rem 0.95rem; }
+    td { padding: 0.58rem 0.95rem; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) td { background: #f1f5f9; }
+    code { background: #e2e8f0; padding: 0.1rem 0.35rem; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.88em; color: #0f172a; }
+
+    .notes-panel { display: none; background: #1e293b; color: #f8fafc; padding: 0.9rem 2rem; border-top: 2px solid var(--gold); font-size: 0.92rem; line-height: 1.5; }
+    .notes-panel.open { display: block; }
+    .notes-panel strong { color: var(--gold); }
+
+    .controls { background: #020617; color: #cbd5e1; padding: 0.6rem 1.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; }
+    .controls button { background: #1e293b; color: #fff; border: 1px solid #334155; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .controls button:hover { background: var(--blue); border-color: var(--blue); }
+  </style>
+</head>
+<body>
+
+<div class="stage">
+  <!-- SLIDE 1 -->
+  <section class="slide title-slide active" data-notes="Welcome back from lunch! This morning we operated the interface. This afternoon we put on our detective hats and inspect the invisible wire between Chrome and Spring Boot.">
+    <div class="title-accent"></div>
+    <div class="tag">Day 3 • Afternoon Session (13:00 – 15:00)</div>
+    <h1>Under the Hood: DevTools, REST Inspection &amp; Bug Reporting</h1>
+    <p class="sub">Collecting Technical Evidence &amp; Communicating Effectively with Development Teams</p>
+    <div class="meta-grid">
+      <div class="meta-card"><small>FOCUS</small><span>Wire Investigation &amp; Diagnostics</span></div>
+      <div class="meta-card"><small>PRIMARY TOOL</small><span>Chrome DevTools (F12) Console &amp; Network</span></div>
+      <div class="meta-card"><small>FINAL OUTCOME</small><span>Reproducible Golden Bug Reports</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 -->
+  <section class="slide" data-notes="Open Swagger UI (http://localhost:8080/swagger-ui.html) and execute GET /api/employees. Emphasize that JSON is plain, readable text—even non-programmers can read firstName and salary immediately.">
+    <div class="slide-header"><div class="sec">API Communication</div><h2>The Network Wire: REST &amp; JSON Envelopes</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>How Messages Travel</h3>
+          <ul>
+            <li>Every button click triggers a standardized HTTP envelope.</li>
+            <li>Data inside uses <strong>JSON</strong> (JavaScript Object Notation).</li>
+            <li><strong>Language-Agnostic:</strong> Java backend talks cleanly to TypeScript frontend.</li>
+            <li><strong>Swagger UI:</strong> Living executable contract at <code>:8080/swagger-ui.html</code>.</li>
+          </ul>
+        </div>
+        <div class="card code-box">
+          <h3>REAL JSON PAYLOAD ON THE WIRE:</h3>
+          <pre style="font-size:0.95rem; line-height:1.5; margin-top:0.4rem;">{
+  "id": 1,
+  "matricule": "FIN-2026-001",
+  "firstName": "Karim",
+  "lastName": "BENALI",
+  "email": "k.benali@finances.gov",
+  "salary": 145000.00,
+  "status": "ACTIVE",
+  "departmentCode": "SIT"
+}</pre>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 2 / 10</span></div>
+  </section>
+
+  <!-- SLIDE 3 -->
+  <section class="slide" data-notes="Laravel Context: Maps directly to Route::apiResource('employees'). Point out that GET reads parameters from the URL, while POST and PUT carry a JSON Payload inside the request body.">
+    <div class="slide-header"><div class="sec">HTTP Protocol</div><h2>The 4 Core HTTP Methods (Action Verbs)</h2></div>
+    <div class="slide-body">
+      <table>
+        <thead><tr><th>HTTP Method</th><th>Action Meaning</th><th>EMS Endpoint Example</th><th>Carries JSON Payload?</th></tr></thead>
+        <tbody>
+          <tr><td><strong><code>GET</code></strong></td><td>Read / Retrieve</td><td><code>GET /api/employees?departmentId=1</code></td><td>No (Filters in URL)</td></tr>
+          <tr><td><strong><code>POST</code></strong></td><td>Create New Record</td><td><code>POST /api/employees</code></td><td>Yes (New Employee Data)</td></tr>
+          <tr><td><strong><code>PUT</code></strong></td><td>Update / Replace</td><td><code>PUT /api/employees/8</code></td><td>Yes (Updated Fields)</td></tr>
+          <tr><td><strong><code>DELETE</code></strong></td><td>Remove Record</td><td><code>DELETE /api/employees/8</code></td><td>No (ID in URL)</td></tr>
+        </tbody>
+      </table>
+      <div class="card gold-box" style="flex:0;">
+        <h3>REST Design Principle</h3>
+        <p>In REST, the URL always names the <strong>RESOURCE</strong> (<code>/api/employees</code>), while the HTTP Verb dictates the <strong>ACTION</strong> (GET, POST, PUT, DELETE).</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 3 / 10</span></div>
+  </section>
+
+  <!-- SLIDE 4 -->
+  <section class="slide" data-notes="Crucial teaching point: 4xx does NOT mean the server crashed! It means the server is healthy and rejected a bad request or unauthorized action. 5xx means the server code crashed. Always remind them: A status code is evidence, NOT a complete diagnosis.">
+    <div class="slide-header"><div class="sec">Diagnostics</div><h2>HTTP Status Codes — Your 3-Digit Compass</h2></div>
+    <div class="slide-body">
+      <table>
+        <thead><tr><th>Category</th><th>Status Code</th><th>What It Means in Plain English</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--green);font-weight:700;">2xx Success</td><td><code>200 OK</code> / <code>201 Created</code> / <code>204 No Content</code></td><td>Request succeeded cleanly (201 = new record created).</td></tr>
+          <tr><td style="color:#b45309;font-weight:700;">4xx Client</td><td><code>400 Bad Request</code></td><td>Validation error (missing field, bad email, negative salary).</td></tr>
+          <tr><td style="color:#b45309;font-weight:700;">4xx Client</td><td><code>401 Unauthorized</code></td><td>Not logged in or JWT token expired ("Who are you?").</td></tr>
+          <tr><td style="color:#b45309;font-weight:700;">4xx Client</td><td><code>403 Forbidden</code></td><td>Logged in, but role lacks permission ("Not allowed!").</td></tr>
+          <tr><td style="color:#b45309;font-weight:700;">4xx Client</td><td><code>404 Not Found</code></td><td>Record ID does not exist or URL typo.</td></tr>
+          <tr><td style="color:#b45309;font-weight:700;">4xx Client</td><td><code>409 Conflict</code></td><td>Duplicate constraint (e.g., matricule already exists).</td></tr>
+          <tr><td style="color:var(--red);font-weight:700;">5xx Server</td><td><code>500 Internal Server Error</code></td><td>Server crashed! Unhandled Java exception or DB outage.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 4 / 10</span></div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <section class="slide" data-notes="Have every participant press F12 right now! Wait until everyone checks 'Preserve log' and clicks the 'Fetch/XHR' filter before moving on.">
+    <div class="slide-header"><div class="sec">Investigation Tools</div><h2>Chrome Developer Tools (F12) — Your Technical Microscope</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card" style="border-top-color:var(--red);">
+          <h3>1. Console Tab (Flight Recorder)</h3>
+          <ul>
+            <li>Shows bright <strong>red JavaScript errors</strong> inside Chrome.</li>
+            <li>Check here <strong>FIRST</strong> when a button clicks and "nothing happens" or screen freezes.</li>
+            <li><strong>Capture:</strong> Exact red error text + file name &amp; line number.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>2. Network Tab (Wire Camera)</h3>
+          <ul>
+            <li>Records every HTTP call between Angular and Spring Boot.</li>
+            <li><strong>MUST DO #1:</strong> Check <strong>"Preserve log"</strong> (keeps evidence on redirect).</li>
+            <li><strong>MUST DO #2:</strong> Click <strong>"Fetch/XHR"</strong> filter (hides images &amp; CSS).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 5 / 10</span></div>
+  </section>
+
+  <!-- SLIDE 6 -->
+  <section class="slide" data-notes="Live Demo: Click 'Actualiser' in EMS, click the 'employees' row in DevTools, and walk through Headers, Payload, Response, and Timing.">
+    <div class="slide-header"><div class="sec">Wire Inspection</div><h2>Inspecting a Network Request (4 Essential Tabs)</h2></div>
+    <div class="slide-body">
+      <div class="grid-2x2">
+        <div class="card" style="border-top-color:var(--navy);">
+          <h3>1. HEADERS TAB</h3>
+          <ul>
+            <li>Request URL (<code>http://localhost:8080/api/employees</code>)</li>
+            <li>HTTP Method &amp; Status Code (<code>201</code> or red <code>409</code>)</li>
+            <li>Request Headers (<code>Authorization: Bearer...</code>)</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top-color:var(--navy);">
+          <h3>2. PAYLOAD TAB</h3>
+          <ul>
+            <li>Shows exact JSON sent by Angular</li>
+            <li>Only present on <code>POST</code> / <code>PUT</code> calls</li>
+            <li>Proves what the user actually submitted</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top-color:var(--navy);">
+          <h3>3. RESPONSE TAB</h3>
+          <ul>
+            <li>Shows exact JSON returned by Spring Boot</li>
+            <li>Contains created ID or detailed field errors</li>
+            <li>Essential for diagnosing <code>400</code> / <code>409</code> / <code>500</code></li>
+          </ul>
+        </div>
+        <div class="card" style="border-top-color:var(--navy);">
+          <h3>4. TIMING TAB</h3>
+          <ul>
+            <li>Measures server response speed in ms</li>
+            <li>Waiting for server response (TTFB)</li>
+            <li>Identifies slow PostgreSQL queries</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 6 / 10</span></div>
+  </section>
+
+  <!-- SLIDE 7 -->
+  <section class="slide" data-notes="Analogy: Authentication is your passport at the airport ('Who are you?'). Authorization is your security badge inside the Ministry ('Can you enter this room?'). Emphasize redacting tokens and passwords before sharing screenshots!">
+    <div class="slide-header"><div class="sec">Security Concepts</div><h2>Authentication (401) vs. Authorization (403) &amp; Data Safety</h2></div>
+    <div class="slide-body">
+      <div class="grid-2" style="flex:0;">
+        <div class="card">
+          <h3>Authentication vs. Authorization</h3>
+          <ul>
+            <li><strong>AuthN (Who are you?):</strong> Checks password &amp; issues JWT Token. Failure = <code>401 Unauthorized</code>.</li>
+            <li><strong>AuthZ (What can you do?):</strong> Checks role (<code>ROLE_ADMIN</code> vs <code>ROLE_AGENT</code>). Failure = <code>403 Forbidden</code>.</li>
+            <li>Angular Interceptor attaches <code>Authorization: Bearer &lt;token&gt;</code> automatically.</li>
+          </ul>
+        </div>
+        <div class="card red">
+          <h3>CRITICAL SECURITY WARNING</h3>
+          <ul>
+            <li><strong>NEVER</strong> share passwords in bug reports.</li>
+            <li><strong>NEVER</strong> paste unredacted JWT Bearer tokens in chat or Jira.</li>
+            <li><strong>MASK</strong> sensitive citizen / salary data in screenshots with <code>[REDACTED]</code>.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card gold-box" style="flex:0;">
+        <h3>Remember the Diagnostic Principle</h3>
+        <p>A status code (like 400 or 500) is evidence—<strong>NOT</strong> a complete diagnosis. Always read the JSON message inside the Response tab!</p>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 7 / 10</span></div>
+  </section>
+
+  <!-- SLIDE 8 -->
+  <section class="slide" data-notes="Compare the two side by side. When you give developers reproduction steps + HTTP method + URL + status code + response JSON, they fix the bug in 15 minutes with zero arguments.">
+    <div class="slide-header"><div class="sec">Technical Communication</div><h2>The Bad Report vs. The Golden Bug Report</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card red">
+          <h3>❌ Useless Bug Report</h3>
+          <ul>
+            <li>"The employee screen is broken. Please fix ASAP."</li>
+            <li>No URL or environment.</li>
+            <li>No steps to reproduce.</li>
+            <li>No status code or error message.</li>
+            <li>Forces developers to guess and email back.</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>✅ Golden Professional Bug Report</h3>
+          <ul>
+            <li><strong>1. Title &amp; Context:</strong> Page URL &amp; User Role.</li>
+            <li><strong>2. Steps to Reproduce:</strong> Numbered 1, 2, 3 clicks.</li>
+            <li><strong>3. Expected vs. Actual Behavior.</strong></li>
+            <li><strong>4. DevTools Evidence:</strong> <code>POST /api/employees</code> → <code>409 Conflict</code> + JSON.</li>
+            <li><strong>5. Cropped, redacted screenshot attached.</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 8 / 10</span></div>
+  </section>
+
+  <!-- SLIDE 9 -->
+  <section class="slide" data-notes="Walk the room during these 35 minutes. Ensure every participant sees the 409 Conflict red row in Network tab and inspects the Authorization: Bearer header after logging into /login-demo.">
+    <div class="slide-header"><div class="sec">Hands-On Lab • 14:00 – 14:35</div><h2>Practical Missions 3 &amp; 4: Wire Inspection &amp; Troubleshooting</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Mission 3: Wire Inspection</h3>
+          <ul>
+            <li>Open DevTools (<code>F12</code>) → Network → <strong>Preserve log</strong> + <strong>Fetch/XHR</strong>.</li>
+            <li>Create test agent: <code>FIN-2026-009</code> (Lynda MEZIANI).</li>
+            <li>Inspect the <code>POST /api/employees</code> row.</li>
+            <li>Record: URL, Method, Status (<code>201</code>), Payload &amp; new ID.</li>
+          </ul>
+        </div>
+        <div class="card gold">
+          <h3>Mission 4: 4 Failure Scenarios</h3>
+          <ul>
+            <li><strong>A. Duplicate Matricule</strong> (<code>FIN-2026-001</code>) → Capture <code>409 Conflict</code>.</li>
+            <li><strong>B. Invalid Email</strong> → Observe client-side block (0 calls).</li>
+            <li><strong>C. Security Tab</strong> (<code>admin</code>/<code>finances2026</code>) → Spot <code>Bearer</code> header.</li>
+            <li><strong>D. Delete test agent</strong> → Capture <code>DELETE</code> &amp; <code>204 No Content</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 9 / 10</span></div>
+  </section>
+
+  <!-- SLIDE 10 -->
+  <section class="slide" data-notes="Administer the 15-minute Final Assessment from 08-final-assessment.md. Review one model bug report together, thank everyone, and congratulate them on mastering Day 3!">
+    <div class="slide-header"><div class="sec">Final Assessment &amp; Wrap-Up • 14:35 – 15:00</div><h2>Capstone Challenge &amp; Day 3 Takeaways</h2></div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Final Assessment (15 Mins)</h3>
+          <ul>
+            <li>Choose one scenario in your Workbook:</li>
+            <li><strong>Scenario A:</strong> Blocked Form (Validation)</li>
+            <li><strong>Scenario B:</strong> Denied Deletion (<code>403 Forbidden</code>)</li>
+            <li><strong>Scenario C:</strong> Server Crash (<code>500 Error</code>)</li>
+            <li>Write one <strong>Golden Bug Report</strong> with redacted evidence.</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Day 3 Key Takeaways</h3>
+          <ul>
+            <li><strong>Decoupled:</strong> Angular (<code>:4200</code>) ↔ REST/JSON ↔ Spring Boot (<code>:8080</code>) ↔ PostgreSQL.</li>
+            <li><strong>REST:</strong> <code>GET</code> reads, <code>POST</code> creates, <code>PUT</code> updates, <code>DELETE</code> deletes.</li>
+            <li><strong>DevTools (F12):</strong> Console shows JS crashes; Network reveals the wire.</li>
+            <li><strong>Evidence over emotion</strong> solves bugs fast!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer"><span>Ministry of Finance / SIT — Day 3 Workshop</span><span>Slide 10 / 10</span></div>
+  </section>
+</div>
+
+<div id="notesPanel" class="notes-panel">
+  <strong>Instructor Speaker Notes:</strong> <span id="notesText"></span>
+</div>
+
+<div class="controls">
+  <div><strong>Day 3 — Part 2:</strong> DevTools, API Inspection &amp; Bug Reporting</div>
+  <div style="display:flex; gap:0.6rem; align-items:center;">
+    <button onclick="prevSlide()">← Previous</button>
+    <span id="counter">1 / 10</span>
+    <button onclick="nextSlide()">Next →</button>
+    <button onclick="toggleNotes()" style="margin-left:0.6rem;">Notes (N)</button>
+  </div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesText = document.getElementById('notesText');
+  const counter = document.getElementById('counter');
+  let current = 0;
+
+  function showSlide(idx) {
+    slides[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${slides.length}`;
+    notesText.textContent = slides[current].getAttribute('data-notes') || '';
+  }
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
+  function toggleNotes() { notesPanel.classList.toggle('open'); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key.toLowerCase() === 'n') toggleNotes();
+  });
+  showSlide(0);
+</script>
+</body>
+</html>

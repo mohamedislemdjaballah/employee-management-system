@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 01 — Creating Tables &amp; Inserting Data</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --tip-bg: #eff6ff;
+      --warn-bg: #fffbeb;
+      --warn-border: #f59e0b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a:hover { text-decoration: underline; }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      padding: 30px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 1.75rem;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.92;
+    }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.24rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    p { margin: 0 0 12px; color: var(--muted); }
+    ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--muted); }
+    li { margin-bottom: 8px; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 12px 0;
+    }
+
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.94rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .tip {
+      background: var(--tip-bg);
+      border-left: 4px solid var(--primary);
+      padding: 12px 16px;
+      border-radius: 0 10px 10px 0;
+      margin: 14px 0 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .warn {
+      background: var(--warn-bg);
+      border-left: 4px solid var(--warn-border);
+      padding: 12px 16px;
+      border-radius: 0 10px 10px 0;
+      margin: 14px 0 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="index.html">&larr; All Exercises</a>
+      <a href="sql-reference.html">SQL Reference</a>
+      <a href="solutions/01-create-tables-solution.html" target="_blank" rel="noopener" style="color: #059669;">View Solution</a>
+      <a href="02-select-queries.html">Next: Exercise 02 &rarr;</a>
+    </div>
+
+    <header>
+      <h1>Exercise 01 &mdash; Creating Tables &amp; Inserting Data</h1>
+      <p>Practice defining table schemas with PostgreSQL data types and inserting your first rows.</p>
+    </header>
+
+    <section class="card">
+      <h2><span class="badge">Quick Reference</span> Common PostgreSQL Data Types</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Data Type</th>
+            <th>Use For</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>SERIAL</code></td>
+            <td>Auto-incrementing whole number ID</td>
+            <td><code>id SERIAL PRIMARY KEY</code></td>
+          </tr>
+          <tr>
+            <td><code>INT</code></td>
+            <td>Whole numbers (age, year, quantity)</td>
+            <td><code>published_year INT</code></td>
+          </tr>
+          <tr>
+            <td><code>TEXT</code> or <code>VARCHAR(n)</code></td>
+            <td>Strings / text</td>
+            <td><code>title TEXT NOT NULL</code></td>
+          </tr>
+          <tr>
+            <td><code>NUMERIC(6, 2)</code></td>
+            <td>Exact decimals like money/prices</td>
+            <td><code>price NUMERIC(6, 2)</code></td>
+          </tr>
+          <tr>
+            <td><code>BOOLEAN</code></td>
+            <td>True or false values</td>
+            <td><code>in_stock BOOLEAN</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Task 1</span> Create a <code>books</code> Table</h2>
+      <p>Write a <code>CREATE TABLE</code> statement to create a table named <code>books</code> with these columns:</p>
+      <ul>
+        <li><code>id</code> &mdash; auto-incrementing primary key (<code>SERIAL PRIMARY KEY</code>)</li>
+        <li><code>title</code> &mdash; text, cannot be empty (<code>TEXT NOT NULL</code>)</li>
+        <li><code>author</code> &mdash; text, cannot be empty (<code>TEXT NOT NULL</code>)</li>
+        <li><code>published_year</code> &mdash; whole number (<code>INT</code>)</li>
+        <li><code>price</code> &mdash; decimal number up to 6 digits with 2 decimal places (<code>NUMERIC(6, 2)</code>)</li>
+        <li><code>in_stock</code> &mdash; true/false, defaults to <code>TRUE</code> (<code>BOOLEAN DEFAULT TRUE</code>)</li>
+      </ul>
+      <div class="tip">
+        <strong>Hint:</strong> Start with <code>CREATE TABLE books ( ... );</code> and separate each column definition with a comma.
+      </div>
+      <details style="margin-top: 12px;">
+        <summary style="cursor: pointer; font-weight: 600; color: #0f172a;">Show Query Template</summary>
+        <pre><span class="kw">CREATE TABLE</span> <span class="ty">table_name</span> (
+    column1 <span class="ty">SERIAL PRIMARY KEY</span>,
+    column2 <span class="ty">TEXT NOT NULL</span>,
+    column3 <span class="ty">INT</span>,
+    column4 <span class="ty">NUMERIC(6, 2)</span>,
+    column5 <span class="ty">BOOLEAN DEFAULT TRUE</span>
+);</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Task 2</span> Insert 5 Books</h2>
+      <p>Insert the following 5 books into your <code>books</code> table using <code>INSERT INTO</code>:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>title</th>
+            <th>author</th>
+            <th>published_year</th>
+            <th>price</th>
+            <th>in_stock</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Clean Code</td><td>Robert C. Martin</td><td>2008</td><td>34.99</td><td>TRUE</td></tr>
+          <tr><td>The Pragmatic Programmer</td><td>Andrew Hunt</td><td>1999</td><td>42.50</td><td>TRUE</td></tr>
+          <tr><td>Designing Data-Intensive Applications</td><td>Martin Kleppmann</td><td>2017</td><td>49.99</td><td>FALSE</td></tr>
+          <tr><td>SQL QuickStart Guide</td><td>Walter Shields</td><td>2019</td><td>24.99</td><td>TRUE</td></tr>
+          <tr><td>Head First Java</td><td>Kathy Sierra</td><td>2005</td><td>39.00</td><td>FALSE</td></tr>
+        </tbody>
+      </table>
+      <div class="tip">
+        <strong>Hint:</strong> Because <code>id</code> is <code>SERIAL</code>, PostgreSQL fills it in automatically! Only list <code>(title, author, published_year, price, in_stock)</code> in your <code>INSERT INTO</code>.
+      </div>
+      <details style="margin-top: 12px;">
+        <summary style="cursor: pointer; font-weight: 600; color: #0f172a;">Show Query Template</summary>
+        <pre><span class="kw">INSERT INTO</span> <span class="ty">books</span> (title, author, published_year, price, in_stock) <span class="kw">VALUES</span>
+(<span class="st">'Title 1'</span>, <span class="st">'Author 1'</span>, <span class="nu">2020</span>, <span class="nu">19.99</span>, <span class="kw">TRUE</span>),
+(<span class="st">'Title 2'</span>, <span class="st">'Author 2'</span>, <span class="nu">2021</span>, <span class="nu">29.99</span>, <span class="kw">FALSE</span>);</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Task 3</span> Create a <code>students</code> Table</h2>
+      <p>Create a second table named <code>students</code> with:</p>
+      <ul>
+        <li><code>id</code> &mdash; <code>SERIAL PRIMARY KEY</code></li>
+        <li><code>full_name</code> &mdash; <code>TEXT NOT NULL</code></li>
+        <li><code>email</code> &mdash; <code>TEXT UNIQUE NOT NULL</code> (no two students can share the same email)</li>
+        <li><code>age</code> &mdash; <code>INT</code></li>
+        <li><code>city</code> &mdash; <code>TEXT</code></li>
+      </ul>
+      <p>Then insert at least <strong>4 students</strong> of your choice (or make one student have <code>NULL</code> for <code>city</code> to practice missing values later).</p>
+      <details style="margin-top: 12px;">
+        <summary style="cursor: pointer; font-weight: 600; color: #0f172a;">Show Query Template</summary>
+        <pre><span class="kw">CREATE TABLE</span> <span class="ty">students</span> (
+    id        <span class="ty">SERIAL PRIMARY KEY</span>,
+    full_name <span class="ty">TEXT NOT NULL</span>,
+    email     <span class="ty">TEXT UNIQUE NOT NULL</span>,
+    age       <span class="ty">INT</span>,
+    city      <span class="ty">TEXT</span>
+);
+
+<span class="cm">-- Use NULL (no quotes) when a value is missing:</span>
+<span class="kw">INSERT INTO</span> <span class="ty">students</span> (full_name, email, age, city)
+<span class="kw">VALUES</span> (<span class="st">'Name'</span>, <span class="st">'name@example.com'</span>, <span class="nu">20</span>, <span class="kw">NULL</span>);</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Task 4</span> Verify Your Data</h2>
+      <p>Run a <code>SELECT</code> query on both tables to confirm all rows were inserted properly:</p>
+      <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">books</span>;
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">students</span>;</pre>
+      <div class="warn">
+        <strong>Common mistake:</strong> In SQL, text values must use <strong>single quotes</strong> (<code>'Clean Code'</code>), not double quotes!
+      </div>
+      <details style="margin-top: 12px;">
+        <summary style="cursor: pointer; font-weight: 600; color: #0f172a;">Show Query Template</summary>
+        <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">table_name</span>;</pre>
+      </details>
+    </section>
+  </div>
+</body>
+</html>

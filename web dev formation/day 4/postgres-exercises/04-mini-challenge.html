@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 04 — Mini Challenge: Online Store</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --tip-bg: #eff6ff;
+      --warn-bg: #fffbeb;
+      --warn-border: #f59e0b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+    }
+
+    .nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav a:hover { text-decoration: underline; }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      padding: 30px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 1.75rem;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.92;
+    }
+
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.24rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    p { margin: 0 0 12px; color: var(--muted); }
+    ol, ul { margin: 8px 0 14px; padding-left: 22px; color: var(--muted); }
+    li { margin-bottom: 10px; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 12px 0;
+    }
+
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.93rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .warn {
+      background: var(--warn-bg);
+      border-left: 4px solid var(--warn-border);
+      padding: 12px 16px;
+      border-radius: 0 10px 10px 0;
+      margin: 14px 0 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <a href="03-filtering-data.html">&larr; Exercise 03</a>
+      <a href="sql-reference.html">SQL Reference</a>
+      <a href="solutions/04-mini-challenge-solution.html" target="_blank" rel="noopener" style="color: #059669;">View Solution</a>
+      <a href="index.html">All Exercises</a>
+    </div>
+
+    <header>
+      <h1>Exercise 04 &mdash; Mini Challenge: Online Store</h1>
+      <p>Combine <code>CREATE TABLE</code>, <code>INSERT</code>, <code>SELECT</code>, <code>WHERE</code>, <code>ORDER BY</code>, and safe <code>UPDATE</code>/<code>DELETE</code>.</p>
+    </header>
+
+    <section class="card">
+      <h2><span class="badge">Step 1</span> Create the <code>products</code> Table</h2>
+      <p>Create a table named <code>products</code> with these columns:</p>
+      <ul>
+        <li><code>id</code> &mdash; <code>SERIAL PRIMARY KEY</code></li>
+        <li><code>name</code> &mdash; <code>TEXT NOT NULL</code></li>
+        <li><code>category</code> &mdash; <code>TEXT NOT NULL</code></li>
+        <li><code>price</code> &mdash; <code>NUMERIC(8, 2) NOT NULL</code></li>
+        <li><code>stock</code> &mdash; <code>INT DEFAULT 0</code></li>
+      </ul>
+      <details style="margin-top: 10px;">
+        <summary style="cursor: pointer; font-weight: 600; color: #2563eb;">Hint</summary>
+        <pre><span class="kw">CREATE TABLE</span> <span class="ty">products</span> (
+    id       <span class="ty">SERIAL PRIMARY KEY</span>,
+    name     <span class="ty">TEXT NOT NULL</span>,
+    category <span class="ty">TEXT NOT NULL</span>,
+    price    <span class="ty">NUMERIC(8, 2) NOT NULL</span>,
+    stock    <span class="ty">INT DEFAULT 0</span>
+);</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Step 2</span> Insert 6 Products</h2>
+      <p>Insert these 6 rows into <code>products</code>:</p>
+      <table>
+        <thead>
+          <tr><th>name</th><th>category</th><th>price</th><th>stock</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Wireless Mouse</td><td>Electronics</td><td>25.99</td><td>40</td></tr>
+          <tr><td>Mechanical Keyboard</td><td>Electronics</td><td>89.50</td><td>15</td></tr>
+          <tr><td>Coffee Mug</td><td>Kitchen</td><td>12.00</td><td>0</td></tr>
+          <tr><td>Standing Desk</td><td>Furniture</td><td>320.00</td><td>5</td></tr>
+          <tr><td>USB-C Cable</td><td>Electronics</td><td>9.99</td><td>100</td></tr>
+          <tr><td>Desk Lamp</td><td>Furniture</td><td>45.00</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <details style="margin-top: 10px;">
+        <summary style="cursor: pointer; font-weight: 600; color: #2563eb;">Hint</summary>
+        <pre><span class="kw">INSERT INTO</span> <span class="ty">products</span> (name, category, price, stock) <span class="kw">VALUES</span>
+(<span class="st">'Product 1'</span>, <span class="st">'Category'</span>, <span class="nu">19.99</span>, <span class="nu">10</span>);</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Step 3</span> Query &amp; Filter the Store</h2>
+      <ol>
+        <li>
+          Show all <code>'Electronics'</code> products that are currently in stock (<code>stock &gt; 0</code>).
+          <details style="margin-top: 6px;">
+            <summary style="cursor: pointer; font-weight: 600; color: #2563eb;">Hint</summary>
+            <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">products</span> <span class="kw">WHERE</span> category = <span class="st">'...'</span> <span class="kw">AND</span> stock &gt; <span class="nu">0</span>;</pre>
+          </details>
+        </li>
+        <li>
+          Show all products that are out of stock (<code>stock = 0</code>).
+          <details style="margin-top: 6px;">
+            <summary style="cursor: pointer; font-weight: 600; color: #2563eb;">Hint</summary>
+            <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">products</span> <span class="kw">WHERE</span> stock = <span class="nu">0</span>;</pre>
+          </details>
+        </li>
+        <li>
+          Show the <strong>2 cheapest</strong> products in the store (<code>ORDER BY price ASC LIMIT 2</code>).
+          <details style="margin-top: 6px;">
+            <summary style="cursor: pointer; font-weight: 600; color: #2563eb;">Hint</summary>
+            <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">products</span> <span class="kw">ORDER BY</span> price <span class="kw">ASC LIMIT</span> <span class="nu">2</span>;</pre>
+          </details>
+        </li>
+        <li>
+          Show all products whose <code>name</code> contains <code>'Desk'</code> (case-insensitive) and cost less than <code>100</code>.
+          <details style="margin-top: 6px;">
+            <summary style="cursor: pointer; font-weight: 600; color: #2563eb;">Hint</summary>
+            <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">products</span> <span class="kw">WHERE</span> name <span class="kw">ILIKE</span> <span class="st">'%...%'</span> <span class="kw">AND</span> price &lt; <span class="nu">100</span>;</pre>
+          </details>
+        </li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2><span class="badge">Step 4</span> Bonus: Safe <code>UPDATE</code> &amp; <code>DELETE</code></h2>
+      <ol>
+        <li>
+          Restock the <code>'Coffee Mug'</code> by setting its <code>stock</code> to <code>25</code> using <code>UPDATE ... WHERE</code>.
+          <details style="margin-top: 6px;">
+            <summary style="cursor: pointer; font-weight: 600; color: #2563eb;">Hint</summary>
+            <pre><span class="kw">UPDATE</span> <span class="ty">products</span> <span class="kw">SET</span> stock = <span class="nu">25</span> <span class="kw">WHERE</span> name = <span class="st">'...'</span>;</pre>
+          </details>
+        </li>
+        <li>
+          Delete the <code>'Desk Lamp'</code> product from the table using <code>DELETE FROM ... WHERE</code>.
+          <details style="margin-top: 6px;">
+            <summary style="cursor: pointer; font-weight: 600; color: #2563eb;">Hint</summary>
+            <pre><span class="kw">DELETE FROM</span> <span class="ty">products</span> <span class="kw">WHERE</span> name = <span class="st">'...'</span>;</pre>
+          </details>
+        </li>
+      </ol>
+      <div class="warn">
+        <strong>Always check your <code>WHERE</code> clause!</strong> Without <code>WHERE</code>, <code>UPDATE</code> or <code>DELETE</code> affects every single row in the table.
+      </div>
+    </section>
+  </div>
+</body>
+</html>

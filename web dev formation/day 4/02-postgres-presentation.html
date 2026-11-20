@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 4 — PostgreSQL Presentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --slide-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --primary: #2563eb;
+      --primary-dark: #1e3a8a;
+      --accent: #16a34a;
+      --border: #e2e8f0;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .deck {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px 16px;
+    }
+
+    .progress-track {
+      width: 100%;
+      max-width: 1040px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #2563eb);
+      transition: width 0.25s ease;
+    }
+
+    .stage {
+      width: 100%;
+      max-width: 1040px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      padding: 14px 0;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      max-height: 620px;
+      background: var(--slide-bg);
+      border-radius: 20px;
+      padding: 36px 44px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide.cover {
+      background: #ffffff;
+      color: var(--text);
+      justify-content: center;
+      text-align: center;
+    }
+
+    .slide.cover h1 {
+      font-size: 2.6rem;
+      margin: 0 0 10px;
+      line-height: 1.2;
+      color: var(--primary-dark);
+    }
+
+    .slide.cover p {
+      font-size: 1.12rem;
+      color: var(--muted);
+      margin: 0 auto 24px;
+      max-width: 680px;
+    }
+
+    .slide.part-slide {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #ffffff;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .slide.part-slide .part-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+
+    .slide.part-slide h2 {
+      font-size: 2.5rem;
+      margin: 0 0 12px;
+      line-height: 1.2;
+      color: #ffffff;
+    }
+
+    .slide.part-slide p {
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.88);
+      margin: 0;
+      max-width: 620px;
+    }
+
+    .cover-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .cover-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--primary);
+      border-radius: 12px;
+      padding: 16px 14px;
+      text-align: left;
+    }
+
+    .cover-card strong {
+      display: block;
+      font-size: 1rem;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .cover-card span {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .bar-row {
+      margin-bottom: 10px;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #0f172a;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 18px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: #94a3b8;
+    }
+
+    .bar-fill.pg {
+      background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    }
+
+    .slide-top {
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 1.75rem;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .card.blue { background: #eff6ff; border-color: #bfdbfe; }
+    .card.green { background: #f0fdf4; border-color: #bbf7d0; }
+    .card.amber { background: #fffbeb; border-color: #fde68a; }
+    .card.red { background: #fef2f2; border-color: #fecaca; }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+      color: #0f172a;
+    }
+
+    .card p, .card li {
+      margin: 0 0 6px;
+      font-size: 0.96rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    ul { margin: 4px 0 0; padding-left: 20px; }
+
+    .big-stat {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 16px;
+    }
+
+    .d-box {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 16px;
+      text-align: center;
+      min-width: 145px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .d-box small {
+      display: block;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 3px;
+      font-size: 0.82rem;
+    }
+
+    .d-box.ok { border-color: #16a34a; background: #f0fdf4; }
+    .d-box.fail { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+    .d-box.info { border-color: #2563eb; background: #eff6ff; }
+
+    .arrow {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.94rem;
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin: 0;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .kw { color: #c084fc; }
+    .ty { color: #38bdf8; }
+    .st { color: #86efac; }
+    .cm { color: #94a3b8; }
+    .nu { color: #fbbf24; }
+
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.9em;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .company-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .company-pill {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #0f172a;
+    }
+
+    .company-pill span {
+      display: block;
+      font-weight: 400;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      display: block;
+      margin: 0 auto 8px;
+    }
+
+    .host-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .host-item svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .pg-hero-logo {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 10px;
+      display: block;
+    }
+
+    .pg-corner-logo {
+      width: 28px;
+      height: 28px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .iframe-wrap {
+      width: 100%;
+      height: 310px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    .iframe-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .controls {
+      width: 100%;
+      max-width: 1040px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #e2e8f0;
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: 0.98rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .nav-btn:hover:not(:disabled) { background: #1d4ed8; }
+    .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .counter {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="progress-track">
+      <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <div class="stage">
+      <!-- SLIDE 1: COVER -->
+      <section class="slide cover active">
+        <img src="postgres-logo.png" alt="PostgreSQL Logo" class="pg-hero-logo" style="object-fit: contain;" />
+        <h1>PostgreSQL</h1>
+        <p>The World&rsquo;s Most Popular Open-Source Database</p>
+        <div class="cover-grid">
+          <div class="cover-card">
+            <strong>1. Introduction</strong>
+            <span>What a database is (tables, rows &amp; columns)</span>
+          </div>
+          <div class="cover-card">
+            <strong>2. History</strong>
+            <span>From 1986 UC Berkeley to today</span>
+          </div>
+          <div class="cover-card">
+            <strong>3. Open Source</strong>
+            <span>Free to use, no lock-in &amp; hosting options</span>
+          </div>
+          <div class="cover-card">
+            <strong>4. Most Popular</strong>
+            <span>#1 in surveys &amp; trusted by top companies</span>
+          </div>
+          <div class="cover-card">
+            <strong>5. ACID Compliant</strong>
+            <span>4 simple promises that keep data safe</span>
+          </div>
+          <div class="cover-card">
+            <strong>6. Basic SQL</strong>
+            <span>Create, read, update &amp; delete data</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 1 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 1</span>
+        <h2>Introduction</h2>
+        <p>What PostgreSQL is and how databases organize data.</p>
+      </section>
+
+      <!-- SLIDE 2: WHAT IS POSTGRESQL? -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 1 &bull; Introduction</span>
+          <h2>What Is PostgreSQL?</h2>
+          <p class="subtitle">A free, open-source relational database system.</p>
+        </div>
+        <div class="slide-body">
+          <div class="card blue">
+            <h3>Simple Definition</h3>
+            <p style="font-size: 1.04rem; line-height: 1.7; color: #1e293b; margin: 0 0 8px;">
+              <strong>PostgreSQL</strong> is a database system designed to store your application&rsquo;s data safely in organized <strong>tables, columns, and rows</strong> &mdash; so your data stays saved even if the app server crashes or restarts. It also provides essential features out of the box:
+            </p>
+            <ul style="color: #1e293b;">
+              <li><strong>Fast searching &amp; filtering</strong> across millions of rows in milliseconds</li>
+              <li><strong>Automated backups</strong> to keep your data recoverable</li>
+              <li><strong>Multiple clients at the same time</strong> without conflict</li>
+              <li><strong>Wide range of column types</strong> (numbers, text, dates, booleans, and more)</li>
+            </ul>
+          </div>
+          <table>
+            <thead><tr><th>id (number)</th><th>name (text)</th><th>role (text)</th><th>active (boolean)</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Alice</td><td>Developer</td><td>true</td></tr>
+              <tr><td>2</td><td>Bob</td><td>Designer</td><td>true</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SLIDE 2B: WHAT DOES RELATIONAL MEAN? -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 1 &bull; Introduction</span>
+          <h2>What Does &ldquo;Relational&rdquo; Mean?</h2>
+          <p class="subtitle">Tables link to each other using IDs instead of repeating the same text everywhere.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card">
+              <h3><code>departments</code> table</h3>
+              <table>
+                <thead><tr><th>id</th><th>name</th><th>location</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>1</strong></td><td>Engineering</td><td>Floor 3</td></tr>
+                  <tr><td><strong>2</strong></td><td>Marketing</td><td>Floor 1</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card">
+              <h3><code>employees</code> table</h3>
+              <table>
+                <thead><tr><th>id</th><th>name</th><th>department_id</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Alice</td><td><strong>1</strong> &rarr; Engineering</td></tr>
+                  <tr><td>2</td><td>Bob</td><td><strong>2</strong> &rarr; Marketing</td></tr>
+                  <tr><td>3</td><td>Charlie</td><td><strong>1</strong> &rarr; Engineering</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card green">
+            <h3>Why this is awesome</h3>
+            <p>If 'Engineering' is renamed to 'RESEARCH', you only update <strong>1 row</strong> in <code>departments</code> &mdash; not hundreds of employee rows!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2C: CLIENT / SERVER MODEL -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 1 &bull; Introduction</span>
+          <h2>The Client / Server Model</h2>
+          <p class="subtitle">PostgreSQL runs as a <strong>server</strong>; tools and apps connect to it as <strong>clients</strong>.</p>
+        </div>
+        <div class="slide-body">
+          <svg viewBox="0 0 820 260" width="100%" style="max-height: 260px; display: block; margin: 0 auto;" role="img" aria-label="Client/Server diagram showing pgAdmin and Spring Boot connecting to PostgreSQL Server on port 5432">
+            <defs>
+              <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb" />
+              </marker>
+              <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+              </marker>
+            </defs>
+
+            <!-- Clients Column Label -->
+            <text x="145" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#64748b" letter-spacing="1.2">CLIENTS</text>
+            <!-- Server Column Label -->
+            <text x="665" y="20" text-anchor="middle" font-size="12" font-weight="700" fill="#64748b" letter-spacing="1.2">SERVER</text>
+
+            <!-- Client 1: pgAdmin -->
+            <rect x="20" y="34" width="250" height="88" rx="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="2" />
+            <text x="145" y="63" text-anchor="middle" font-size="16" font-weight="700" fill="#1e3a8a">pgAdmin</text>
+            <text x="145" y="85" text-anchor="middle" font-size="12.5" fill="#475569">Visual UI for humans</text>
+            <text x="145" y="103" text-anchor="middle" font-size="12" fill="#2563eb" font-weight="600">Run queries &amp; inspect tables</text>
+
+            <!-- Client 2: Spring Boot -->
+            <rect x="20" y="148" width="250" height="88" rx="14" fill="#fffbeb" stroke="#fcd34d" stroke-width="2" />
+            <text x="145" y="177" text-anchor="middle" font-size="16" font-weight="700" fill="#92400e">Spring Boot</text>
+            <text x="145" y="199" text-anchor="middle" font-size="12.5" fill="#475569">Java backend app (JDBC)</text>
+            <text x="145" y="217" text-anchor="middle" font-size="12" fill="#d97706" font-weight="600">Reads &amp; saves API data</text>
+
+            <!-- Arrows from Clients to Server -->
+            <path d="M 272 78 C 380 78, 410 118, 520 118" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowBlue)" />
+            <path d="M 272 192 C 380 192, 410 152, 520 152" fill="none" stroke="#d97706" stroke-width="2.5" marker-end="url(#arrowAmber)" />
+
+            <!-- Connection Label Pill -->
+            <rect x="330" y="119" width="142" height="32" rx="16" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5" />
+            <text x="401" y="139" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">SQL &bull; port 5432</text>
+
+            <!-- Server: PostgreSQL -->
+            <rect x="526" y="42" width="274" height="186" rx="16" fill="#f0fdf4" stroke="#86efac" stroke-width="2.5" />
+            <!-- Database cylinder icon -->
+            <ellipse cx="663" cy="78" rx="34" ry="10" fill="#bbf7d0" stroke="#16a34a" stroke-width="2" />
+            <path d="M 629 78 L 629 108 A 34 10 0 0 0 697 108 L 697 78" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+            <ellipse cx="663" cy="78" rx="34" ry="10" fill="#86efac" stroke="#16a34a" stroke-width="2" />
+
+            <text x="663" y="142" text-anchor="middle" font-size="17" font-weight="700" fill="#14532d">PostgreSQL Server</text>
+            <text x="663" y="166" text-anchor="middle" font-size="12.5" fill="#166534">Listens on localhost:5432</text>
+            <text x="663" y="186" text-anchor="middle" font-size="12.5" fill="#475569">Executes SQL &amp; stores</text>
+            <text x="663" y="204" text-anchor="middle" font-size="12.5" fill="#475569">databases (e.g. demo_db) on disk</text>
+          </svg>
+          <div class="card">
+            <p><strong>Key takeaway:</strong> Both <strong>pgAdmin</strong> and <strong>Spring Boot</strong> talk to the <em>exact same</em> PostgreSQL server. When your Spring Boot API inserts a row, you can open pgAdmin and see it right away!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2D: DATABASE STRUCTURE & DISK STORAGE -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 1 &bull; Introduction</span>
+          <h2>Inside PostgreSQL: Schemas &amp; Files on Disk</h2>
+          <p class="subtitle">How PostgreSQL organizes databases logically &mdash; and how it stores them as files on your hard drive.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card blue" style="padding: 14px 16px;">
+              <h3 style="margin-bottom: 10px;">Logical Structure (Inside SQL)</h3>
+              <div style="background: #ffffff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 7px 10px; font-size: 0.85rem;">
+                <strong>Server (Cluster)</strong> &mdash; <code>localhost:5432</code>
+              </div>
+              <div style="margin-left: 14px; padding-left: 10px; border-left: 2px solid #93c5fd; margin-top: 6px;">
+                <div style="background: #ffffff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 7px 10px; font-size: 0.85rem;">
+                  <strong>Database</strong> &mdash; e.g. <code>demo_db</code>, <code>company_db</code>
+                </div>
+                <div style="margin-left: 14px; padding-left: 10px; border-left: 2px solid #93c5fd; margin-top: 6px;">
+                  <div style="background: #ffffff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 7px 10px; font-size: 0.85rem;">
+                    <strong>Schema</strong> &mdash; folders (<code>public</code>, <code>hr</code>)
+                  </div>
+                  <div style="margin-left: 14px; padding-left: 10px; border-left: 2px solid #93c5fd; margin-top: 6px;">
+                    <div style="background: #dbeafe; border: 1px solid #60a5fa; border-radius: 8px; padding: 7px 10px; font-size: 0.85rem;">
+                      <strong>Tables &amp; Indexes</strong> &mdash; <code>public.employees</code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card green">
+              <h3>Physical Files on Disk (<code>PGDATA</code>)</h3>
+              <pre style="font-size: 0.78rem; padding: 10px 12px; margin: 6px 0 8px;"><code>/var/lib/postgresql/data/
+├── base/
+│   └── 16384/        <span class="cm">-- demo_db folder (by ID)</span>
+│       ├── 16390     <span class="cm">-- employees table</span>
+│       ├── 16390.1   <span class="cm">-- next 1 GB chunk</span>
+│       └── 16395     <span class="cm">-- primary key index</span>
+├── pg_wal/           <span class="cm">-- crash recovery logs</span>
+└── postgresql.conf   <span class="cm">-- server settings</span></code></pre>
+              <p style="font-size: 0.85rem; margin: 0;">Each table is stored as a binary file (split into <strong>1 GB</strong> chunks if it grows large), and each index gets its own file.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 2 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 2</span>
+        <h2>History &amp; Open Source</h2>
+        <p>From 1986 UC Berkeley to free, community-driven software.</p>
+      </section>
+
+      <!-- SLIDE 3: HISTORY -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 2 &bull; History</span>
+          <h2>
+            <img src="postgres-logo.png" alt="" class="pg-corner-logo" style="object-fit: contain;" />A Brief History of PostgreSQL
+          </h2>
+          <p class="subtitle">From Ingres in the 1970s to nearly 40 years of continuous improvement.</p>
+        </div>
+        <div class="slide-body">
+          <div class="diagram">
+            <div class="d-box">1970s<small><strong>Ingres</strong> built at UC Berkeley</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box info">1986<small><strong>Post-Ingres</strong> (&ldquo;Postgres&rdquo;)</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box info">1996<small>Added SQL &rarr; <strong>PostgreSQL</strong></small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box ok">Today<small>Powering apps worldwide</small></div>
+          </div>
+          <div class="grid-2">
+            <div class="card">
+              <h3>1. 1970s &mdash; INGRES</h3>
+              <p>Professor Michael Stonebraker built <strong>INGRES</strong> (<strong>IN</strong>teractive <strong>G</strong>raphics <strong>RE</strong>trieval <strong>S</strong>ystem) at UC Berkeley. Its goal: <strong>proving the Relational Model could work</strong>, at a time when hierarchical and network databases dominated the industry.</p>
+            </div>
+            <div class="card blue">
+              <h3>2. 1986 &mdash; Post-Ingres (&ldquo;Postgres&rdquo;)</h3>
+              <p>He started a brand-new successor to Ingres, written in <strong>C</strong> for speed and portability, and named it <strong>Post-Ingres &rarr; Postgres</strong>.</p>
+            </div>
+            <div class="card blue">
+              <h3>3. 1996 &mdash; PostgreSQL</h3>
+              <p>Added standard <strong>SQL</strong> support and became a free, open-source project renamed <strong>PostgreSQL</strong>.</p>
+            </div>
+            <div class="card green">
+              <h3>4. Today &mdash; Battle-Tested</h3>
+              <p>Nearly 40 years of improvements and yearly updates powering apps around the world.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: OPEN SOURCE -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 2 &bull; Open Source</span>
+          <h2>100% Free &amp; Open Source</h2>
+          <p class="subtitle">Owned by the community &mdash; not by one single company.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card green">
+              <h3>Free to Use</h3>
+              <p>No expensive license fees. Whether you are a student or a billion-dollar company, it costs $0 to download and run.</p>
+            </div>
+            <div class="card blue">
+              <h3>No Lock-In</h3>
+              <p>You can run it on your laptop, your own server, or move it to any cloud provider at any time.</p>
+            </div>
+            <div class="card amber">
+              <h3>Global Community</h3>
+              <p>Thousands of engineers worldwide inspect the code, fix bugs quickly, and release a major update every year.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 3 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 3</span>
+        <h2>Most Popular &amp; Who Uses It</h2>
+        <p>#1 in developer surveys and trusted by the world&rsquo;s biggest apps.</p>
+      </section>
+
+      <!-- SLIDE 5: #1 IN STACK OVERFLOW SURVEY -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 4 &bull; Most Popular</span>
+          <h2>#1 Most Used Database in the World</h2>
+          <p class="subtitle">
+            Stack Overflow Developer Survey &mdash;
+            <a href="https://survey.stackoverflow.co/2026/technology/data/databases" target="_blank" rel="noopener">Open Official Survey Page &nearr;</a>
+          </p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card blue">
+              <div class="big-stat">57.9%</div>
+              <p>Of all respondents in the <strong>2026</strong> Stack Overflow Survey use PostgreSQL, ranking it <strong>#1</strong>.</p>
+            </div>
+            <div class="card green">
+              <div class="big-stat">#1 Database</div>
+              <p>Ahead of #2 SQLite (<strong>42.1%</strong>) and #3 MySQL (<strong>35.1%</strong>) in the 2026 results.</p>
+            </div>
+          </div>
+          <div class="card">
+            <h3>2026 Stack Overflow Survey &mdash; Top Databases</h3>
+            <div class="bar-row">
+              <div class="bar-label"><span>PostgreSQL (#1)</span><span>57.9%</span></div>
+              <div class="bar-track"><div class="bar-fill pg" style="width: 57.9%;"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label"><span>SQLite (#2)</span><span>42.1%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width: 42.1%;"></div></div>
+            </div>
+            <div class="bar-row" style="margin-bottom: 0;">
+              <div class="bar-label"><span>MySQL (#3)</span><span>35.1%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width: 35.1%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: BIG COMPANIES -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 4 &bull; Who Uses It?</span>
+          <h2>Big Companies That Trust PostgreSQL</h2>
+          <p class="subtitle">Used behind the scenes by apps you open every day.</p>
+        </div>
+        <div class="slide-body">
+          <div class="company-grid">
+            <div class="company-pill">
+              <svg class="logo-icon" viewBox="0 0 24 24" fill="#0F172A"><path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45z"/></svg>
+              Apple<span>Internal services &amp; data</span>
+            </div>
+            <div class="company-pill">
+              <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#E1306C"/></svg>
+              Instagram<span>Photos, likes &amp; accounts</span>
+            </div>
+            <div class="company-pill">
+              <svg class="logo-icon" viewBox="0 0 24 24" fill="#1DB954"><circle cx="12" cy="12" r="10"/><path d="M7 10.2c3.3-1 7-.8 9.8.6M7.8 13.2c2.7-.8 5.8-.6 8.2.5M8.5 16c2.1-.6 4.5-.5 6.4.4" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+              Spotify<span>Music metadata &amp; playlists</span>
+            </div>
+            <div class="company-pill">
+              <svg class="logo-icon" viewBox="0 0 24 24"><rect x="3" y="2" width="18" height="20" rx="4" fill="#111827"/><path d="M8 18V6l4 7.5V6h4v12l-4-7.5V18H8z" fill="#E50914"/></svg>
+              Netflix<span>Studio &amp; billing systems</span>
+            </div>
+            <div class="company-pill">
+              <svg class="logo-icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" fill="#0F172A"/><text x="12" y="16" text-anchor="middle" font-size="11" font-weight="800" fill="#FFFFFF" font-family="sans-serif">U</text></svg>
+              Uber<span>Trips &amp; payments</span>
+            </div>
+            <div class="company-pill">
+              <svg class="logo-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FF4500"/><circle cx="9.2" cy="12" r="1.4" fill="#FFFFFF"/><circle cx="14.8" cy="12" r="1.4" fill="#FFFFFF"/><path d="M9 15.5c1 .8 5 .8 6 0" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+              Reddit<span>Posts &amp; comments</span>
+            </div>
+            <div class="company-pill">
+              <svg class="logo-icon" viewBox="0 0 24 24"><path d="M4 3h16v11l-4 4h-4l-3 3v-3H4V3z" fill="#9146FF"/><path d="M11 7v4M15 7v4" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/></svg>
+              Twitch<span>Streams &amp; chat data</span>
+            </div>
+            <div class="company-pill">
+              <svg class="logo-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#0B3D91"/><path d="M5 14c4-5 10-7 15-4" stroke="#FC3D21" stroke-width="2" stroke-linecap="round" fill="none"/><text x="12" y="14.5" text-anchor="middle" font-size="6.5" font-weight="800" fill="#FFFFFF" font-family="sans-serif">NASA</text></svg>
+              NASA<span>Scientific &amp; space data</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 4 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 4</span>
+        <h2>Cloud Hosting</h2>
+        <p>Managed PostgreSQL providers vs. self-hosting.</p>
+      </section>
+
+      <!-- SLIDE 7: HOSTING PROVIDERS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 3 &bull; Cloud Hosting</span>
+          <h2>Postgres Hosting Providers (vs. Self-Hosting)</h2>
+          <p class="subtitle">You can run open-source Postgres yourself, OR pay a host to manage it for you.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card blue">
+              <h3>Biggest Postgres Hosts</h3>
+              <div class="host-item">
+                <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#00E599"/><path d="M7 17V7l10 10V7" stroke="#0F172A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <span><strong>Neon</strong> &mdash; Serverless Postgres (sleeps when idle)</span>
+              </div>
+              <div class="host-item">
+                <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#1C1C1C"/><path d="M13 4L6 13h6l-1 7 7-9h-6l1-7z" fill="#3ECF8E"/></svg>
+                <span><strong>Supabase</strong> &mdash; Postgres + auth &amp; dashboard</span>
+              </div>
+              <div class="host-item">
+                <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#232F3E"/><path d="M5 15c4 3 10 3 14 0" stroke="#FF9900" stroke-width="2.2" stroke-linecap="round" fill="none"/><circle cx="12" cy="9" r="3" fill="#FF9900"/></svg>
+                <span><strong>AWS RDS</strong> &mdash; Amazon&rsquo;s managed Postgres</span>
+              </div>
+              <div class="host-item" style="margin-bottom: 0;">
+                <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#E0F2FE"/><path d="M7 16h10a3 3 0 0 0 .5-5.95A4.5 4.5 0 0 0 8.6 9a3.5 3.5 0 0 0-1.6 7z" fill="#2563EB"/></svg>
+                <span><strong>Google Cloud SQL</strong> &amp; <strong>Azure Postgres</strong></span>
+              </div>
+            </div>
+            <div class="card green">
+              <h3>Why Use a Host Instead of Free Self-Hosting?</h3>
+              <ul>
+                <li><strong>Automatic backups:</strong> Restore yesterday&rsquo;s data in 1 click</li>
+                <li><strong>Zero maintenance:</strong> Security updates happen automatically</li>
+                <li><strong>24/7 uptime:</strong> No waking up at 3 AM if a server crashes</li>
+                <li><strong>Easy growth:</strong> Upgrade storage or speed with a slider</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 5 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 5</span>
+        <h2>Data Safety &mdash; ACID</h2>
+        <p>Four guarantees that keep your data safe and consistent.</p>
+      </section>
+
+      <!-- SLIDE 8: ACID OVERVIEW -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 4 &bull; Data Safety</span>
+          <h2>Why Is PostgreSQL So Safe? &ldquo;ACID&rdquo;</h2>
+          <p class="subtitle">ACID is 4 simple promises that keep your data from ever getting corrupted.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card blue">
+              <h3>A &mdash; Atomicity</h3>
+              <p><strong>All or nothing.</strong> Either every step succeeds, or none of it happens.</p>
+            </div>
+            <div class="card green">
+              <h3>C &mdash; Consistency</h3>
+              <p><strong>Rules always hold.</strong> Invalid data is never allowed in.</p>
+            </div>
+            <div class="card amber">
+              <h3>I &mdash; Isolation</h3>
+              <p><strong>No clashing edits.</strong> Two people editing at once don&rsquo;t break each other.</p>
+            </div>
+            <div class="card blue">
+              <h3>D &mdash; Durability</h3>
+              <p><strong>Saved forever.</strong> Once saved, it survives even a power cut.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: A - ATOMICITY -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 4 &bull; ACID (1 of 4)</span>
+          <h2>A &mdash; Atomicity (&ldquo;All or Nothing&rdquo;)</h2>
+          <p class="subtitle">Example: Sending $50 from Alice to Bob.</p>
+        </div>
+        <div class="slide-body">
+          <div class="diagram">
+            <div class="d-box info">Step 1<small>Take $50 from Alice</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box fail">Step 2: Crash!<small>Power cuts before Bob gets $50</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box ok">Undo (Rollback)<small>Alice keeps her $50!</small></div>
+          </div>
+          <div class="grid-2">
+            <div class="card blue">
+              <h3>In Plain English</h3>
+              <p>Both steps are glued together as one action. If Step 2 fails, PostgreSQL automatically undoes Step 1 so money never disappears into thin air.</p>
+            </div>
+            <pre style="font-size: 0.78rem; padding: 12px 14px;"><code><span class="kw">BEGIN</span>;
+  <span class="kw">UPDATE</span> <span class="ty">accounts</span> <span class="kw">SET</span> balance = balance - <span class="nu">50</span> <span class="kw">WHERE</span> name = <span class="st">'Alice'</span>;
+  <span class="kw">UPDATE</span> <span class="ty">accounts</span> <span class="kw">SET</span> balance = balance + <span class="nu">50</span> <span class="kw">WHERE</span> name = <span class="st">'Bob'</span>;
+<span class="kw">COMMIT</span>;   <span class="cm">-- saves BOTH</span>
+<span class="cm">-- Or ROLLBACK; to undo BOTH if a step fails!</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: C - CONSISTENCY -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 4 &bull; ACID (2 of 4)</span>
+          <h2>C &mdash; Consistency (&ldquo;Rules Always Hold&rdquo;)</h2>
+          <p class="subtitle">Example: Rule says <code>balance</code> can never be negative.</p>
+        </div>
+        <div class="slide-body">
+          <div class="diagram">
+            <div class="d-box info">Alice&rsquo;s Balance<small>$40</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box fail">Try to withdraw $100<small>Would make balance -$60</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box ok">Blocked by Postgres<small>Balance stays $40 (valid!)</small></div>
+          </div>
+          <div class="grid-2">
+            <div class="card green">
+              <h3>Main Constraint Types</h3>
+              <ul style="font-size: 0.88rem; margin-top: 4px;">
+                <li><code>NOT NULL</code> &mdash; Cannot be empty</li>
+                <li><code>UNIQUE</code> &mdash; No duplicate values allowed</li>
+                <li><code>PRIMARY KEY</code> &mdash; Unique ID (<code>NOT NULL</code> + <code>UNIQUE</code>)</li>
+                <li><code>CHECK</code> &mdash; Custom rule (e.g. <code>balance &gt;= 0</code>)</li>
+                <li><code>FOREIGN KEY</code> &mdash; Must match a row in another table</li>
+              </ul>
+            </div>
+            <pre style="font-size: 0.76rem; padding: 12px 14px;"><code><span class="kw">CREATE TABLE</span> <span class="ty">employees</span> (
+  id      <span class="ty">INT PRIMARY KEY</span>,
+  name    <span class="ty">TEXT</span> <span class="kw">NOT NULL</span>,
+  email   <span class="ty">TEXT</span> <span class="kw">UNIQUE</span>,
+  balance <span class="ty">INT</span> <span class="kw">CHECK</span> (balance &gt;= <span class="nu">0</span>),
+  dept_id <span class="ty">INT</span> <span class="kw">REFERENCES</span> <span class="ty">departments</span>(id)
+);
+
+<span class="kw">UPDATE</span> <span class="ty">employees</span> <span class="kw">SET</span> balance = -<span class="nu">60</span>;
+<span class="cm">-- ERROR: violates check constraint!</span></code></pre>
+          </div>
+          <div class="card blue" style="padding: 12px 16px;">
+            <p style="margin: 0;"><strong>Data Types Are Enforced Too:</strong> PostgreSQL respects column data types &mdash; trying to save <code>'hello'</code> into an <code>INT</code> column is rejected immediately.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: I - ISOLATION -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 4 &bull; ACID (3 of 4)</span>
+          <h2>I &mdash; Isolation (&ldquo;No Clashing Edits&rdquo;)</h2>
+          <p class="subtitle">Example: Only 1 concert ticket is left, and Alice &amp; Bob click &ldquo;Buy&rdquo; at the exact same time.</p>
+        </div>
+        <div class="slide-body">
+          <div class="diagram">
+            <div class="d-box info">Alice &amp; Bob<small>Click &ldquo;Buy&rdquo; at 12:00:00</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box ok">Alice goes 1st<small>Gets Ticket #1 (0 left)</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box fail">Bob goes 2nd<small>Sees &ldquo;Sold Out&rdquo;!</small></div>
+          </div>
+          <div class="grid-2">
+            <div class="card amber">
+              <h3>In Plain English</h3>
+              <p>PostgreSQL keeps simultaneous users isolated in a clean line so the same ticket is never sold twice.</p>
+            </div>
+            <pre style="font-size: 0.78rem; padding: 12px 14px;"><code><span class="cm">-- Alice &amp; Bob run this at the exact same time:</span>
+<span class="kw">BEGIN</span>;
+  <span class="kw">UPDATE</span> <span class="ty">tickets</span> <span class="kw">SET</span> qty = qty - <span class="nu">1</span>
+  <span class="kw">WHERE</span> id = <span class="nu">1</span> <span class="kw">AND</span> qty &gt; <span class="nu">0</span>;
+<span class="kw">COMMIT</span>;
+<span class="cm">-- Postgres runs 1st, then 2nd sees qty = 0!</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: D - DURABILITY -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 4 &bull; ACID (4 of 4)</span>
+          <h2>D &mdash; Durability (&ldquo;Saved Forever&rdquo;)</h2>
+          <p class="subtitle">Example: Your order is confirmed, and 1 second later the server loses power.</p>
+        </div>
+        <div class="slide-body">
+          <div class="diagram">
+            <div class="d-box ok">Postgres says &ldquo;Saved!&rdquo;<small>Written safely to disk</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box fail">Power Goes Out<small>Server restarts</small></div>
+            <span class="arrow">&rarr;</span>
+            <div class="d-box ok">Data Is Still There<small>Nothing was lost!</small></div>
+          </div>
+          <div class="grid-2">
+            <div class="card blue">
+              <h3>In Plain English</h3>
+              <p>When PostgreSQL tells you &ldquo;Saved&rdquo;, it means the data is permanently written to disk &mdash; not sitting in temporary memory.</p>
+            </div>
+            <pre style="font-size: 0.78rem; padding: 12px 14px;"><code><span class="kw">BEGIN</span>;
+  <span class="kw">INSERT INTO</span> <span class="ty">orders</span> (id, item)
+  <span class="kw">VALUES</span> (<span class="nu">1</span>, <span class="st">'Laptop'</span>);
+<span class="kw">COMMIT</span>; <span class="cm">-- Written safely to disk!</span>
+<span class="cm">-- Even if power cuts 1ms later, order #1 stays!</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- PART 6 DIVIDER -->
+      <section class="slide part-slide">
+        <span class="part-badge">Part 6</span>
+        <h2>Basic SQL Syntax</h2>
+        <p>Organized into <strong>DDL</strong> (structure), <strong>DML</strong> (changing data), and <strong>DQL</strong> (reading data).</p>
+      </section>
+
+      <!-- SLIDE 13_0: SQL CATEGORIES OVERVIEW -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 6 &bull; Basic SQL Syntax</span>
+          <h2>The 3 Main Types of SQL Queries</h2>
+          <p class="subtitle">SQL commands are grouped by what they work on: structure, data changes, or reading.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card blue">
+              <h3>DDL</h3>
+              <p><strong>Data Definition Language</strong></p>
+              <p>Creates or changes <strong>structure</strong> (databases, tables, columns).</p>
+              <p><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code></p>
+            </div>
+            <div class="card amber">
+              <h3>DML</h3>
+              <p><strong>Data Manipulation Language</strong></p>
+              <p>Adds, edits, or removes <strong>rows</strong> inside a table.</p>
+              <p><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code></p>
+            </div>
+            <div class="card green">
+              <h3>DQL</h3>
+              <p><strong>Data Query Language</strong></p>
+              <p>Reads and filters <strong>data</strong> without changing it.</p>
+              <p><code>SELECT</code>, <code>WHERE</code></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13A: DDL - CREATE & DROP DATABASE -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">DDL &bull; Data Definition Language</span>
+          <h2>1. Creating &amp; Dropping a Database</h2>
+          <p class="subtitle">Before creating tables, you need a database to hold them.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="cm">-- Create a brand-new database</span>
+<span class="kw">CREATE DATABASE</span> <span class="ty">company_db</span>;
+
+<span class="cm">-- Delete a database permanently</span>
+<span class="kw">DROP DATABASE</span> <span class="ty">company_db</span>;</code></pre>
+          <div class="card red">
+            <p><strong>Careful:</strong> <code>DROP DATABASE</code> deletes the <strong>entire database</strong> and every table inside it &mdash; there is no undo!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13: DDL - CREATE & DROP TABLE -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">DDL &bull; Data Definition Language</span>
+          <h2>2. Creating &amp; Dropping a Table</h2>
+          <p class="subtitle">SQL is the simple English-like language we use to talk to PostgreSQL.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="cm">-- Create a new table</span>
+<span class="kw">CREATE TABLE</span> <span class="ty">employees</span> (
+    id   <span class="ty">INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY</span>, <span class="cm">-- auto-increments (1, 2, 3...)</span>
+    name <span class="ty">TEXT</span>,
+    role <span class="ty">TEXT</span>
+);
+
+<span class="cm">-- Delete the table and all its rows permanently</span>
+<span class="kw">DROP TABLE</span> <span class="ty">employees</span>;</code></pre>
+          <div class="card">
+            <ul>
+              <li><code>CREATE TABLE employees</code> &mdash; makes a new table named <code>employees</code>.</li>
+              <li><code>GENERATED ALWAYS AS IDENTITY PRIMARY KEY</code> &mdash; automatically counts up (1, 2, 3...) for every new row.</li>
+              <li><code>DROP TABLE employees</code> &mdash; permanently deletes the table and all of its data.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13B: DDL - ADD & DROP COLUMN -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">DDL &bull; Data Definition Language</span>
+          <h2>3. Adding &amp; Dropping a Column (<code>ALTER TABLE</code>)</h2>
+          <p class="subtitle">Change an existing table&rsquo;s structure without deleting the table.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="cm">-- Add a new column to an existing table</span>
+<span class="kw">ALTER TABLE</span> <span class="ty">employees</span>
+<span class="kw">ADD COLUMN</span> email <span class="ty">TEXT</span>;
+
+<span class="cm">-- Remove a column from an existing table</span>
+<span class="kw">ALTER TABLE</span> <span class="ty">employees</span>
+<span class="kw">DROP COLUMN</span> email;</code></pre>
+          <div class="card blue">
+            <p><strong>Tip:</strong> Use <code>ALTER TABLE</code> when your table already exists and you need to add or remove a column.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 14: DML - INSERT -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">DML &bull; Data Manipulation Language</span>
+          <h2>4. Adding Data (<code>INSERT INTO</code>)</h2>
+          <p class="subtitle">Insert new rows into your table.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="cm">-- Add a new employee (id is generated automatically!)</span>
+<span class="kw">INSERT INTO</span> <span class="ty">employees</span> (name, role)
+<span class="kw">VALUES</span> (<span class="st">'Alice'</span>, <span class="st">'Developer'</span>);
+
+<span class="cm">-- Add multiple employees at once</span>
+<span class="kw">INSERT INTO</span> <span class="ty">employees</span> (name, role)
+<span class="kw">VALUES</span>
+    (<span class="st">'Bob'</span>, <span class="st">'Designer'</span>),
+    (<span class="st">'Charlie'</span>, <span class="st">'Manager'</span>);</code></pre>
+          <div class="card green">
+            <p><strong>Tip:</strong> In SQL, text values always use single quotes (<code>'Alice'</code>).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 15: DML - UPDATE & DELETE -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">DML &bull; Data Manipulation Language</span>
+          <h2>5. Updating &amp; Deleting Data (<code>UPDATE</code> &amp; <code>DELETE</code>)</h2>
+          <p class="subtitle">Always remember <code>WHERE</code> so you only touch the row you want!</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="cm">-- Change Alice's role</span>
+<span class="kw">UPDATE</span> <span class="ty">employees</span>
+<span class="kw">SET</span> role = <span class="st">'Manager'</span>
+<span class="kw">WHERE</span> id = <span class="nu">1</span>;
+
+<span class="cm">-- Remove employee #1</span>
+<span class="kw">DELETE FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> id = <span class="nu">1</span>;</code></pre>
+          <div class="card red">
+            <p><strong>Careful:</strong> If you forget <code>WHERE id = 1</code> on <code>UPDATE</code> or <code>DELETE</code>, it changes or deletes <strong>every row</strong> in the table!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 15B: DQL - SELECT & WHERE -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">DQL &bull; Data Query Language</span>
+          <h2>6. Reading &amp; Filtering Data (<code>SELECT</code>)</h2>
+          <p class="subtitle">Read rows from a table without modifying anything.</p>
+        </div>
+        <div class="slide-body">
+          <pre><code><span class="cm">-- Read ALL employees</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">employees</span>;
+
+<span class="cm">-- Read only specific columns</span>
+<span class="kw">SELECT</span> name, role <span class="kw">FROM</span> <span class="ty">employees</span>;
+
+<span class="cm">-- Filter rows with WHERE</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="ty">employees</span> <span class="kw">WHERE</span> id = <span class="nu">1</span>;</code></pre>
+          <div class="card green">
+            <p><strong>Tip:</strong> <code>*</code> means &ldquo;all columns&rdquo;, and <code>WHERE</code> lets you filter only the rows you care about.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 15C: DQL - FULL SELECT & EXECUTION ORDER -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">DQL &bull; Data Query Language</span>
+          <h2>7. Full <code>SELECT</code> &amp; Execution Order</h2>
+          <p class="subtitle">You <em>write</em> <code>SELECT</code> first, but PostgreSQL <em>runs</em> the clauses in a specific order.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div>
+              <pre style="font-size: 0.85rem; padding: 14px 16px; margin: 0;"><code><span class="kw">SELECT</span> department, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> total
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">WHERE</span> salary &gt; <span class="nu">50000</span>
+<span class="kw">GROUP BY</span> department
+<span class="kw">ORDER BY</span> total <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="nu">3</span>
+<span class="kw">OFFSET</span> <span class="nu">2</span>;</code></pre>
+            </div>
+            <div class="card blue">
+              <h3>Order of Execution</h3>
+              <ul style="font-size: 0.9rem;">
+                <li><strong>1. <code>FROM</code></strong> &mdash; choose the table</li>
+                <li><strong>2. <code>WHERE</code></strong> &mdash; filter individual rows</li>
+                <li><strong>3. <code>GROUP BY</code></strong> &mdash; group matching rows</li>
+                <li><strong>4. <code>SELECT</code></strong> &mdash; pick columns &amp; counts</li>
+                <li><strong>5. <code>ORDER BY</code></strong> &mdash; sort the results</li>
+                <li><strong>6. <code>OFFSET</code></strong> &mdash; skip the first N rows</li>
+                <li><strong>7. <code>LIMIT</code></strong> &mdash; take the next N rows</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 15D: DQL - HOW GROUP BY WORKS -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">DQL &bull; Data Query Language</span>
+          <h2>8. How <code>GROUP BY</code> Works (Split &amp; Collapse)</h2>
+          <p class="subtitle"><code>GROUP BY</code> splits your table into temporary sub-tables, then collapses each one into a single row.</p>
+        </div>
+        <div class="slide-body">
+          <pre style="font-size: 0.85rem; padding: 10px 14px; margin: 0;"><code><span class="kw">SELECT</span> department, <span class="kw">COUNT</span>(*) <span class="kw">AS</span> total
+<span class="kw">FROM</span> <span class="ty">employees</span>
+<span class="kw">GROUP BY</span> department;</code></pre>
+          <div class="grid-3" style="align-items: start;">
+            <div class="card" style="padding: 12px 14px;">
+              <h3 style="margin-bottom: 8px; font-size: 0.98rem;">1. Full <code>employees</code> Table</h3>
+              <table style="font-size: 0.78rem;">
+                <thead><tr><th>name</th><th>department</th></tr></thead>
+                <tbody>
+                  <tr><td>Alice</td><td>Engineering</td></tr>
+                  <tr><td>Bob</td><td>Marketing</td></tr>
+                  <tr><td>Charlie</td><td>Engineering</td></tr>
+                  <tr><td>Diana</td><td>Marketing</td></tr>
+                  <tr><td>Evan</td><td>Sales</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card blue" style="padding: 12px 14px;">
+              <h3 style="margin-bottom: 8px; font-size: 0.98rem;">2. Split into Sub-tables</h3>
+              <p style="font-size: 0.76rem; font-weight: 700; color: #1e3a8a; margin: 0 0 2px;">Engineering</p>
+              <table style="font-size: 0.76rem; margin-bottom: 6px;">
+                <tbody>
+                  <tr><td>Alice</td><td>Engineering</td></tr>
+                  <tr><td>Charlie</td><td>Engineering</td></tr>
+                </tbody>
+              </table>
+              <p style="font-size: 0.76rem; font-weight: 700; color: #1e3a8a; margin: 0 0 2px;">Marketing</p>
+              <table style="font-size: 0.76rem; margin-bottom: 6px;">
+                <tbody>
+                  <tr><td>Bob</td><td>Marketing</td></tr>
+                  <tr><td>Diana</td><td>Marketing</td></tr>
+                </tbody>
+              </table>
+              <p style="font-size: 0.76rem; font-weight: 700; color: #1e3a8a; margin: 0 0 2px;">Sales</p>
+              <table style="font-size: 0.76rem;">
+                <tbody>
+                  <tr><td>Evan</td><td>Sales</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card green" style="padding: 12px 14px;">
+              <h3 style="margin-bottom: 8px; font-size: 0.98rem;">3. Collapse Each Sub-table</h3>
+              <table style="font-size: 0.8rem; margin-bottom: 10px;">
+                <thead><tr><th>department</th><th>total</th></tr></thead>
+                <tbody>
+                  <tr><td>Engineering</td><td><strong>2</strong></td></tr>
+                  <tr><td>Marketing</td><td><strong>2</strong></td></tr>
+                  <tr><td>Sales</td><td><strong>1</strong></td></tr>
+                </tbody>
+              </table>
+              <p style="font-size: 0.8rem; margin: 0;"><strong>Rule:</strong> Every column in <code>SELECT</code> must be in <code>GROUP BY</code> or inside an aggregate like <code>COUNT(*)</code>.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 16: SQL SYNTAX - OBJECTS / CUSTOM TYPES -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 6 &bull; Bonus (Object-Relational)</span>
+          <h2>9. PostgreSQL Supports Objects Too!</h2>
+          <p class="subtitle">PostgreSQL is an <strong>Object-Relational</strong> database &mdash; you can define your own custom object types (just like a class).</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card blue">
+              <h3>1. Define the <code>Address</code> Type</h3>
+              <pre style="font-size: 0.85rem; padding: 12px 14px; margin-top: 8px;"><code><span class="kw">CREATE TYPE</span> <span class="ty">address</span> <span class="kw">AS</span> (
+    city <span class="ty">TEXT</span>,
+    zip  <span class="ty">TEXT</span>
+);</code></pre>
+              <p style="margin-top: 10px; margin-bottom: 0;">Groups <code>city</code> and <code>zip</code> together into one reusable <code>address</code> object.</p>
+            </div>
+            <div class="card green">
+              <h3>2. Use <code>address</code> in a Table</h3>
+              <pre style="font-size: 0.82rem; padding: 12px 14px; margin-top: 8px;"><code><span class="kw">CREATE TABLE</span> <span class="ty">employees</span> (
+    id           <span class="ty">INT PRIMARY KEY</span>,
+    name         <span class="ty">TEXT</span>,
+    home_address <span class="ty">address</span>
+);
+
+<span class="kw">INSERT INTO</span> <span class="ty">employees</span> (id, name, home_address)
+<span class="kw">VALUES</span> (<span class="nu">1</span>, <span class="st">'Alice'</span>, <span class="kw">ROW</span>(<span class="st">'Rabat'</span>, <span class="st">'10000'</span>));
+
+<span class="kw">SELECT</span> name, (home_address).city
+<span class="kw">FROM</span> <span class="ty">employees</span>; <span class="cm">-- Alice | Rabat</span></code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 16B: BEYOND THIS WORKSHOP -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Part 6 &bull; Going Further</span>
+          <h2>Beyond This Workshop (More SQL Keywords)</h2>
+          <p class="subtitle">Other powerful PostgreSQL features you&rsquo;ll explore as you grow &mdash; beyond today&rsquo;s scope.</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card blue">
+              <h3>Combining &amp; Advanced Queries</h3>
+              <ul>
+                <li><code>JOIN</code> (<code>INNER</code>, <code>LEFT</code>, <code>RIGHT</code>) &mdash; combine rows from multiple tables</li>
+                <li><code>HAVING</code> &mdash; filter groups created by <code>GROUP BY</code></li>
+                <li><code>WITH</code> (CTEs) &amp; Subqueries &mdash; break big queries into steps</li>
+                <li><code>UNION</code> &amp; Window Functions (<code>OVER</code>, <code>ROW_NUMBER</code>)</li>
+              </ul>
+            </div>
+            <div class="card green">
+              <h3>Constraints &amp; Performance</h3>
+              <ul>
+                <li><code>FOREIGN KEY</code> &amp; <code>CHECK</code> &mdash; enforce table relationships &amp; rules</li>
+                <li><code>CREATE INDEX</code> &mdash; speed up searches on large tables</li>
+                <li><code>CREATE VIEW</code> &mdash; save reusable <code>SELECT</code> queries</li>
+                <li><code>TRUNCATE</code> &mdash; empty a table instantly</li>
+              </ul>
+            </div>
+            <div class="card amber">
+              <h3>Transactions (TCL)</h3>
+              <ul>
+                <li><code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code> &mdash; group changes safely</li>
+                <li><code>SAVEPOINT</code> &mdash; undo part of a transaction</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Security &amp; Automation (DCL)</h3>
+              <ul>
+                <li><code>GRANT</code> &amp; <code>REVOKE</code> &mdash; manage user permissions</li>
+                <li><code>CREATE TRIGGER</code> &amp; Functions &mdash; run logic automatically</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 17: RECAP -->
+      <section class="slide">
+        <div class="slide-top">
+          <span class="tag">Wrap-Up</span>
+          <h2>Quick Recap</h2>
+          <p class="subtitle">Everything you need to remember from today:</p>
+        </div>
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card blue">
+              <h3>Why PostgreSQL?</h3>
+              <ul>
+                <li>Free, open-source, nearly 40 years old</li>
+                <li>#1 most used database in the world</li>
+                <li>Trusted by Apple, Instagram, Spotify, Netflix, Uber</li>
+                <li>Can be self-hosted or managed (Neon, Supabase, AWS RDS)</li>
+              </ul>
+            </div>
+            <div class="card green">
+              <h3>ACID &amp; Basic SQL</h3>
+              <ul>
+                <li><strong>ACID:</strong> All-or-nothing, valid rules, no clashes, saved forever</li>
+                <li><code>CREATE TABLE</code> &mdash; make a table</li>
+                <li><code>INSERT INTO</code> / <code>SELECT</code> &mdash; add &amp; read rows</li>
+                <li><code>UPDATE</code> / <code>DELETE</code> &mdash; edit &amp; remove rows (with <code>WHERE</code>!)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="controls">
+      <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&larr; Previous</button>
+      <div class="counter" id="counter">1 / 16</div>
+      <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next &rarr;</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    let current = 0;
+
+    function showSlide(index) {
+      slides[current].classList.remove('active');
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides[current].classList.add('active');
+
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === slides.length - 1;
+      counter.textContent = (current + 1) + ' / ' + slides.length;
+      progress.style.width = (((current + 1) / slides.length) * 100) + '%';
+    }
+
+    function changeSlide(step) {
+      showSlide(current + step);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
