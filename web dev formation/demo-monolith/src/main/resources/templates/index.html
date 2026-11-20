@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMS Demo — Monolithic (Full Page Reloads)</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      padding: 28px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e3a8a;
+      color: #ffffff;
+      padding: 20px 24px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+    }
+
+    header h1 { margin: 0; font-size: 1.5rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 { margin: 0 0 12px; font-size: 1.2rem; color: #0f172a; }
+    h3 { margin: 16px 0 8px; font-size: 1rem; color: #334155; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    th { background: #f1f5f9; color: #0f172a; }
+
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    button {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    button:hover { background: #1d4ed8; }
+    button.refresh { background: #16a34a; }
+    button.refresh:hover { background: #15803d; }
+    button.danger { background: #dc2626; }
+    button.danger:hover { background: #b91c1c; }
+
+    .row-form {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .row-form input { margin-bottom: 0; }
+
+    .create-form {
+      min-height: 218px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .create-form button {
+      margin-top: auto;
+      align-self: flex-end;
+    }
+
+    @media (max-width: 780px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Employee Management System</h1>
+      <form method="get" action="/refresh" style="margin: 0;">
+        <button type="submit" class="refresh">Refresh</button>
+      </form>
+    </header>
+
+    <div class="grid">
+      <!-- EMPLOYEES SECTION -->
+      <section class="card">
+        <h2>Employees</h2>
+
+        <h3>Create Employee</h3>
+        <form method="post" action="/employees" class="create-form">
+          <input type="text" name="name" placeholder="Name (e.g. Alice)" />
+          <input type="text" name="lastName1" placeholder="Last Name (e.g. Smith)" />
+          <input type="text" name="role" placeholder="Role (e.g. Developer)" />
+          <input type="number" name="departmentId" placeholder="Department ID (optional)" />
+          <button type="submit">Add Employee</button>
+        </form>
+
+        <h3>Delete Employee</h3>
+        <form method="post" action="/employees/delete" class="row-form">
+          <input type="number" name="id" placeholder="Employee ID" />
+          <button type="submit" class="danger">Delete</button>
+        </form>
+
+        <h3 style="margin-top: 20px;">Employee List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Last Name</th>
+              <th>Role</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="emp : ${employees}">
+              <td th:text="${emp.id}"></td>
+              <td th:text="${emp.name}"></td>
+              <td th:text="${emp.lastName1}"></td>
+              <td th:text="${emp.role}"></td>
+              <td th:text="${emp.department != null ? emp.department.name : '-'}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- DEPARTMENTS SECTION -->
+      <section class="card">
+        <h2>Departments</h2>
+
+        <h3>Create Department</h3>
+        <form method="post" action="/departments" class="create-form">
+          <input type="text" name="name" placeholder="Name (e.g. Engineering)" />
+          <input type="text" name="location" placeholder="Location (e.g. Floor 3)" />
+          <button type="submit">Add Department</button>
+        </form>
+
+        <h3>Delete Department</h3>
+        <form method="post" action="/departments/delete" class="row-form">
+          <input type="number" name="id" placeholder="Department ID" />
+          <button type="submit" class="danger">Delete</button>
+        </form>
+
+        <h3 style="margin-top: 20px;">Department List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="dept : ${departments}">
+              <td th:text="${dept.id}"></td>
+              <td th:text="${dept.name}"></td>
+              <td th:text="${dept.location}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

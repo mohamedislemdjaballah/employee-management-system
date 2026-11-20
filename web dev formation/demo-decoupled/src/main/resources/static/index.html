@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMS Demo — Minimal Frontend</title>
+  <script src="app.js" defer></script>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      padding: 28px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e3a8a;
+      color: #ffffff;
+      padding: 20px 24px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+    }
+
+    header h1 { margin: 0; font-size: 1.5rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 { margin: 0 0 12px; font-size: 1.2rem; color: #0f172a; }
+    h3 { margin: 16px 0 8px; font-size: 1rem; color: #334155; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    th { background: #f1f5f9; color: #0f172a; }
+
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    button {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    button:hover { background: #1d4ed8; }
+    button.refresh { background: #16a34a; }
+    button.refresh:hover { background: #15803d; }
+    button.danger { background: #dc2626; }
+    button.danger:hover { background: #b91c1c; }
+
+    .row-form {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .row-form input { margin-bottom: 0; }
+
+    .create-form {
+      min-height: 218px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .create-form button {
+      margin-top: auto;
+      align-self: flex-end;
+    }
+
+    @media (max-width: 780px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Employee Management System</h1>
+      <button type="button" id="refreshBtn" class="refresh">Refresh</button>
+    </header>
+
+    <div class="grid">
+      <!-- EMPLOYEES SECTION -->
+      <section class="card">
+        <h2>Employees</h2>
+
+        <h3>Create Employee</h3>
+        <div class="create-form">
+          <input type="text" id="empName" placeholder="Name (e.g. Alice)" />
+          <input type="text" id="empLastName" placeholder="Last Name (e.g. Smith)" />
+          <input type="text" id="empRole" placeholder="Role (e.g. Developer)" />
+          <input type="number" id="empDeptId" placeholder="Department ID (optional)" />
+          <button type="button" id="createEmpBtn">Add Employee</button>
+        </div>
+
+        <h3>Delete Employee</h3>
+        <div class="row-form">
+          <input type="number" id="deleteEmpId" placeholder="Employee ID" />
+          <button type="button" id="deleteEmpBtn" class="danger">Delete</button>
+        </div>
+
+        <h3 style="margin-top: 20px;">Employee List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Last Name</th>
+              <th>Role</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTable"></tbody>
+        </table>
+      </section>
+
+      <!-- DEPARTMENTS SECTION -->
+      <section class="card">
+        <h2>Departments</h2>
+
+        <h3>Create Department</h3>
+        <div class="create-form">
+          <input type="text" id="deptName" placeholder="Name (e.g. Engineering)" />
+          <input type="text" id="deptLocation" placeholder="Location (e.g. Floor 3)" />
+          <button type="button" id="createDeptBtn">Add Department</button>
+        </div>
+
+        <h3>Delete Department</h3>
+        <div class="row-form">
+          <input type="number" id="deleteDeptId" placeholder="Department ID" />
+          <button type="button" id="deleteDeptBtn" class="danger">Delete</button>
+        </div>
+
+        <h3 style="margin-top: 20px;">Department List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody id="departmentTable"></tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
